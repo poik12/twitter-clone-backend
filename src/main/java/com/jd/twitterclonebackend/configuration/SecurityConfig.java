@@ -46,7 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 accessTokenProvider,
                 refreshTokenProvider
         );
-        customAuthenticationFilter.setFilterProcessesUrl(API_VERSION + "/user/login");
+        customAuthenticationFilter.setFilterProcessesUrl(API_VERSION + "/auth/login");
 
         CustomAuthorizationFilter customAuthorizationFilter = new CustomAuthorizationFilter(accessTokenProvider);
 
@@ -81,7 +81,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.authorizeRequests().antMatchers("h2-console/**").permitAll();
 
         httpSecurity.authorizeRequests().antMatchers(API_VERSION + "/auth/**").permitAll();
-        httpSecurity.authorizeRequests().antMatchers(API_VERSION + "/user/**").permitAll();
+        httpSecurity.authorizeRequests().antMatchers(API_VERSION + "/users/**").permitAll();
         httpSecurity.authorizeRequests().antMatchers(API_VERSION + "/login/**").permitAll();
 //        httpSecurity.authorizeRequests().antMatchers("/api/login/**", "/api/user/token/refresh").permitAll();
         httpSecurity.authorizeRequests().antMatchers("/api/post/**").permitAll();

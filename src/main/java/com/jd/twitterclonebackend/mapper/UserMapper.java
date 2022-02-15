@@ -1,8 +1,7 @@
 package com.jd.twitterclonebackend.mapper;
 
 import com.jd.twitterclonebackend.domain.UserEntity;
-import com.jd.twitterclonebackend.dto.PostResponse;
-import com.jd.twitterclonebackend.dto.UserRequest;
+import com.jd.twitterclonebackend.dto.UserRequestDto;
 import com.jd.twitterclonebackend.dto.UserResponse;
 import com.jd.twitterclonebackend.service.impl.PostServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -12,10 +11,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 
 @Component
@@ -67,24 +64,24 @@ public class UserMapper {
 
 
     public UserEntity mapFromDtoToEntity(UserEntity userEntity,
-                                         UserRequest userRequest,
+                                         UserRequestDto userRequestDto,
                                          MultipartFile profileImageFile,
                                          MultipartFile backgroundImageFile) {
 
-        if (Objects.isNull(userRequest)) {
+        if (Objects.isNull(userRequestDto)) {
             return null;
         }
 
-        if (userRequest.getUsername().equals("")) {
-            userRequest.setUsername(userEntity.getUsername());
+        if (userRequestDto.getUsername().equals("")) {
+            userRequestDto.setUsername(userEntity.getUsername());
         }
 
 //        TODO: Description, profile image, background image not added yet
-        userEntity.setName(userRequest.getName());
-        userEntity.setUsername(userRequest.getUsername());
-        userEntity.setEmailAddress(userRequest.getEmailAddress());
-        userEntity.setPhoneNumber(userRequest.getPhoneNumber());
-        userEntity.setPassword(passwordEncoder().encode(userRequest.getPassword()));
+        userEntity.setName(userRequestDto.getName());
+        userEntity.setUsername(userRequestDto.getUsername());
+        userEntity.setEmailAddress(userRequestDto.getEmailAddress());
+        userEntity.setPhoneNumber(userRequestDto.getPhoneNumber());
+        userEntity.setPassword(passwordEncoder().encode(userRequestDto.getPassword()));
 
         if (Objects.nonNull(profileImageFile)) {
             try {

@@ -2,7 +2,7 @@ package com.jd.twitterclonebackend.service.impl;
 
 import com.jd.twitterclonebackend.domain.FollowerEntity;
 import com.jd.twitterclonebackend.domain.UserEntity;
-import com.jd.twitterclonebackend.dto.UserRequest;
+import com.jd.twitterclonebackend.dto.UserRequestDto;
 import com.jd.twitterclonebackend.dto.UserResponse;
 import com.jd.twitterclonebackend.mapper.UserMapper;
 import com.jd.twitterclonebackend.repository.FollowerRepository;
@@ -41,23 +41,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserEntity> getUsers() {
         log.info("Fetching all users");
-        return userRepository.findAll();
+        return userRepository.findAllUsers();
     }
 
     @Override
     public void updateUserByUsername(String username,
-                                     UserRequest userRequest,
+                                     UserRequestDto userRequestDto,
                                      MultipartFile profileImageFile,
                                      MultipartFile backgroundImageFile) {
         // Find user in repository by its username
         UserEntity userEntity = userRepository
                 .findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username));
-
         // Map user response to user entity
         UserEntity updatedUserEntity = userMapper.mapFromDtoToEntity(
                 userEntity,
-                userRequest,
+                userRequestDto,
                 profileImageFile,
                 backgroundImageFile
         );

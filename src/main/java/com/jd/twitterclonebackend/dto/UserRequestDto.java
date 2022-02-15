@@ -1,11 +1,9 @@
 package com.jd.twitterclonebackend.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-public class UserRequest {
+public class UserRequestDto {
 
     private String name;
 

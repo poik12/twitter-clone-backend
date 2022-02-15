@@ -1,7 +1,7 @@
 package com.jd.twitterclonebackend.service;
 
 import com.jd.twitterclonebackend.domain.UserEntity;
-import com.jd.twitterclonebackend.dto.UserRequest;
+import com.jd.twitterclonebackend.dto.UserRequestDto;
 import com.jd.twitterclonebackend.dto.UserResponse;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,7 +16,7 @@ public interface UserService {
 
     // Update user details
     void updateUserByUsername(String username,
-                              UserRequest userRequest,
+                              UserRequestDto userRequestDto,
                               MultipartFile profileImageFile,
                               MultipartFile backgroundImageFile);
 
