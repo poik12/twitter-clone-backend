@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -23,6 +24,7 @@ public class CommentEntity {
     @Lob
     private String text;
 
+    @CreationTimestamp
     private Instant createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)

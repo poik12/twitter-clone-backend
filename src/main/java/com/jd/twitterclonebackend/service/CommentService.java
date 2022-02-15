@@ -1,16 +1,17 @@
 package com.jd.twitterclonebackend.service;
 
-import com.jd.twitterclonebackend.dto.CommentRequest;
-import com.jd.twitterclonebackend.dto.CommentResponse;
+import com.jd.twitterclonebackend.dto.CommentRequestDto;
+import com.jd.twitterclonebackend.dto.CommentResponseDto;
 
 import java.util.List;
 
 public interface CommentService {
 
-    void createComment(CommentRequest commentRequest);
+    void createComment(CommentRequestDto commentRequestDto);
 
-    List<CommentResponse> getAllCommentsForPost(Long postId);
+    List<CommentResponseDto> getAllCommentsForPost(Long postId);
 
-    List<CommentResponse> getAllCommentsForUser(String username);
+    List<CommentResponseDto> getAllCommentsForUser(String username);
 
+    void deleteCommentById(Long commentId);
 }

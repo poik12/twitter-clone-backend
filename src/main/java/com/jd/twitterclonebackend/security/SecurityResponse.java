@@ -1,15 +1,10 @@
 package com.jd.twitterclonebackend.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jd.twitterclonebackend.domain.RefreshTokenEntity;
-import com.jd.twitterclonebackend.domain.UserEntity;
-import com.jd.twitterclonebackend.dto.AuthResponse;
-import com.jd.twitterclonebackend.repository.UserRepository;
-import com.jd.twitterclonebackend.security.jwt.JwtProvider;
+import com.jd.twitterclonebackend.dto.AuthResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -30,7 +25,7 @@ public class SecurityResponse {
 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
-        AuthResponse authResponse = AuthResponse.builder()
+        AuthResponseDto authResponseDto = AuthResponseDto.builder()
                 .username(username)
                 .authenticationToken(accessToken)
                 .refreshToken(refreshToken)
@@ -39,7 +34,7 @@ public class SecurityResponse {
 
         new ObjectMapper().writeValue(
                 response.getOutputStream(),
-                authResponse
+                authResponseDto
         );
     }
 

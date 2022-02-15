@@ -167,8 +167,8 @@ public class AuthServiceImpl implements AuthService {
 
     // Refresh Access Token
     @Override
-    public AuthResponse refreshAccessToken(RefreshTokenRequest refreshTokenRequest) {
-        return refreshTokenProvider.refreshAccessToken(refreshTokenRequest);
+    public AuthResponseDto refreshAccessToken(RefreshTokenRequestDto refreshTokenRequestDto) {
+        return refreshTokenProvider.refreshAccessToken(refreshTokenRequestDto);
     }
 
     // TODO: doesnt work
