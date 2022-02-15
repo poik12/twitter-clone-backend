@@ -2,7 +2,7 @@ package com.jd.twitterclonebackend.mapper;
 
 import com.jd.twitterclonebackend.domain.UserEntity;
 import com.jd.twitterclonebackend.dto.UserRequestDto;
-import com.jd.twitterclonebackend.dto.UserResponse;
+import com.jd.twitterclonebackend.dto.UserResponseDto;
 import com.jd.twitterclonebackend.service.impl.PostServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -21,13 +21,13 @@ public class UserMapper {
 
     private final PostServiceImpl postService;
 
-    public UserResponse mapFromEntityToDto(UserEntity userEntity) {
+    public UserResponseDto mapFromEntityToDto(UserEntity userEntity) {
 
         if (Objects.isNull(userEntity)) {
             return null;
         }
 
-        return UserResponse.builder()
+        return UserResponseDto.builder()
                 .id(userEntity.getId())
                 .name(userEntity.getName())
                 .username(userEntity.getUsername())

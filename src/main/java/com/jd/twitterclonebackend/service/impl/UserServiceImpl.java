@@ -3,7 +3,7 @@ package com.jd.twitterclonebackend.service.impl;
 import com.jd.twitterclonebackend.domain.FollowerEntity;
 import com.jd.twitterclonebackend.domain.UserEntity;
 import com.jd.twitterclonebackend.dto.UserRequestDto;
-import com.jd.twitterclonebackend.dto.UserResponse;
+import com.jd.twitterclonebackend.dto.UserResponseDto;
 import com.jd.twitterclonebackend.mapper.UserMapper;
 import com.jd.twitterclonebackend.repository.FollowerRepository;
 import com.jd.twitterclonebackend.repository.UserRepository;
@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
     private final FollowerRepository followerRepository;
 
     @Override
-    public UserResponse getUserByUsername(String username) {
+    public UserResponseDto getUserByUsername(String username) {
         // Find user in repository by its username
         UserEntity userEntity = userRepository
                 .findByUsername(username)
@@ -39,9 +39,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserEntity> getUsers() {
+    public List<UserResponseDto> getUsers() {
         log.info("Fetching all users");
-        return userRepository.findAllUsers();
+        return userRepository
+                .findAll()
+                .stream()
+                .map(userEntity -> userMapper.mapFromEntityToDto(userEntity))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -81,11 +85,43 @@ public class UserServiceImpl implements UserService {
                 loggedUserEntity
         );
         followerRepository.save(followerEntity);
+        // Update no of following in logged user entity
+        loggedUserEntity.setFollowingNo(loggedUserEntity.getFollowingNo() + 1);
+        userRepository.save(loggedUserEntity);
+        // Update no of followers in followed user entity
+        userToFollow.setFollowerNo(userToFollow.getFollowerNo() + 1);
+        userRepository.save(userToFollow);
     }
 
+    @Transactional
     @Override
-    public List<UserResponse> getAllFollowers() {
+    public void unfollowUser(String username) {
+        // Find logged user
+        UserEntity loggedUserEntity = userDetailsService.currentLoggedUserEntity();
+        // Find user who will be unfollowed by its username
+        UserEntity userToUnfollow = userRepository
+                .findByUsername(username)
+                .orElseThrow(() ->
+                        new UsernameNotFoundException("User with username: " + username + " was not found")
+                );
+        // Find follower entity in db and delete
+        FollowerEntity followerEntity = followerRepository.findByToAndFrom(
+                userToUnfollow,
+                loggedUserEntity
+        );
+        followerRepository.delete(followerEntity);
+        // Update no of following in logged user entity
+        loggedUserEntity.setFollowingNo(loggedUserEntity.getFollowingNo() - 1);
+        userRepository.save(loggedUserEntity);
+        // Update no of followers in followed user entity
+        userToUnfollow.setFollowerNo(userToUnfollow.getFollowerNo() - 1);
+        userRepository.save(userToUnfollow);
+    }
 
+
+    @Override
+    public List<UserResponseDto> getAllFollowers() {
+        // Find logged user
         UserEntity loggedUserEntity = userDetailsService.currentLoggedUserEntity();
 
         return followerRepository
@@ -96,8 +132,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserResponse> getAllFollowings() {
-
+    public List<UserResponseDto> getAllFollowings() {
+        // Find logged user
         UserEntity loggedUserEntity = userDetailsService.currentLoggedUserEntity();
 
         return followerRepository

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jd.twitterclonebackend.domain.UserEntity;
 import com.jd.twitterclonebackend.dto.UserRequestDto;
-import com.jd.twitterclonebackend.dto.UserResponse;
+import com.jd.twitterclonebackend.dto.UserResponseDto;
 import com.jd.twitterclonebackend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,14 +22,14 @@ public class UserController {
 
     // GET USER DETAILS
     @GetMapping("/{username}")
-    public UserResponse getUserDetails(@PathVariable String username) {
+    public UserResponseDto getUserDetails(@PathVariable String username) {
         return userService.getUserByUsername(username);
     }
 
     // GET ALL USERS
-    // TODO: pagination etc.
+    // TODO: pagination etc. some nested exception
     @GetMapping
-    public ResponseEntity<List<UserEntity>> getUsers() {
+    public ResponseEntity<List<UserResponseDto>> getUsers() {
         return ResponseEntity.ok().body(userService.getUsers());
     }
 
@@ -61,15 +61,18 @@ public class UserController {
         userService.followUser(username);
     }
 
+    // UNFOLLOW USER BY ITS USERNAME
+    @PostMapping("/{username}/unfollow")
+    public void unfollowUser(@PathVariable String username) { userService.unfollowUser(username); }
     // GET USERS WHO FOLLOW LOGGED USER
     @GetMapping("/all-followers")
-    public List<UserResponse> getAllFollowers() {
+    public List<UserResponseDto> getAllFollowers() {
         return userService.getAllFollowers();
     }
 
     // GET USERS WHO ARE FOLLOWING BY LOGGED USER
     @GetMapping("/all-following")
-    public List<UserResponse> getAllFollowings() {
+    public List<UserResponseDto> getAllFollowings() {
         return userService.getAllFollowings();
     }
 
