@@ -3,6 +3,7 @@ package com.jd.twitterclonebackend.mapper;
 import com.jd.twitterclonebackend.domain.UserEntity;
 import com.jd.twitterclonebackend.dto.UserRequestDto;
 import com.jd.twitterclonebackend.dto.UserResponseDto;
+import com.jd.twitterclonebackend.service.FileService;
 import com.jd.twitterclonebackend.service.impl.PostServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,6 +21,8 @@ import java.util.Objects;
 public class UserMapper {
 
     private final PostServiceImpl postService;
+    private final FileService fileService;
+    private final PasswordEncoder passwordEncoder;
 
     public UserResponseDto mapFromEntityToDto(UserEntity userEntity) {
 
@@ -68,41 +71,32 @@ public class UserMapper {
                                          MultipartFile profileImageFile,
                                          MultipartFile backgroundImageFile) {
 
-        if (Objects.isNull(userRequestDto)) {
-            return null;
+        // TODO: Description not added yet
+        // TODO: Add username line in frontend
+
+        if (!userRequestDto.getName().isBlank()) {
+            userEntity.setName(userRequestDto.getName());
         }
-
-        if (userRequestDto.getUsername().equals("")) {
-            userRequestDto.setUsername(userEntity.getUsername());
+        if (!userRequestDto.getUsername().isBlank()) {
+            userEntity.setUsername(userRequestDto.getUsername());
         }
-
-//        TODO: Description, profile image, background image not added yet
-        userEntity.setName(userRequestDto.getName());
-        userEntity.setUsername(userRequestDto.getUsername());
-        userEntity.setEmailAddress(userRequestDto.getEmailAddress());
-        userEntity.setPhoneNumber(userRequestDto.getPhoneNumber());
-        userEntity.setPassword(passwordEncoder().encode(userRequestDto.getPassword()));
-
+        if (!userRequestDto.getEmailAddress().isBlank()) {
+            userEntity.setEmailAddress(userRequestDto.getUsername());
+        }
+        if (!userRequestDto.getPhoneNumber().isBlank()) {
+            userEntity.setPhoneNumber(userRequestDto.getPhoneNumber());
+        }
+        if (!userRequestDto.getPassword().isBlank()) {
+            userEntity.setPassword(passwordEncoder.encode(userRequestDto.getPassword()));
+        }
         if (Objects.nonNull(profileImageFile)) {
-            try {
-                userEntity.setUserProfilePicture(profileImageFile.getBytes());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            userEntity.setUserProfilePicture(fileService.convertImageFileToByteArray(profileImageFile));
         }
-
         if (Objects.nonNull(backgroundImageFile)) {
-            try {
-                userEntity.setUserBackgroundPicture(backgroundImageFile.getBytes());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            userEntity.setUserBackgroundPicture(fileService.convertImageFileToByteArray(backgroundImageFile));
         }
 
         return userEntity;
     }
 
-    private PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 }
