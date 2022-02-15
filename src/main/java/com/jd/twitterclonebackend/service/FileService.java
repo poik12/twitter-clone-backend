@@ -13,4 +13,8 @@ public interface FileService {
     Map<Long, byte[]> getAllImageFiles();
     // Get image file by post list
     Map<Long, byte[]> getImageFilesByPostList(List<PostEntity> postList);
+    // Get array from image path
+    byte[] convertImagePathToByteArray(String imagePath);
+    // Get array from multipart file
+    byte[] convertImageFileToByteArray(MultipartFile imageFile);
 }

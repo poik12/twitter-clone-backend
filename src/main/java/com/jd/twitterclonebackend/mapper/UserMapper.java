@@ -1,9 +1,9 @@
 package com.jd.twitterclonebackend.mapper;
 
 import com.jd.twitterclonebackend.domain.UserEntity;
-import com.jd.twitterclonebackend.dto.PostResponse;
-import com.jd.twitterclonebackend.dto.UserRequest;
-import com.jd.twitterclonebackend.dto.UserResponse;
+import com.jd.twitterclonebackend.dto.UserRequestDto;
+import com.jd.twitterclonebackend.dto.UserResponseDto;
+import com.jd.twitterclonebackend.service.FileService;
 import com.jd.twitterclonebackend.service.impl.PostServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -12,9 +12,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.Instant;
 import java.time.ZoneOffset;
-import java.util.List;
+import java.util.Date;
 import java.util.Objects;
 
 @Component
@@ -22,14 +21,16 @@ import java.util.Objects;
 public class UserMapper {
 
     private final PostServiceImpl postService;
+    private final FileService fileService;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserResponse mapFromEntityToDto(UserEntity userEntity) {
+    public UserResponseDto mapFromEntityToDto(UserEntity userEntity) {
 
         if (Objects.isNull(userEntity)) {
             return null;
         }
 
-        return UserResponse.builder()
+        return UserResponseDto.builder()
                 .id(userEntity.getId())
                 .name(userEntity.getName())
                 .username(userEntity.getUsername())
@@ -43,10 +44,10 @@ public class UserMapper {
                 .build();
     }
 
-    private String getDateOfCreation(Instant createAt) {
+    private String getDateOfCreation(Date createdAt) {
         // Get month and year from Instant created at
-        String month = createAt.atZone(ZoneOffset.UTC).getMonth().toString().toLowerCase();
-        int year = createAt.atZone(ZoneOffset.UTC).getYear();
+        String month = createdAt.toInstant().atZone(ZoneOffset.UTC).getMonth().toString().toLowerCase();
+        int year = createdAt.toInstant().atZone(ZoneOffset.UTC).getYear();
         // Return string eg. "August 2014"
         return month + " " + year;
     }
@@ -66,45 +67,36 @@ public class UserMapper {
 
 
     public UserEntity mapFromDtoToEntity(UserEntity userEntity,
-                                         UserRequest userRequest,
+                                         UserRequestDto userRequestDto,
                                          MultipartFile profileImageFile,
                                          MultipartFile backgroundImageFile) {
 
-        if (Objects.isNull(userRequest)) {
-            return null;
+        // TODO: Description not added yet
+        // TODO: Add username line in frontend
+
+        if (!userRequestDto.getName().isBlank()) {
+            userEntity.setName(userRequestDto.getName());
         }
-
-        if (userRequest.getUsername().equals("")) {
-            userRequest.setUsername(userEntity.getUsername());
+        if (!userRequestDto.getUsername().isBlank()) {
+            userEntity.setUsername(userRequestDto.getUsername());
         }
-
-//        TODO: Description, profile image, background image not added yet
-        userEntity.setName(userRequest.getName());
-        userEntity.setUsername(userRequest.getUsername());
-        userEntity.setEmailAddress(userRequest.getEmailAddress());
-        userEntity.setPhoneNumber(userRequest.getPhoneNumber());
-        userEntity.setPassword(passwordEncoder().encode(userRequest.getPassword()));
-
+        if (!userRequestDto.getEmailAddress().isBlank()) {
+            userEntity.setEmailAddress(userRequestDto.getUsername());
+        }
+        if (!userRequestDto.getPhoneNumber().isBlank()) {
+            userEntity.setPhoneNumber(userRequestDto.getPhoneNumber());
+        }
+        if (!userRequestDto.getPassword().isBlank()) {
+            userEntity.setPassword(passwordEncoder.encode(userRequestDto.getPassword()));
+        }
         if (Objects.nonNull(profileImageFile)) {
-            try {
-                userEntity.setUserProfilePicture(profileImageFile.getBytes());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            userEntity.setUserProfilePicture(fileService.convertImageFileToByteArray(profileImageFile));
         }
-
         if (Objects.nonNull(backgroundImageFile)) {
-            try {
-                userEntity.setUserBackgroundPicture(backgroundImageFile.getBytes());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            userEntity.setUserBackgroundPicture(fileService.convertImageFileToByteArray(backgroundImageFile));
         }
 
         return userEntity;
     }
 
-    private PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 }

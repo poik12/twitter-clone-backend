@@ -4,8 +4,8 @@ import com.github.marlonlom.utilities.timeago.TimeAgo;
 import com.jd.twitterclonebackend.domain.CommentEntity;
 import com.jd.twitterclonebackend.domain.PostEntity;
 import com.jd.twitterclonebackend.domain.UserEntity;
-import com.jd.twitterclonebackend.dto.CommentRequest;
-import com.jd.twitterclonebackend.dto.CommentResponse;
+import com.jd.twitterclonebackend.dto.CommentRequestDto;
+import com.jd.twitterclonebackend.dto.CommentResponseDto;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -14,29 +14,28 @@ import java.util.Objects;
 @Component
 public class CommentMapper {
 
-    public CommentEntity mapFromDtoToEntity(CommentRequest commentRequest,
+    public CommentEntity mapFromDtoToEntity(CommentRequestDto commentRequestDto,
                                             PostEntity postEntity,
                                             UserEntity userEntity) {
 
-        if (Objects.isNull(commentRequest)) {
+        if (Objects.isNull(commentRequestDto)) {
             return null;
         }
 
         return CommentEntity.builder()
                 .post(postEntity)
                 .user(userEntity)
-                .createdAt(Instant.now())
-                .text(commentRequest.getText())
+                .text(commentRequestDto.getText())
                 .build();
     }
 
-    public CommentResponse mapFromEntityToDto(CommentEntity commentEntity) {
+    public CommentResponseDto mapFromEntityToDto(CommentEntity commentEntity) {
 
         if (Objects.isNull(commentEntity)) {
             return null;
         }
 
-        return CommentResponse.builder()
+        return CommentResponseDto.builder()
                 .name(commentEntity.getUser().getName())
                 .username(commentEntity.getUser().getUsername())
                 .profileImage(commentEntity.getUser().getUserProfilePicture())
@@ -46,7 +45,7 @@ public class CommentMapper {
                 .build();
     }
 
-    // Creation time of comment
+    // Creation time of comment passed when it was created
     String getCommentTimeDuration(CommentEntity commentEntity) {
         return TimeAgo.using(commentEntity.getCreatedAt().toEpochMilli());
     }

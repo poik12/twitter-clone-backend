@@ -1,12 +1,15 @@
 package com.jd.twitterclonebackend.service.impl;
 
 import com.jd.twitterclonebackend.domain.UserEntity;
-import com.jd.twitterclonebackend.domain.UserRole;
+import com.jd.twitterclonebackend.enums.InvalidUserEnum;
+import com.jd.twitterclonebackend.enums.UserRole;
 import com.jd.twitterclonebackend.domain.VerificationTokenEntity;
 import com.jd.twitterclonebackend.dto.*;
-import com.jd.twitterclonebackend.exception.InvalidTokenEnum;
-import com.jd.twitterclonebackend.exception.InvalidTokenException;
+import com.jd.twitterclonebackend.enums.InvalidAuthenticationEnum;
+import com.jd.twitterclonebackend.enums.InvalidTokenEnum;
+import com.jd.twitterclonebackend.exception.TokenException;
 import com.jd.twitterclonebackend.exception.UserAlreadyExistsException;
+import com.jd.twitterclonebackend.exception.UserException;
 import com.jd.twitterclonebackend.mapper.AuthMapper;
 import com.jd.twitterclonebackend.repository.RefreshTokenRepository;
 import com.jd.twitterclonebackend.repository.UserRepository;
@@ -15,6 +18,7 @@ import com.jd.twitterclonebackend.security.jwt.RefreshTokenProvider;
 import com.jd.twitterclonebackend.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,17 +41,18 @@ public class AuthServiceImpl implements AuthService {
 
     private final MailServiceImpl mailService;
     private final UserDetailsServiceImpl userDetailsService;
+
     private final RefreshTokenProvider refreshTokenProvider;
 
     // Create User in Db
     @Override
-    public UserEntity createUserAccount(RegisterRequest registerRequest) {
+    public UserEntity createUserAccount(RegisterRequestDto registerRequestDto) {
         // Check if user exists in database
-        validateIfUserExists(registerRequest);
+        validateIfUserExists(registerRequestDto);
         // Map User Dto to User Entity
-        log.info("Saving new user {} to the database", registerRequest.getName());
-        UserEntity userEntity = authMapper.mapFromDtoToEntity(registerRequest);
+        UserEntity userEntity = authMapper.mapFromDtoToEntity(registerRequestDto);
         // Save User in Repository
+        log.info("Saving new user {} to the database", registerRequestDto.getName());
         userRepository.save(userEntity);
         // Generate verification token for created User
         String token = generateVerificationToken(userEntity);
@@ -63,20 +68,24 @@ public class AuthServiceImpl implements AuthService {
     }
 
     // Validate User
-    private void validateIfUserExists(RegisterRequest registerRequest) {
+    private void validateIfUserExists(RegisterRequestDto registerRequestDto) {
+        // Check if user with username currently exists in db, if exists throw exception
         userRepository
-                .findByUsername(registerRequest.getUsername())
+                .findByUsername(registerRequestDto.getUsername())
                 .ifPresent((userEntity) -> {
                     throw new UserAlreadyExistsException(
-                            "User with username: " + userEntity.getUsername() + " already exists"
+                            InvalidAuthenticationEnum.USER_ALREADY_EXISTS,
+                            userEntity.getUsername()
                     );
                 });
 
+        // Check if user with email address currently exists in db, if exists throw exception
         userRepository
-                .findByEmailAddress(registerRequest.getEmailAddress())
+                .findByEmailAddress(registerRequestDto.getEmailAddress())
                 .ifPresent((userEntity) -> {
                     throw new UserAlreadyExistsException(
-                            "User with email address: " + userEntity.getEmailAddress() + " already exists"
+                            InvalidAuthenticationEnum.USER_ALREADY_EXISTS,
+                            userEntity.getEmailAddress()
                     );
                 });
     }
@@ -101,38 +110,48 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public String confirmUserAccount(String token) {
-        // Find token in db
-        VerificationTokenEntity verificationTokenEntityInDb = verificationTokenRepository
-                .findByToken(token)
-                .orElseThrow(() -> new InvalidTokenException(InvalidTokenEnum.INVALID_VERIFICATION_TOKEN.getMessage()));
-        // Check if token isn't confirmed
-        if (verificationTokenEntityInDb.getConfirmedAt() != null) {
-            throw new IllegalStateException("Email already confirmed");
-        }
-        // Find user to enable in db
-        UserEntity user = userRepository
-                .findByUsername(verificationTokenEntityInDb.getUser().getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException(
-                        "User with username: " + verificationTokenEntityInDb.getUser().getUsername() + " does not exist"
-                ));
-        // Check if user is enabled
-        if (user.getEnabled()) {
-            throw new RuntimeException("User is already confirmed");
-        }
-        // Enable user and save in repository
-        user.setEnabled(true);
-        userRepository.save(user);
-
-        // Update token confirmation
+        // Validate verification token
+        VerificationTokenEntity verificationTokenEntityInDb = validateVerificationToken(token);
+        // Validate User with verification token
+        validateUserByVerificationToken(verificationTokenEntityInDb);
+        // Update token confirmation in db
         verificationTokenRepository.updateConfirmedAt(
                 token,
                 Instant.now()
         );
-
-        return "Email has been confirmed";
+        return InvalidAuthenticationEnum.EMAIL_CONFIRMED.getMessage();
     }
 
-//    TODO: delete account
+    private void validateUserByVerificationToken(VerificationTokenEntity verificationTokenEntityInDb) {
+        // Find user to enable in db
+        UserEntity user = userRepository
+                .findByUsername(verificationTokenEntityInDb.getUser().getUsername())
+                .orElseThrow(() -> new UserException(
+                        InvalidUserEnum.USER_NOT_FOUND_WITH_USERNAME.getMessage() + verificationTokenEntityInDb.getUser().getUsername()
+                ));
+        // Check if user is enabled
+        if (user.getEnabled()) {
+            throw new TokenException(InvalidTokenEnum.USER_ALREADY_CONFIRMED.getMessage());
+        }
+        // Enable user and save in repository
+        user.setEnabled(true);
+        userRepository.save(user);
+    }
+
+    @NotNull
+    private VerificationTokenEntity validateVerificationToken(String token) {
+        // Find token in db
+        VerificationTokenEntity verificationTokenEntityInDb = verificationTokenRepository
+                .findByToken(token)
+                .orElseThrow(() -> new TokenException(InvalidTokenEnum.INVALID_VERIFICATION_TOKEN.getMessage()));
+        // Check if token isn't confirmed
+        if (verificationTokenEntityInDb.getConfirmedAt() != null) {
+            throw new TokenException(InvalidTokenEnum.EMAIL_ALREADY_CONFIRMED.getMessage());
+        }
+        return verificationTokenEntityInDb;
+    }
+
+    //    TODO: delete account
     // Delete account
     @Override
     @Transactional
@@ -148,8 +167,8 @@ public class AuthServiceImpl implements AuthService {
 
     // Refresh Access Token
     @Override
-    public AuthResponse refreshAccessToken(RefreshTokenRequest refreshTokenRequest) {
-        return refreshTokenProvider.refreshAccessToken(refreshTokenRequest);
+    public AuthResponseDto refreshAccessToken(RefreshTokenRequestDto refreshTokenRequestDto) {
+        return refreshTokenProvider.refreshAccessToken(refreshTokenRequestDto);
     }
 
     // TODO: doesnt work

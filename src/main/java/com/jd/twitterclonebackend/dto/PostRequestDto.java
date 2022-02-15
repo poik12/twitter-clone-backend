@@ -7,10 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PostRequest {
+public class PostRequestDto {
 
     private String description;
-
 //    private String url;
 
 }

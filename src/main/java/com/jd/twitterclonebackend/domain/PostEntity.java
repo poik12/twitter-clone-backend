@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -28,11 +29,18 @@ public class PostEntity implements Serializable {
 
     private String url;
 
+    @CreationTimestamp
     private Instant createdAt;
+
+    private Long commentNo;
 
     // Many posts created by one user
     @ManyToOne(fetch = FetchType.LAZY) // some error during getting all post from db
     private UserEntity user;
+
+    @OneToMany(mappedBy = "post")
+    private List<CommentEntity> comments = new ArrayList<>();
+
 
     // One post can have multiple images
 //    @OneToMany(cascade = CascadeType.ALL)

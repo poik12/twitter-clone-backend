@@ -1,4 +1,4 @@
-package com.jd.twitterclonebackend.exception;
+package com.jd.twitterclonebackend.enums;
 
 public enum InvalidEmailEnum {
 

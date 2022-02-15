@@ -1,6 +1,7 @@
 package com.jd.twitterclonebackend.security.filter;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.jd.twitterclonebackend.configuration.SecurityConfig;
 import com.jd.twitterclonebackend.security.SecurityResponse;
 import com.jd.twitterclonebackend.security.jwt.AccessTokenProvider;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +38,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
 //            filterChain.doFilter(request, response);
 //        }
 
-        if (request.getServletPath().equals("/api/login")) {
+        if (request.getServletPath().equals(SecurityConfig.API_VERSION + "/auth/login")) {
             filterChain.doFilter(request, response);
         }
 

@@ -5,11 +5,15 @@ import com.jd.twitterclonebackend.domain.PostEntity;
 import com.jd.twitterclonebackend.repository.ImageFileRepository;
 import com.jd.twitterclonebackend.service.FileService;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.HashMap;
@@ -93,8 +97,9 @@ public class FileServiceImpl implements FileService {
                 .stream()
                 .collect(Collectors.toMap(
                         imageFileEntity -> imageFileEntity.getPost().getId(),
-                        imageFileEntity -> decompressBytes(imageFileEntity.getContent())
-                ));
+                        imageFileEntity -> decompressBytes(imageFileEntity.getContent()
+                        ))
+                );
 
     }
 
@@ -146,5 +151,34 @@ public class FileServiceImpl implements FileService {
 
         return outputStream.toByteArray();
     }
+
+    // CONVERT IMAGE TO BYTE ARRAY USING IMAGE PATH
+    @Override
+    @Nullable
+    public byte[] convertImagePathToByteArray(String imagePath) {
+        byte[] pictureBytes = null;
+
+        try {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            BufferedImage bufferedImage = ImageIO.read(new File(imagePath));
+            ImageIO.write(bufferedImage, "png", byteArrayOutputStream);
+            pictureBytes = byteArrayOutputStream.toByteArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return pictureBytes;
+    }
+
+    // CONVERT IMAGE TO BYTE ARRAY USING IMAGE FILE
+    @Override
+    public byte[] convertImageFileToByteArray(MultipartFile imageFile) {
+        try {
+            return imageFile.getBytes();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
 }

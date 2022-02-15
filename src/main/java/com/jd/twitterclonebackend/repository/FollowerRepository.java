@@ -20,4 +20,6 @@ public interface FollowerRepository extends JpaRepository<FollowerEntity, Long> 
     @Query("SELECT e.to FROM FollowerEntity e WHERE e.from = :user")
     List<UserEntity> getAllFollowingsByUser(UserEntity user);
 
+    // Find followed and following users by their ids
+    FollowerEntity findByToAndFrom(UserEntity followedUserId, UserEntity followingUserId);
 }

@@ -4,10 +4,10 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.jd.twitterclonebackend.domain.RefreshTokenEntity;
 import com.jd.twitterclonebackend.domain.UserEntity;
-import com.jd.twitterclonebackend.dto.AuthResponse;
-import com.jd.twitterclonebackend.dto.RefreshTokenRequest;
-import com.jd.twitterclonebackend.exception.InvalidTokenEnum;
-import com.jd.twitterclonebackend.exception.InvalidTokenException;
+import com.jd.twitterclonebackend.dto.AuthResponseDto;
+import com.jd.twitterclonebackend.dto.RefreshTokenRequestDto;
+import com.jd.twitterclonebackend.enums.InvalidTokenEnum;
+import com.jd.twitterclonebackend.exception.TokenException;
 import com.jd.twitterclonebackend.repository.RefreshTokenRepository;
 import com.jd.twitterclonebackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -110,10 +110,10 @@ public class RefreshTokenProvider extends JwtProvider {
         // Find refresh token in database
         RefreshTokenEntity refreshTokenEntityFromDb = refreshTokenRepository
                 .findByToken(refreshToken)
-                .orElseThrow(() -> new InvalidTokenException(InvalidTokenEnum.INVALID_REFRESH_TOKEN.getMessage()));
+                .orElseThrow(() -> new TokenException(InvalidTokenEnum.INVALID_REFRESH_TOKEN.getMessage()));
         // Check if refresh token has not expired
         if (refreshTokenEntityFromDb.getExpiresAt().isBefore(Instant.now())) {
-            throw new InvalidTokenException(InvalidTokenEnum.REFRESH_TOKEN_EXPIRED.getMessage());
+            throw new TokenException(InvalidTokenEnum.REFRESH_TOKEN_EXPIRED.getMessage());
         }
         return refreshTokenEntityFromDb;
     }
@@ -124,14 +124,14 @@ public class RefreshTokenProvider extends JwtProvider {
     }
 
     // Refresh access token
-    public AuthResponse refreshAccessToken(RefreshTokenRequest refreshTokenRequest) {
+    public AuthResponseDto refreshAccessToken(RefreshTokenRequestDto refreshTokenRequestDto) {
 
 
 
         // Check if refresh Token is valid
-        RefreshTokenEntity refreshTokenEntity = validateRefreshToken(refreshTokenRequest.getRefreshToken());
+        RefreshTokenEntity refreshTokenEntity = validateRefreshToken(refreshTokenRequestDto.getRefreshToken());
         // Decode JWT(Remove Bearer from JWT, Verify algorithm signature)
-        DecodedJWT decodedJWT = decodeJwt("Bearer " + refreshTokenRequest.getRefreshToken());
+        DecodedJWT decodedJWT = decodeJwt("Bearer " + refreshTokenRequestDto.getRefreshToken());
         // Get username from decoded JWT
         String username = decodedJWT.getSubject();
         // Check if user exists in database
@@ -141,11 +141,11 @@ public class RefreshTokenProvider extends JwtProvider {
         // Generate new access token for user
         String accessToken = accessTokenProvider.refreshAccessTokenUserEntity(userEntity);
         // Create response for user
-        return AuthResponse.builder()
+        return AuthResponseDto.builder()
                 .username(username)
                 .authenticationToken(accessToken)
                 .expiresAt(String.valueOf(EXPIRATION_TIME_OF_ACCESS_TOKEN))
-                .refreshToken(refreshTokenRequest.getRefreshToken())
+                .refreshToken(refreshTokenRequestDto.getRefreshToken())
                 .build();
     }
 

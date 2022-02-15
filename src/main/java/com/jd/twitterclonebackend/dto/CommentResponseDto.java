@@ -9,11 +9,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CommentRequest {
+public class CommentResponseDto {
 
     private String username;
 
+    private String name;
+
+    private byte[] profileImage;
+
     private Long postId;
+
+//    private Instant createdAt;
+
+    private String timeOfCreation;
 
     private String text;
 
