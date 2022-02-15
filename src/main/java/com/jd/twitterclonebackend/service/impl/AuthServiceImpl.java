@@ -1,13 +1,15 @@
 package com.jd.twitterclonebackend.service.impl;
 
 import com.jd.twitterclonebackend.domain.UserEntity;
+import com.jd.twitterclonebackend.enums.InvalidUserEnum;
 import com.jd.twitterclonebackend.enums.UserRole;
 import com.jd.twitterclonebackend.domain.VerificationTokenEntity;
 import com.jd.twitterclonebackend.dto.*;
-import com.jd.twitterclonebackend.enums.AuthenticationMessageEnum;
+import com.jd.twitterclonebackend.enums.InvalidAuthenticationEnum;
 import com.jd.twitterclonebackend.enums.InvalidTokenEnum;
-import com.jd.twitterclonebackend.exception.InvalidTokenException;
+import com.jd.twitterclonebackend.exception.TokenException;
 import com.jd.twitterclonebackend.exception.UserAlreadyExistsException;
+import com.jd.twitterclonebackend.exception.UserException;
 import com.jd.twitterclonebackend.mapper.AuthMapper;
 import com.jd.twitterclonebackend.repository.RefreshTokenRepository;
 import com.jd.twitterclonebackend.repository.UserRepository;
@@ -72,7 +74,7 @@ public class AuthServiceImpl implements AuthService {
                 .findByUsername(registerRequestDto.getUsername())
                 .ifPresent((userEntity) -> {
                     throw new UserAlreadyExistsException(
-                            AuthenticationMessageEnum.USER_ALREADY_EXISTS,
+                            InvalidAuthenticationEnum.USER_ALREADY_EXISTS,
                             userEntity.getUsername()
                     );
                 });
@@ -82,7 +84,7 @@ public class AuthServiceImpl implements AuthService {
                 .findByEmailAddress(registerRequestDto.getEmailAddress())
                 .ifPresent((userEntity) -> {
                     throw new UserAlreadyExistsException(
-                            AuthenticationMessageEnum.USER_ALREADY_EXISTS,
+                            InvalidAuthenticationEnum.USER_ALREADY_EXISTS,
                             userEntity.getEmailAddress()
                     );
                 });
@@ -117,19 +119,19 @@ public class AuthServiceImpl implements AuthService {
                 token,
                 Instant.now()
         );
-        return AuthenticationMessageEnum.EMAIL_CONFIRMED.getMessage();
+        return InvalidAuthenticationEnum.EMAIL_CONFIRMED.getMessage();
     }
 
     private void validateUserByVerificationToken(VerificationTokenEntity verificationTokenEntityInDb) {
         // Find user to enable in db
         UserEntity user = userRepository
                 .findByUsername(verificationTokenEntityInDb.getUser().getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException(
-                        "User with username: " + verificationTokenEntityInDb.getUser().getUsername() + " does not exist"
+                .orElseThrow(() -> new UserException(
+                        InvalidUserEnum.USER_NOT_FOUND_WITH_USERNAME.getMessage() + verificationTokenEntityInDb.getUser().getUsername()
                 ));
         // Check if user is enabled
         if (user.getEnabled()) {
-            throw new InvalidTokenException(InvalidTokenEnum.USER_ALREADY_CONFIRMED.getMessage());
+            throw new TokenException(InvalidTokenEnum.USER_ALREADY_CONFIRMED.getMessage());
         }
         // Enable user and save in repository
         user.setEnabled(true);
@@ -141,10 +143,10 @@ public class AuthServiceImpl implements AuthService {
         // Find token in db
         VerificationTokenEntity verificationTokenEntityInDb = verificationTokenRepository
                 .findByToken(token)
-                .orElseThrow(() -> new InvalidTokenException(InvalidTokenEnum.INVALID_VERIFICATION_TOKEN.getMessage()));
+                .orElseThrow(() -> new TokenException(InvalidTokenEnum.INVALID_VERIFICATION_TOKEN.getMessage()));
         // Check if token isn't confirmed
         if (verificationTokenEntityInDb.getConfirmedAt() != null) {
-            throw new InvalidTokenException(InvalidTokenEnum.EMAIL_ALREADY_CONFIRMED.getMessage());
+            throw new TokenException(InvalidTokenEnum.EMAIL_ALREADY_CONFIRMED.getMessage());
         }
         return verificationTokenEntityInDb;
     }

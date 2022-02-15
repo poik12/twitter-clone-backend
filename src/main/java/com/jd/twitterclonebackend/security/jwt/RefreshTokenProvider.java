@@ -7,7 +7,7 @@ import com.jd.twitterclonebackend.domain.UserEntity;
 import com.jd.twitterclonebackend.dto.AuthResponse;
 import com.jd.twitterclonebackend.dto.RefreshTokenRequest;
 import com.jd.twitterclonebackend.enums.InvalidTokenEnum;
-import com.jd.twitterclonebackend.exception.InvalidTokenException;
+import com.jd.twitterclonebackend.exception.TokenException;
 import com.jd.twitterclonebackend.repository.RefreshTokenRepository;
 import com.jd.twitterclonebackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -110,10 +110,10 @@ public class RefreshTokenProvider extends JwtProvider {
         // Find refresh token in database
         RefreshTokenEntity refreshTokenEntityFromDb = refreshTokenRepository
                 .findByToken(refreshToken)
-                .orElseThrow(() -> new InvalidTokenException(InvalidTokenEnum.INVALID_REFRESH_TOKEN.getMessage()));
+                .orElseThrow(() -> new TokenException(InvalidTokenEnum.INVALID_REFRESH_TOKEN.getMessage()));
         // Check if refresh token has not expired
         if (refreshTokenEntityFromDb.getExpiresAt().isBefore(Instant.now())) {
-            throw new InvalidTokenException(InvalidTokenEnum.REFRESH_TOKEN_EXPIRED.getMessage());
+            throw new TokenException(InvalidTokenEnum.REFRESH_TOKEN_EXPIRED.getMessage());
         }
         return refreshTokenEntityFromDb;
     }

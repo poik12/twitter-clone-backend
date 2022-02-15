@@ -93,8 +93,9 @@ public class FileServiceImpl implements FileService {
                 .stream()
                 .collect(Collectors.toMap(
                         imageFileEntity -> imageFileEntity.getPost().getId(),
-                        imageFileEntity -> decompressBytes(imageFileEntity.getContent())
-                ));
+                        imageFileEntity -> decompressBytes(imageFileEntity.getContent()
+                        ))
+                );
 
     }
 

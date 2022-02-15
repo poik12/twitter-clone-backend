@@ -5,7 +5,7 @@ import com.jd.twitterclonebackend.domain.PostEntity;
 import com.jd.twitterclonebackend.domain.UserEntity;
 import com.jd.twitterclonebackend.dto.CommentRequest;
 import com.jd.twitterclonebackend.dto.CommentResponse;
-import com.jd.twitterclonebackend.exception.PostNotFoundException;
+import com.jd.twitterclonebackend.exception.PostException;
 import com.jd.twitterclonebackend.mapper.CommentMapper;
 import com.jd.twitterclonebackend.repository.CommentRepository;
 import com.jd.twitterclonebackend.repository.PostRepository;
@@ -33,7 +33,7 @@ public class CommentServiceImpl implements CommentService {
 
         // Find post for comment
         PostEntity postEntity = postRepository.findById(commentRequest.getPostId())
-                .orElseThrow(() -> new PostNotFoundException(
+                .orElseThrow(() -> new PostException(
                         "Post with id: " + commentRequest.getPostId() + " for comment being created was now found"
                 ));
 
@@ -58,7 +58,7 @@ public class CommentServiceImpl implements CommentService {
         // Find post with comments in post repository
         PostEntity postEntity = postRepository
                 .findById(postId)
-                .orElseThrow(() -> new PostNotFoundException(
+                .orElseThrow(() -> new PostException(
                         "Post with id: " + postId + " for comment being created was now found"
                 ));
 

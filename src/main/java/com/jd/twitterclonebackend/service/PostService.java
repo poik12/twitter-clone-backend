@@ -1,7 +1,7 @@
 package com.jd.twitterclonebackend.service;
 
-import com.jd.twitterclonebackend.dto.PostRequest;
-import com.jd.twitterclonebackend.dto.PostResponse;
+import com.jd.twitterclonebackend.dto.PostRequestDto;
+import com.jd.twitterclonebackend.dto.PostResponseDto;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -12,18 +12,18 @@ public interface PostService {
 //    void addPost(PostRequest postRequest);
 
     // Get all posts
-    List<PostResponse> getAllPosts();
+    List<PostResponseDto> getAllPosts();
 
     // Get single post by id
-    PostResponse getPostById(Long postId);
+    PostResponseDto getPostById(Long postId);
 
     // Get posts by Username
-    List<PostResponse> getPostsByUsername(String username);
+    List<PostResponseDto> getPostsByUsername(String username);
 
     //TODO: Get Post by Hashtag list?
 
     // Add new post
-    void addPost(MultipartFile file, PostRequest postRequest);
+    void addPost(MultipartFile file, PostRequestDto postRequestDto);
 
     void deletePostById(Long postId);
 }

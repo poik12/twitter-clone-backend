@@ -1,11 +1,13 @@
 package com.jd.twitterclonebackend.service.impl;
 
-import com.jd.twitterclonebackend.domain.ImageFileEntity;
 import com.jd.twitterclonebackend.domain.PostEntity;
 import com.jd.twitterclonebackend.domain.UserEntity;
-import com.jd.twitterclonebackend.dto.PostRequest;
-import com.jd.twitterclonebackend.dto.PostResponse;
-import com.jd.twitterclonebackend.exception.PostNotFoundException;
+import com.jd.twitterclonebackend.dto.PostRequestDto;
+import com.jd.twitterclonebackend.dto.PostResponseDto;
+import com.jd.twitterclonebackend.enums.InvalidPostEnum;
+import com.jd.twitterclonebackend.enums.InvalidUserEnum;
+import com.jd.twitterclonebackend.exception.PostException;
+import com.jd.twitterclonebackend.exception.UserException;
 import com.jd.twitterclonebackend.mapper.PostMapper;
 import com.jd.twitterclonebackend.repository.CommentRepository;
 import com.jd.twitterclonebackend.repository.ImageFileRepository;
@@ -35,11 +37,11 @@ public class PostServiceImpl implements PostService {
     private final ImageFileRepository imageFileRepository;
 
     @Override
-    public void addPost( MultipartFile file, PostRequest postRequest) {
-        // User who created post
+    public void addPost(MultipartFile file, PostRequestDto postRequestDto) {
+        // Get User who created post
         UserEntity userEntity = userDetailsService.currentLoggedUserEntity();
         // Map Post from request to post entity
-        PostEntity postEntity = postMapper.mapFromDtoToEntity(postRequest, userEntity);
+        PostEntity postEntity = postMapper.mapFromDtoToEntity(postRequestDto, userEntity);
         // Save mapped post in repository
         postRepository.save(postEntity);
         // If file is not empty - upload into db
@@ -53,7 +55,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<PostResponse> getAllPosts() {
+    public List<PostResponseDto> getAllPosts() {
         // Get map of post id and content in byte from db
         Map<Long, byte[]> imageFilesMap = fileService.getAllImageFiles();
 
@@ -69,12 +71,12 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostResponse getPostById(Long postId) {
+    public PostResponseDto getPostById(Long postId) {
         // Find post by id
         PostEntity postEntity = postRepository
                 .findById(postId)
                 .orElseThrow(() ->
-                        new PostNotFoundException("Post with id: " + postId + "was not found")
+                        new PostException(InvalidPostEnum.POST_NOT_FOUND.getMessage() + postId)
                 );
 
         // Collect found post entity to list
@@ -93,12 +95,12 @@ public class PostServiceImpl implements PostService {
     // TODO: update map
     @Override
     @Transactional
-    public List<PostResponse> getPostsByUsername(String username) {
+    public List<PostResponseDto> getPostsByUsername(String username) {
         // Find user in user repository
         UserEntity userEntity = userRepository
                 .findByUsername(username)
                 .orElseThrow(() ->
-                        new UsernameNotFoundException("User with username: " + username + " was not found")
+                        new UserException(InvalidUserEnum.USER_NOT_FOUND_WITH_USERNAME.getMessage() + username)
                 );
 
         // Find all posts by user entity, map them to dto and return

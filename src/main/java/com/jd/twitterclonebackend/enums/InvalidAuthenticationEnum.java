@@ -1,6 +1,6 @@
 package com.jd.twitterclonebackend.enums;
 
-public enum AuthenticationMessageEnum {
+public enum InvalidAuthenticationEnum {
 
     USER_ALREADY_EXISTS("user already exists with: "),
     USER_NOT_FOUND("user not found with: "),
@@ -9,7 +9,7 @@ public enum AuthenticationMessageEnum {
 
     private final String message;
 
-    AuthenticationMessageEnum(String message) {
+    InvalidAuthenticationEnum(String message) {
         this.message = message;
     }
 
