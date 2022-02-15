@@ -1,8 +1,8 @@
 package com.jd.twitterclonebackend.mapper;
 
 import com.jd.twitterclonebackend.domain.UserEntity;
-import com.jd.twitterclonebackend.domain.UserRole;
-import com.jd.twitterclonebackend.dto.RegisterRequest;
+import com.jd.twitterclonebackend.enums.UserRole;
+import com.jd.twitterclonebackend.dto.RegisterRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,19 +17,18 @@ public class AuthMapper {
 
     private final PasswordEncoder passwordEncoder;
 
-    public UserEntity mapFromDtoToEntity(RegisterRequest registerRequest) {
+    public UserEntity mapFromDtoToEntity(RegisterRequestDto registerRequestDto) {
 
-        if (Objects.isNull(registerRequest)) {
+        if (Objects.isNull(registerRequestDto)) {
             return null;
         }
 
         return UserEntity.builder()
-                .name(registerRequest.getName())
-                .emailAddress(registerRequest.getEmailAddress())
-                .username(registerRequest.getUsername())
-                .password(passwordEncoder().encode(registerRequest.getPassword()))
-                .phoneNumber(registerRequest.getPhoneNumber())
-                .createdAt(Instant.now())
+                .name(registerRequestDto.getName())
+                .emailAddress(registerRequestDto.getEmailAddress())
+                .username(registerRequestDto.getUsername())
+                .password(passwordEncoder().encode(registerRequestDto.getPassword()))
+                .phoneNumber(registerRequestDto.getPhoneNumber())
                 .enabled(false)
                 .userRole(UserRole.ROLE_USER)
                 .followerNo(0L)

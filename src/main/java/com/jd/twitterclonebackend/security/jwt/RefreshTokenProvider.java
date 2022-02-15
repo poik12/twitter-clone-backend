@@ -6,7 +6,7 @@ import com.jd.twitterclonebackend.domain.RefreshTokenEntity;
 import com.jd.twitterclonebackend.domain.UserEntity;
 import com.jd.twitterclonebackend.dto.AuthResponse;
 import com.jd.twitterclonebackend.dto.RefreshTokenRequest;
-import com.jd.twitterclonebackend.exception.InvalidTokenEnum;
+import com.jd.twitterclonebackend.enums.InvalidTokenEnum;
 import com.jd.twitterclonebackend.exception.InvalidTokenException;
 import com.jd.twitterclonebackend.repository.RefreshTokenRepository;
 import com.jd.twitterclonebackend.repository.UserRepository;

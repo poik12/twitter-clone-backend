@@ -1,14 +1,14 @@
 package com.jd.twitterclonebackend.service;
 
 import com.jd.twitterclonebackend.domain.UserEntity;
-import com.jd.twitterclonebackend.domain.UserRole;
+import com.jd.twitterclonebackend.enums.UserRole;
 import com.jd.twitterclonebackend.dto.AuthResponse;
 import com.jd.twitterclonebackend.dto.RefreshTokenRequest;
-import com.jd.twitterclonebackend.dto.RegisterRequest;
+import com.jd.twitterclonebackend.dto.RegisterRequestDto;
 
 public interface AuthService {
     // Create account
-    UserEntity createUserAccount(RegisterRequest registerRequest);
+    UserEntity createUserAccount(RegisterRequestDto registerRequestDto);
     // Confirm account
     String confirmUserAccount(String token);
     // Delete account

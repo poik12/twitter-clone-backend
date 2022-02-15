@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.Instant;
 import java.time.ZoneOffset;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -43,10 +44,10 @@ public class UserMapper {
                 .build();
     }
 
-    private String getDateOfCreation(Instant createAt) {
+    private String getDateOfCreation(Date createdAt) {
         // Get month and year from Instant created at
-        String month = createAt.atZone(ZoneOffset.UTC).getMonth().toString().toLowerCase();
-        int year = createAt.atZone(ZoneOffset.UTC).getYear();
+        String month = createdAt.toInstant().atZone(ZoneOffset.UTC).getMonth().toString().toLowerCase();
+        int year = createdAt.toInstant().atZone(ZoneOffset.UTC).getYear();
         // Return string eg. "August 2014"
         return month + " " + year;
     }
