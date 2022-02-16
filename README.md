@@ -35,7 +35,7 @@ Dependencies
 
 Architecture
 ---------------------------------------
-<img src = "readme-images/twitter-clone-architecture.png" width = 1000 height = 300>
+<img src = "readme_images/twitter-clone-architecture.jpg" >
 
 Entity Relationship Diagram
 ---------------------------------------
