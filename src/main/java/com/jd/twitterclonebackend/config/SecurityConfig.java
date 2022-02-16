@@ -1,6 +1,5 @@
-package com.jd.twitterclonebackend.configuration;
+package com.jd.twitterclonebackend.config;
 
-import com.jd.twitterclonebackend.repository.UserRepository;
 import com.jd.twitterclonebackend.security.filter.CustomAuthenticationFilter;
 import com.jd.twitterclonebackend.security.filter.CustomAuthorizationFilter;
 import com.jd.twitterclonebackend.security.jwt.AccessTokenProvider;
@@ -12,6 +11,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -71,21 +71,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         // Swagger API
-        httpSecurity.authorizeRequests().antMatchers(
-                "/swagger-ui.html",
-                "/v2/api-docs",
-                "/webjars/**",
-                "/swagger-resources/**").permitAll();
+        httpSecurity.authorizeRequests()
+                .antMatchers(
+                        "/v2/api-docs",
+                        "/swagger-resources/**",
+                        "/swagger-ui.html",
+                        "/swagger-ui/**",
+                        "/webjars/**")
+                .permitAll();
+
+        // ACCESS SWAGGER THROUGH:
+        // http://localhost:8080/swagger-ui/index.html
+
 
         // H2 Database
         httpSecurity.authorizeRequests().antMatchers("h2-console/**").permitAll();
 
+        // CONTROLLER MAPPINGS
         httpSecurity.authorizeRequests().antMatchers(API_VERSION + "/auth/**").permitAll();
         httpSecurity.authorizeRequests().antMatchers(API_VERSION + "/users/**").permitAll();
-        httpSecurity.authorizeRequests().antMatchers(API_VERSION + "/login/**").permitAll();
+//        httpSecurity.authorizeRequests().antMatchers(API_VERSION + "/login/**").permitAll();
 //        httpSecurity.authorizeRequests().antMatchers("/api/login/**", "/api/user/token/refresh").permitAll();
-        httpSecurity.authorizeRequests().antMatchers("/api/post/**").permitAll();
-        httpSecurity.authorizeRequests().antMatchers("/api/comment/**").permitAll();
+        httpSecurity.authorizeRequests().antMatchers(API_VERSION + "/posts/**").permitAll();
+        httpSecurity.authorizeRequests().antMatchers(API_VERSION + "/comments/**").permitAll();
 //        httpSecurity.authorizeRequests().antMatchers(HttpMethod.GET, "/api/user/**").hasAnyAuthority("ROLE_USER");
 //        httpSecurity.authorizeRequests().antMatchers(HttpMethod.POST, "/api/user/save/**").hasAnyAuthority("ROLE_ADMIN");
 

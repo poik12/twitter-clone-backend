@@ -2,7 +2,7 @@ package com.jd.twitterclonebackend.integrations;
 
 import com.jd.twitterclonebackend.domain.UserEntity;
 import com.jd.twitterclonebackend.dto.PostRequestDto;
-import com.jd.twitterclonebackend.enums.UserRole;
+import com.jd.twitterclonebackend.domain.enums.UserRole;
 import com.jd.twitterclonebackend.mapper.PostMapper;
 import com.jd.twitterclonebackend.repository.PostRepository;
 import com.jd.twitterclonebackend.service.impl.UserDetailsServiceImpl;

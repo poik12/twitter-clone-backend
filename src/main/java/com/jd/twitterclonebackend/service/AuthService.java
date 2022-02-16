@@ -1,7 +1,7 @@
 package com.jd.twitterclonebackend.service;
 
 import com.jd.twitterclonebackend.domain.UserEntity;
-import com.jd.twitterclonebackend.enums.UserRole;
+import com.jd.twitterclonebackend.domain.enums.UserRole;
 import com.jd.twitterclonebackend.dto.AuthResponseDto;
 import com.jd.twitterclonebackend.dto.RefreshTokenRequestDto;
 import com.jd.twitterclonebackend.dto.RegisterRequestDto;

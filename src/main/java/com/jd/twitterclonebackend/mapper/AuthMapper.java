@@ -1,11 +1,10 @@
 package com.jd.twitterclonebackend.mapper;
 
 import com.jd.twitterclonebackend.domain.UserEntity;
+import com.jd.twitterclonebackend.domain.enums.UserRole;
 import com.jd.twitterclonebackend.dto.RegisterRequestDto;
-import com.jd.twitterclonebackend.enums.UserRole;
 import com.jd.twitterclonebackend.service.FileService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 

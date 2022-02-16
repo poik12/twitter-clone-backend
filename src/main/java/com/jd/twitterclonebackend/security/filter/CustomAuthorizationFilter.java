@@ -1,7 +1,7 @@
 package com.jd.twitterclonebackend.security.filter;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.jd.twitterclonebackend.configuration.SecurityConfig;
+import com.jd.twitterclonebackend.config.SecurityConfig;
 import com.jd.twitterclonebackend.security.SecurityResponse;
 import com.jd.twitterclonebackend.security.jwt.AccessTokenProvider;
 import lombok.extern.slf4j.Slf4j;
