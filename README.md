@@ -1,6 +1,5 @@
 # Twitter Clone Backend Demo Web Application
 
----------------------------------------
 
 Java Version: 17 LTS
 ---------------------------------------
