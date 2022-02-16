@@ -26,46 +26,39 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
 		<!-- JPA -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
-
 		<!-- MySql Driver -->
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-
-		<!-- Spring Security -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency>
-
 		<!-- Lombok -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
-
+		<!-- Spring Security -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
 		<!-- JWT -->
 		<dependency>
 			<groupId>com.auth0</groupId>
 			<artifactId>java-jwt</artifactId>
 			<version>3.18.1</version>
 		</dependency>
-
 		<!-- Mail Sender -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
-
 		<!-- SWAGGER -->
 		<dependency>
 			<groupId>io.springfox</groupId>
@@ -82,12 +75,17 @@
 			<artifactId>springfox-swagger-ui</artifactId>
 			<version>3.0.0</version>
 		</dependency>
-
-		<!-- Relative Time Ago -->
+		<!-- Time Ago https://github.com/marlonlom/timeago    +-->
 		<dependency>
 			<groupId>com.github.marlonlom</groupId>
 			<artifactId>timeago</artifactId>
 			<version>4.0.3</version>
+		</dependency>
+		<!-- Web Socket -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-websocket</artifactId>
+			<version>5.3.10</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib-jdk8 -->
@@ -96,20 +94,12 @@
 			<artifactId>kotlin-stdlib-jdk8</artifactId>
 			<version>${kotlin.version}</version>
 		</dependency>
-
 		<!-- https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-test-junit -->
 		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
 			<artifactId>kotlin-test-junit</artifactId>
 			<version>${kotlin.version}</version>
 			<scope>test</scope>
-		</dependency>
-
-		<!-- Web Socket -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-websocket</artifactId>
-			<version>5.3.10</version>
 		</dependency>
 
 		<!--########################### TESTS ###########################-->
@@ -123,14 +113,12 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-
 		<!-- JUnit 5 -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter</artifactId>
 			<scope>test</scope>
 		</dependency>
-
 		<!-- AssertJ -->
 		<dependency>
 			<groupId>org.assertj</groupId>
@@ -138,7 +126,6 @@
 			<version>2.2.0</version>
 			<scope>test</scope>
 		</dependency>
-
 		<!-- Mockito -->
 		<dependency>
 			<groupId>org.mockito</groupId>
@@ -146,7 +133,6 @@
 			<version>3.12.4</version>
 			<scope>test</scope>
 		</dependency>
-
 		<!-- H2 In Memory Database -->
 		<dependency>
 			<groupId>com.h2database</groupId>
@@ -154,6 +140,7 @@
 			<version>1.4.200</version>
 			<scope>test</scope>
 		</dependency>
+
         <dependency>
             <groupId>jakarta.validation</groupId>
             <artifactId>jakarta.validation-api</artifactId>
