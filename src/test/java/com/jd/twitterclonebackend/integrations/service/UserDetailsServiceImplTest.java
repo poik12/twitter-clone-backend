@@ -1,6 +1,6 @@
 package com.jd.twitterclonebackend.integrations.service;
 
-import com.jd.twitterclonebackend.enums.UserRole;
+import com.jd.twitterclonebackend.domain.enums.UserRole;
 import com.jd.twitterclonebackend.integrations.InitIntegrationTestData;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -1,9 +1,9 @@
 package com.jd.twitterclonebackend.service.impl;
 
-import com.jd.twitterclonebackend.configuration.SecurityConfig;
+import com.jd.twitterclonebackend.config.SecurityConfig;
 import com.jd.twitterclonebackend.domain.UserEntity;
 import com.jd.twitterclonebackend.dto.NotificationEmailDto;
-import com.jd.twitterclonebackend.enums.InvalidEmailEnum;
+import com.jd.twitterclonebackend.exception.enums.InvalidEmailEnum;
 import com.jd.twitterclonebackend.exception.EmailException;
 import com.jd.twitterclonebackend.service.MailService;
 import lombok.RequiredArgsConstructor;

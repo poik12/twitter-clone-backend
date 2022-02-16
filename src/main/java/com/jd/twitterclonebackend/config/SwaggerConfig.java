@@ -1,4 +1,4 @@
-package com.jd.twitterclonebackend.configuration;
+package com.jd.twitterclonebackend.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -64,11 +64,11 @@ public class SwaggerConfig {
 
     private ApiInfo getApiInfo() {
         return new ApiInfoBuilder()
-                .title("User Service API")
+                .title("Twitter Clone API")
                 .version("1.0")
                 .description("Twitter Clone API")
                 .contact(new Contact(
-                        "JD",
+                        "Jonasz Delimata",
                         "https://github.com/poik12/",
                         "jonasz.dl@gmail.com"
                 ))

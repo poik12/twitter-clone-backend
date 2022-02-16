@@ -1,12 +1,12 @@
 package com.jd.twitterclonebackend.service.impl;
 
 import com.jd.twitterclonebackend.domain.UserEntity;
-import com.jd.twitterclonebackend.enums.InvalidUserEnum;
-import com.jd.twitterclonebackend.enums.UserRole;
+import com.jd.twitterclonebackend.exception.enums.InvalidUserEnum;
+import com.jd.twitterclonebackend.domain.enums.UserRole;
 import com.jd.twitterclonebackend.domain.VerificationTokenEntity;
 import com.jd.twitterclonebackend.dto.*;
-import com.jd.twitterclonebackend.enums.InvalidAuthenticationEnum;
-import com.jd.twitterclonebackend.enums.InvalidTokenEnum;
+import com.jd.twitterclonebackend.exception.enums.InvalidAuthenticationEnum;
+import com.jd.twitterclonebackend.exception.enums.InvalidTokenEnum;
 import com.jd.twitterclonebackend.exception.TokenException;
 import com.jd.twitterclonebackend.exception.UserAlreadyExistsException;
 import com.jd.twitterclonebackend.exception.UserException;

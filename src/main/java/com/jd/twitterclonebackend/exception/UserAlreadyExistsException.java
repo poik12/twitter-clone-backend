@@ -1,6 +1,6 @@
 package com.jd.twitterclonebackend.exception;
 
-import com.jd.twitterclonebackend.enums.InvalidAuthenticationEnum;
+import com.jd.twitterclonebackend.exception.enums.InvalidAuthenticationEnum;
 
 public class UserAlreadyExistsException extends RuntimeException {
 
