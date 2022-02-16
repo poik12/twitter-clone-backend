@@ -33,7 +33,9 @@ Dependencies
 9. Additional
     - TimeAgo - library for displaying dates as relative time ago language
 
+Architecture
+---------------------------------------
+<img src = "readme-images/twitter-clone-architecture.png" width = 1000 height = 300>
+
 Entity Relationship Diagram
 ---------------------------------------
-
-<img src = “readme-images/twitter-clone-architecture.png” width = _ height =_>
