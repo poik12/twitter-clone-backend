@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
+import java.util.Date;
 
 @Data
 @Builder
@@ -15,17 +16,15 @@ public class PostResponseDto {
 
     private Long id;
 
-    private String description;
-
-    private String url;
-
-    private Instant createdAt;
+    private String name;
 
     private String username;
 
-    private String name;
+    private String description;
 
-    private Integer commentCount;
+    private Integer commentNo;
+
+    private Date createdAt;
 
     private String postTimeDuration;
 

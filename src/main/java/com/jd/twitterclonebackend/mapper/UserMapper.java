@@ -1,6 +1,5 @@
 package com.jd.twitterclonebackend.mapper;
 
-import com.jd.twitterclonebackend.domain.FollowerEntity;
 import com.jd.twitterclonebackend.domain.UserEntity;
 import com.jd.twitterclonebackend.dto.FollowerDto;
 import com.jd.twitterclonebackend.dto.UserRequestDto;
@@ -41,8 +40,8 @@ public class UserMapper {
                 .tweetNo(getUserPostsSize(userEntity.getUsername()))
                 .followingNo(getUserFollowings(userEntity))
                 .followerNo(getUserFollowers(userEntity))
-                .userProfilePicture(userEntity.getUserProfilePicture())
-                .userBackgroundPicture(userEntity.getUserBackgroundPicture())
+                .userProfilePicture(userEntity.getProfilePicture())
+                .userBackgroundPicture(userEntity.getBackgroundPicture())
                 .description(userEntity.getDescription())
                 .followers(userEntity.getFollowers()
                         .stream()
@@ -103,10 +102,10 @@ public class UserMapper {
             userEntity.setPassword(passwordEncoder.encode(userRequestDto.getPassword()));
         }
         if (Objects.nonNull(profileImageFile)) {
-            userEntity.setUserProfilePicture(fileService.convertImageFileToByteArray(profileImageFile));
+            userEntity.setProfilePicture(fileService.convertImageFileToByteArray(profileImageFile));
         }
         if (Objects.nonNull(backgroundImageFile)) {
-            userEntity.setUserBackgroundPicture(fileService.convertImageFileToByteArray(backgroundImageFile));
+            userEntity.setBackgroundPicture(fileService.convertImageFileToByteArray(backgroundImageFile));
         }
 
         return userEntity;
@@ -123,8 +122,8 @@ public class UserMapper {
                 .name(userEntity.getName())
                 .username(userEntity.getUsername())
                 .emailAddress(userEntity.getEmailAddress())
-                .userProfilePicture(userEntity.getUserProfilePicture())
-                .userBackgroundPicture(userEntity.getUserBackgroundPicture())
+                .userProfilePicture(userEntity.getProfilePicture())
+                .userBackgroundPicture(userEntity.getBackgroundPicture())
                 .tweetNo(getUserPostsSize(userEntity.getUsername()))
                 .followingNo(getUserFollowings(userEntity))
                 .followerNo(getUserFollowers(userEntity))

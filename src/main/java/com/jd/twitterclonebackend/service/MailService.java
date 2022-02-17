@@ -11,5 +11,4 @@ public interface MailService {
 
     void sendEmailToUser(NotificationEmailDto notificationEmailDto);
 
-
 }

@@ -32,32 +32,19 @@ public class UserEntity implements Serializable {
     private String username;
 
     @Column(nullable = false)
-    private String emailAddress;
+    private String password;
 
     @Column(nullable = false)
-    private String password;
+    private String emailAddress;
 
     @Column(nullable = false)
     private String phoneNumber;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
-    @CreationTimestamp
-    private Date createdAt;
-
-    @Column(name = "updated_at", nullable = false)
-    @UpdateTimestamp
-    private Date updatedAt;
-
-    private Boolean enabled;
-
-    @Enumerated(EnumType.STRING)
-    private UserRole userRole;
+    @Lob
+    private byte[] profilePicture;
 
     @Lob
-    private byte[] userProfilePicture;
-
-    @Lob
-    private byte[] userBackgroundPicture;
+    private byte[] backgroundPicture;
 
     private Long tweetNo;
 
@@ -74,4 +61,16 @@ public class UserEntity implements Serializable {
     @OneToMany(mappedBy="from") // relationship owner
     private List<FollowerEntity> following;
 
+    @Enumerated(EnumType.STRING)
+    private UserRole userRole;
+
+    private Boolean enabled;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    @CreationTimestamp
+    private Date createdAt;
+
+    @Column(name = "updated_at", nullable = false)
+    @UpdateTimestamp
+    private Date updatedAt;
 }

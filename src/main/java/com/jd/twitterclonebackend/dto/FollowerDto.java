@@ -9,8 +9,6 @@ import javax.persistence.Lob;
 
 @Data
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 public class FollowerDto {
 
 

@@ -48,7 +48,6 @@ public class FileServiceImpl implements FileService {
             imageFileEntity.setName(fileName);
             imageFileEntity.setContent(compressBytes(file.getBytes()));
             imageFileEntity.setSize(file.getSize());
-            imageFileEntity.setUploadTime(Instant.now());
             imageFileEntity.setPost(post);
         } catch (IOException e) {
             e.printStackTrace();

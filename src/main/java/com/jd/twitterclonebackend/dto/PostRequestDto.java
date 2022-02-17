@@ -10,6 +10,5 @@ import lombok.NoArgsConstructor;
 public class PostRequestDto {
 
     private String description;
-//    private String url;
 
 }

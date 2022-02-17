@@ -11,7 +11,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -33,7 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     // Authentication
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    protected void configure(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(daoAuthenticationProvider());
     }
 
@@ -54,23 +53,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.csrf().disable();
         // Config Cross-Origin Resource Sharing in WebConfig Class
         httpSecurity.cors();
-//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                .and()
-//                .authorizeRequests()
-//                .antMatchers(
-//                        "/swagger-ui.html",
-//                        "/v2/api-docs",
-//                        "/webjars/**",
-//                        "/swagger-resources/**").permitAll()
-//                .antMatchers("/api/user/**").permitAll()
-//                .antMatchers("/api/login/**", "/api/token/refresh/**").permitAll()
-//                .anyRequest().authenticated();
-
 
         // Stateless Session because of JWT
         httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         // Swagger API
+        // ACCESS THROUGH: http://localhost:8080/swagger-ui/index.html
         httpSecurity.authorizeRequests()
                 .antMatchers(
                         "/v2/api-docs",
@@ -80,27 +68,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/webjars/**")
                 .permitAll();
 
-        // ACCESS SWAGGER THROUGH:
-        // http://localhost:8080/swagger-ui/index.html
-
-
         // H2 Database
         httpSecurity.authorizeRequests().antMatchers("h2-console/**").permitAll();
 
         // CONTROLLER MAPPINGS
         httpSecurity.authorizeRequests().antMatchers(API_VERSION + "/auth/**").permitAll();
         httpSecurity.authorizeRequests().antMatchers(API_VERSION + "/users/**").permitAll();
-//        httpSecurity.authorizeRequests().antMatchers(API_VERSION + "/login/**").permitAll();
-//        httpSecurity.authorizeRequests().antMatchers("/api/login/**", "/api/user/token/refresh").permitAll();
         httpSecurity.authorizeRequests().antMatchers(API_VERSION + "/posts/**").permitAll();
         httpSecurity.authorizeRequests().antMatchers(API_VERSION + "/comments/**").permitAll();
 //        httpSecurity.authorizeRequests().antMatchers(HttpMethod.GET, "/api/user/**").hasAnyAuthority("ROLE_USER");
 //        httpSecurity.authorizeRequests().antMatchers(HttpMethod.POST, "/api/user/save/**").hasAnyAuthority("ROLE_ADMIN");
 
         httpSecurity.authorizeRequests().anyRequest().authenticated();
-
         httpSecurity.addFilter(customAuthenticationFilter);
-        httpSecurity.addFilterBefore(customAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
+        httpSecurity.addFilterBefore(
+                customAuthorizationFilter,
+                UsernamePasswordAuthenticationFilter.class
+        );
     }
 
     @Bean

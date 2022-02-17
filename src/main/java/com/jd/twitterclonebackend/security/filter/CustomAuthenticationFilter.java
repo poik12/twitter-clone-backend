@@ -1,6 +1,8 @@
 package com.jd.twitterclonebackend.security.filter;
 
 import com.jd.twitterclonebackend.dto.LoginRequestDto;
+import com.jd.twitterclonebackend.exception.AuthException;
+import com.jd.twitterclonebackend.exception.enums.InvalidAuthEnum;
 import com.jd.twitterclonebackend.security.SecurityResponse;
 import com.jd.twitterclonebackend.security.jwt.AccessTokenProvider;
 import com.jd.twitterclonebackend.security.jwt.RefreshTokenProvider;
@@ -53,12 +55,11 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
                     authenticationRequest.getUsername(),
                     authenticationRequest.getPassword()
             );
-
             // Authenticate in AuthenticationManager
             return authenticationManager.authenticate(authenticationToken);
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new AuthException(InvalidAuthEnum.AUTHENTICATION_FAILED.getMessage() + e);
         }
     }
 

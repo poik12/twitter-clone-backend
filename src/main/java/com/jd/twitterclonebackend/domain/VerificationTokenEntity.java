@@ -3,10 +3,11 @@ package com.jd.twitterclonebackend.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.Instant;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Table(name = "verification_tokens")
@@ -21,20 +22,18 @@ public class VerificationTokenEntity {
 
     private String token;
 
-    @Column(nullable = false)
-    private Instant createdAt;
+    @OneToOne(fetch = FetchType.LAZY)
+    private UserEntity user;
 
-    @Column(nullable = false)
+    @CreationTimestamp
+    private Date createdAt;
+
     private Instant expiresAt;
 
     private Instant confirmedAt;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    private UserEntity user;
-
-    public VerificationTokenEntity(String token, Instant createdAt, Instant expiresAt, UserEntity user) {
+    public VerificationTokenEntity(String token, Instant expiresAt, UserEntity user) {
         this.token = token;
-        this.createdAt = createdAt;
         this.expiresAt = expiresAt;
         this.user = user;
     }

@@ -13,10 +13,6 @@ import java.util.List;
 @Repository
 public interface CommentRepository extends JpaRepository<CommentEntity, Long> {
 
-    List<CommentEntity> findAllByPost(PostEntity post);
-
-    List<CommentEntity> findAllByUser(UserEntity userEntity);
-
     void deleteByPostId(Long postId);
 
     @Query(value = "FROM CommentEntity WHERE post = :postEntity ORDER BY createdAt DESC")
@@ -24,4 +20,6 @@ public interface CommentRepository extends JpaRepository<CommentEntity, Long> {
 
     @Query(value = "FROM CommentEntity WHERE user = :userEntity ORDER BY createdAt DESC")
     List<CommentEntity> findAllByUserAndOrderByCreatedAtDesc(@Param("userEntity") UserEntity userEntity);
+
+    void deleteAllByUser(UserEntity userEntity);
 }

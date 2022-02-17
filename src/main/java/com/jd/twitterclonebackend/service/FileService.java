@@ -17,6 +17,4 @@ public interface FileService {
     byte[] convertImagePathToByteArray(String imagePath);
     // Get array from multipart file
     byte[] convertImageFileToByteArray(MultipartFile imageFile);
-
-
 }

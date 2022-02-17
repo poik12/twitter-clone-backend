@@ -51,8 +51,8 @@ public abstract class InitIntegrationTestData {
         userEntity.setPhoneNumber(USER_PRIME_PHONE_NUMBER);
         userEntity.setEnabled(true);
         userEntity.setUserRole(UserRole.ROLE_USER);
-        userEntity.setUserProfilePicture(null);
-        userEntity.setUserBackgroundPicture(null);
+        userEntity.setProfilePicture(null);
+        userEntity.setBackgroundPicture(null);
         userEntity.setTweetNo(0L);
         userEntity.setFollowerNo(0L);
         userEntity.setFollowingNo(0L);
@@ -69,8 +69,8 @@ public abstract class InitIntegrationTestData {
         userEntity.setPhoneNumber(USER_SECOND_PHONE_NUMBER);
         userEntity.setEnabled(true);
         userEntity.setUserRole(UserRole.ROLE_USER);
-        userEntity.setUserProfilePicture(null);
-        userEntity.setUserBackgroundPicture(null);
+        userEntity.setProfilePicture(null);
+        userEntity.setBackgroundPicture(null);
         userEntity.setTweetNo(0L);
         userEntity.setFollowerNo(0L);
         userEntity.setFollowingNo(0L);

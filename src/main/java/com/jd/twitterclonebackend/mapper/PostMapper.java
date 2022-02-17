@@ -9,7 +9,6 @@ import com.jd.twitterclonebackend.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
 import java.util.Map;
 import java.util.Objects;
 
@@ -42,9 +41,8 @@ public class PostMapper {
         return PostResponseDto.builder()
                 .id(postEntity.getId())
                 .description(postEntity.getDescription())
-                .url(postEntity.getUrl())
                 .createdAt(postEntity.getCreatedAt())
-                .commentCount(getCommentCount(postEntity))
+                .commentNo(getCommentCount(postEntity))
                 .postTimeDuration(getPostTimeDuration(postEntity))
                 .username(postEntity.getUser().getUsername())
                 .name(postEntity.getUser().getName())
@@ -61,9 +59,8 @@ public class PostMapper {
         return PostResponseDto.builder()
                 .id(postEntity.getId())
                 .description(postEntity.getDescription())
-                .url(postEntity.getUrl())
                 .createdAt(postEntity.getCreatedAt())
-                .commentCount(getCommentCount(postEntity))
+                .commentNo(getCommentCount(postEntity))
                 .postTimeDuration(getPostTimeDuration(postEntity))
                 .username(postEntity.getUser().getUsername())
                 .name(postEntity.getUser().getName())
@@ -73,7 +70,7 @@ public class PostMapper {
                                 imageFileMap
                         )
                 )
-                .userProfilePicture(postEntity.getUser().getUserProfilePicture())
+                .userProfilePicture(postEntity.getUser().getProfilePicture())
                 .build();
         
     }
@@ -91,7 +88,7 @@ public class PostMapper {
 
     // Creation time of post
     String getPostTimeDuration(PostEntity postEntity) {
-        return TimeAgo.using(postEntity.getCreatedAt().toEpochMilli());
+        return TimeAgo.using(postEntity.getCreatedAt().toInstant().toEpochMilli());
     }
 
 }

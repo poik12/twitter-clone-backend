@@ -7,7 +7,6 @@ import javax.persistence.*;
 @Entity
 @Table(name = "followers")
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 public class FollowerEntity {
 
