@@ -25,14 +25,19 @@ public class UserEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
     private String username;
 
+    @Column(nullable = false)
     private String emailAddress;
 
+    @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
     private String phoneNumber;
 
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -60,7 +65,7 @@ public class UserEntity implements Serializable {
 
     private Long followingNo;
 
-    @Lob
+    @Column(length = 280)
     private String description;
 
     @OneToMany(mappedBy="to") // relationship owner

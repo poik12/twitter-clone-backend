@@ -123,39 +123,6 @@ public class UserServiceImpl implements UserService {
         userRepository.save(userToUnfollow);
     }
 
-
-    @Override
-    public List<UserResponseDto> getAllFollowers(String username) {
-
-        UserEntity userEntity = userRepository
-                .findByUsername(username)
-                .orElseThrow(() ->
-                        new UserException(InvalidUserEnum.USER_NOT_FOUND_WITH_USERNAME.getMessage() + username)
-                );
-
-        return followerRepository
-                .getAllFollowersByUser(userEntity)
-                .stream()
-                .map(ue -> userMapper.mapFromEntityToUserDto(ue))
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<UserResponseDto> getAllFollowings(String username) {
-
-        UserEntity userEntity = userRepository
-                .findByUsername(username)
-                .orElseThrow(() ->
-                        new UserException(InvalidUserEnum.USER_NOT_FOUND_WITH_USERNAME.getMessage() + username)
-                );
-
-        return followerRepository
-                .getAllFollowingsByUser(userEntity)
-                .stream()
-                .map(ue -> userMapper.mapFromEntityToUserDto(ue))
-                .collect(Collectors.toList());
-    }
-
     @Override
     public boolean checkIfUserIsFollowed(String followingUser, String followedUser) {
 

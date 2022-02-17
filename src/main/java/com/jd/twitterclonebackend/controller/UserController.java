@@ -70,17 +70,4 @@ public class UserController {
     @PostMapping("/unfollow")
     public void unfollowUser(@RequestBody String username) { userService.unfollowUser(username); }
 
-    // GET USERS WHO ARE FOLLOWING BY USERNAME
-    @GetMapping("/all-followers/{username}")
-    public List<UserResponseDto> getAllFollowers(@PathVariable String username) {
-        return userService.getAllFollowers(username);
-    }
-
-    // GET USERS WHO ARE FOLLOWED BY USERNAME
-    @GetMapping("/all-following/{username}")
-    public List<UserResponseDto> getAllFollowings(@PathVariable String username) {
-        return userService.getAllFollowings(username);
-    }
-
-
 }

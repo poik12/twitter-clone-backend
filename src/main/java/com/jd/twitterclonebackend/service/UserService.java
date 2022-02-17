@@ -23,9 +23,5 @@ public interface UserService {
 
     void unfollowUser(String username);
 
-    List<UserResponseDto> getAllFollowers(String username);
-
-    List<UserResponseDto> getAllFollowings(String username);
-
     boolean checkIfUserIsFollowed(String username, String followed);
 }
