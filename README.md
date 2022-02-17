@@ -39,3 +39,22 @@ Architecture
 
 Entity Relationship Diagram
 ---------------------------------------
+
+
+
+
+Implemented Features
+---------------------------------------
+- authentication
+  - sign up with email confirmation
+  - login authentication
+- user profile:
+  - update user profile
+  - check selected user profile
+  - follow/unfollow user
+- posts:
+  - add posts
+  - delete posts
+  - update posts / not implemented
+- comments:
+  - add comments to posts
