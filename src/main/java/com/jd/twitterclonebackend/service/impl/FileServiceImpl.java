@@ -1,10 +1,13 @@
 package com.jd.twitterclonebackend.service.impl;
 
+import com.jd.twitterclonebackend.domain.CommentEntity;
 import com.jd.twitterclonebackend.domain.ImageFileEntity;
 import com.jd.twitterclonebackend.domain.PostEntity;
+import com.jd.twitterclonebackend.domain.UserEntity;
 import com.jd.twitterclonebackend.repository.ImageFileRepository;
 import com.jd.twitterclonebackend.service.FileService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -12,14 +15,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
@@ -27,6 +25,7 @@ import java.util.zip.Inflater;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class FileServiceImpl implements FileService {
 
     private final ImageFileRepository imageFileRepository;
@@ -179,6 +178,5 @@ public class FileServiceImpl implements FileService {
         }
         return null;
     }
-
 
 }

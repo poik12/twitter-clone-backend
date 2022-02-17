@@ -63,10 +63,10 @@ public class UserEntity implements Serializable {
     @Lob
     private String description;
 
-    @OneToMany(mappedBy="to")
+    @OneToMany(mappedBy="to") // relationship owner
     private List<FollowerEntity> followers;
 
-    @OneToMany(mappedBy="from")
+    @OneToMany(mappedBy="from") // relationship owner
     private List<FollowerEntity> following;
 
 }

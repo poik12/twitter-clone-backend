@@ -4,13 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.util.List;
+
+import javax.persistence.Lob;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class UserResponseDto {
+public class FollowerDto {
+
 
     private Long id;
 
@@ -18,22 +20,18 @@ public class UserResponseDto {
 
     private String username;
 
-    private String createdAt;
+    private String emailAddress;
 
-    private long tweetNo;
-
-    private long followingNo;
-
-    private long followerNo;
-
+    @Lob
     private byte[] userProfilePicture;
 
+    @Lob
     private byte[] userBackgroundPicture;
 
-    private String description;
+    private Long tweetNo;
 
-    private List<FollowerDto> followers;
+    private Long followerNo;
 
-    private List<FollowerDto> following;
+    private Long followingNo;
 
 }

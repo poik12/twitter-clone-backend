@@ -103,13 +103,13 @@ public class PostServiceImpl implements PostService {
                 );
 
         // Find all posts by user entity, map them to dto and return
-        List<PostEntity> postList = postRepository.findByUser(userEntity);
+        List<PostEntity> postList = postRepository.findByUserAndOrderByCreatedAtDesc(userEntity);
 
         Map<Long, byte[]> imageFileList = fileService.getImageFilesByPostList(postList);
 
         // Find all posts by user entity, map them to dto and return
         return postRepository
-                .findByUser(userEntity)
+                .findByUserAndOrderByCreatedAtDesc(userEntity)
                 .stream()
                 .map(postEntity -> postMapper.mapFromEntityToDto(
                         postEntity,

@@ -1,20 +1,22 @@
 package com.jd.twitterclonebackend.mapper;
 
+import com.jd.twitterclonebackend.domain.FollowerEntity;
 import com.jd.twitterclonebackend.domain.UserEntity;
+import com.jd.twitterclonebackend.dto.FollowerDto;
 import com.jd.twitterclonebackend.dto.UserRequestDto;
 import com.jd.twitterclonebackend.dto.UserResponseDto;
+import com.jd.twitterclonebackend.repository.FollowerRepository;
 import com.jd.twitterclonebackend.service.FileService;
 import com.jd.twitterclonebackend.service.impl.PostServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -23,8 +25,9 @@ public class UserMapper {
     private final PostServiceImpl postService;
     private final FileService fileService;
     private final PasswordEncoder passwordEncoder;
+    private final FollowerRepository followerRepository;
 
-    public UserResponseDto mapFromEntityToDto(UserEntity userEntity) {
+    public UserResponseDto mapFromEntityToUserDto(UserEntity userEntity) {
 
         if (Objects.isNull(userEntity)) {
             return null;
@@ -35,12 +38,22 @@ public class UserMapper {
                 .name(userEntity.getName())
                 .username(userEntity.getUsername())
                 .createdAt(getDateOfCreation(userEntity.getCreatedAt()))
-                .tweetsNo(getUserPosts(userEntity.getUsername()))
+                .tweetNo(getUserPostsSize(userEntity.getUsername()))
                 .followingNo(getUserFollowings(userEntity))
-                .followersNo(getUserFollowers(userEntity))
+                .followerNo(getUserFollowers(userEntity))
                 .userProfilePicture(userEntity.getUserProfilePicture())
                 .userBackgroundPicture(userEntity.getUserBackgroundPicture())
                 .description(userEntity.getDescription())
+                .followers(userEntity.getFollowers()
+                        .stream()
+                        .map(followerEntity -> mapFromEntityToFollowerDto(followerEntity.getFrom()))
+                        .collect(Collectors.toList())
+                )
+                .following(userEntity.getFollowing()
+                        .stream()
+                        .map(followingEntity -> mapFromEntityToFollowerDto(followingEntity.getTo()))
+                        .collect(Collectors.toList())
+                )
                 .build();
     }
 
@@ -52,7 +65,7 @@ public class UserMapper {
         return month + " " + year;
     }
 
-    private long getUserPosts(String username) {
+    private long getUserPostsSize(String username) {
         // Get posts for user and return length of post list
         return postService.getPostsByUsername(username).size();
     }
@@ -66,10 +79,10 @@ public class UserMapper {
     }
 
 
-    public UserEntity mapFromDtoToEntity(UserEntity userEntity,
-                                         UserRequestDto userRequestDto,
-                                         MultipartFile profileImageFile,
-                                         MultipartFile backgroundImageFile) {
+    public UserEntity mapFromUserDtoToEntity(UserEntity userEntity,
+                                             UserRequestDto userRequestDto,
+                                             MultipartFile profileImageFile,
+                                             MultipartFile backgroundImageFile) {
 
         // TODO: Description not added yet
         // TODO: Add username line in frontend
@@ -99,4 +112,23 @@ public class UserMapper {
         return userEntity;
     }
 
+
+    private FollowerDto mapFromEntityToFollowerDto(UserEntity userEntity) {
+        if (Objects.isNull(userEntity)) {
+            return null;
+        }
+
+        return FollowerDto.builder()
+                .id(userEntity.getId())
+                .name(userEntity.getName())
+                .username(userEntity.getUsername())
+                .emailAddress(userEntity.getEmailAddress())
+                .userProfilePicture(userEntity.getUserProfilePicture())
+                .userBackgroundPicture(userEntity.getUserBackgroundPicture())
+                .tweetNo(getUserPostsSize(userEntity.getUsername()))
+                .followingNo(getUserFollowings(userEntity))
+                .followerNo(getUserFollowers(userEntity))
+                .build();
+
+    }
 }

@@ -15,11 +15,11 @@ public class FollowerEntity {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="to_user_fk")
     private UserEntity to;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="from_user_fk")
     private UserEntity from;
 
