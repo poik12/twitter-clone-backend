@@ -25,15 +25,46 @@ public class UserEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
     private String username;
 
-    private String emailAddress;
-
+    @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    private String emailAddress;
+
+    @Column(nullable = false)
     private String phoneNumber;
+
+    @Lob
+    private byte[] profilePicture;
+
+    @Lob
+    private byte[] backgroundPicture;
+
+    private Long tweetNo;
+
+    private Long followerNo;
+
+    private Long followingNo;
+
+    @Column(length = 280)
+    private String description;
+
+    @OneToMany(mappedBy="to") // relationship owner
+    private List<FollowerEntity> followers;
+
+    @OneToMany(mappedBy="from") // relationship owner
+    private List<FollowerEntity> following;
+
+    @Enumerated(EnumType.STRING)
+    private UserRole userRole;
+
+    private Boolean enabled;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp
@@ -42,31 +73,4 @@ public class UserEntity implements Serializable {
     @Column(name = "updated_at", nullable = false)
     @UpdateTimestamp
     private Date updatedAt;
-
-    private Boolean enabled;
-
-    @Enumerated(EnumType.STRING)
-    private UserRole userRole;
-
-    @Lob
-    private byte[] userProfilePicture;
-
-    @Lob
-    private byte[] userBackgroundPicture;
-
-    private Long tweetNo;
-
-    private Long followerNo;
-
-    private Long followingNo;
-
-    @Lob
-    private String description;
-
-    @OneToMany(mappedBy="to")
-    private List<FollowerEntity> followers;
-
-    @OneToMany(mappedBy="from")
-    private List<FollowerEntity> following;
-
 }

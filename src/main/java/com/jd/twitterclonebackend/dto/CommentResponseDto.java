@@ -19,8 +19,6 @@ public class CommentResponseDto {
 
     private Long postId;
 
-//    private Instant createdAt;
-
     private String timeOfCreation;
 
     private String text;

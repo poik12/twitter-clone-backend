@@ -3,9 +3,11 @@ package com.jd.twitterclonebackend.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.Date;
 
 @Entity
 @Table(name = "refresh_tokens")
@@ -20,16 +22,16 @@ public class RefreshTokenEntity {
 
     private String token;
 
-    private Instant createdAt;
-
-    private Instant expiresAt;
-
     @OneToOne(fetch = FetchType.LAZY)
     private UserEntity user;
 
-    public RefreshTokenEntity(String token, Instant createdAt, Instant expiresAt, UserEntity user) {
+    @CreationTimestamp
+    private Date createdAt;
+
+    private Instant expiresAt;
+
+    public RefreshTokenEntity(String token, Instant expiresAt, UserEntity user) {
         this.token = token;
-        this.createdAt = createdAt;
         this.expiresAt = expiresAt;
         this.user = user;
     }

@@ -69,7 +69,7 @@ public class CommentServiceImpl implements CommentService {
                 ));
         // Get all comments for found post, map them to DTO and collect to list
         return commentRepository
-                .findAllByPost(postEntity)
+                .findAllByPostAndOrderByCreatedAtDesc(postEntity)
                 .stream()
                 .map(commentEntity -> commentMapper.mapFromEntityToDto(commentEntity))
                 .collect(Collectors.toList());
@@ -85,7 +85,7 @@ public class CommentServiceImpl implements CommentService {
                 );
         // Get all comments created by user, map them to dto, collect to list and return
         return commentRepository
-                .findAllByUser(userEntity)
+                .findAllByUserAndOrderByCreatedAtDesc(userEntity)
                 .stream()
                 .map(commentEntity -> commentMapper.mapFromEntityToDto(commentEntity))
                 .collect(Collectors.toList());

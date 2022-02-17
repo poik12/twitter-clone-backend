@@ -2,7 +2,6 @@ package com.jd.twitterclonebackend.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jd.twitterclonebackend.domain.UserEntity;
 import com.jd.twitterclonebackend.dto.UserRequestDto;
 import com.jd.twitterclonebackend.dto.UserResponseDto;
 import com.jd.twitterclonebackend.service.UserService;
@@ -55,25 +54,20 @@ public class UserController {
         );
     }
 
+    // CHECK IF USER IS FOLLOWED BY USERNAME
+    @GetMapping("{from}/{to}")
+    public boolean checkIfUserIfFollowed(@PathVariable String from, @PathVariable String to) {
+        return userService.checkIfUserIsFollowed(from, to);
+    }
+
     // FOLLOW USER BY ITS USERNAME
-    @PostMapping("/{username}/follow")
-    public void followUser(@PathVariable String username) {
+    @PostMapping("/follow")
+    public void followUser(@RequestBody String username) {
         userService.followUser(username);
     }
 
     // UNFOLLOW USER BY ITS USERNAME
-    @PostMapping("/{username}/unfollow")
-    public void unfollowUser(@PathVariable String username) { userService.unfollowUser(username); }
-    // GET USERS WHO FOLLOW LOGGED USER
-    @GetMapping("/all-followers")
-    public List<UserResponseDto> getAllFollowers() {
-        return userService.getAllFollowers();
-    }
-
-    // GET USERS WHO ARE FOLLOWING BY LOGGED USER
-    @GetMapping("/all-following")
-    public List<UserResponseDto> getAllFollowings() {
-        return userService.getAllFollowings();
-    }
+    @PostMapping("/unfollow")
+    public void unfollowUser(@RequestBody String username) { userService.unfollowUser(username); }
 
 }

@@ -7,12 +7,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface UserService {
-
     // Get user details by username
     UserResponseDto getUserByUsername(String username);
 
     List<UserResponseDto> getUsers();
-
     // Update user details
     void updateUserByUsername(String username,
                               UserRequestDto userRequestDto,
@@ -23,8 +21,5 @@ public interface UserService {
 
     void unfollowUser(String username);
 
-    List<UserResponseDto> getAllFollowers();
-
-    List<UserResponseDto> getAllFollowings();
-
+    boolean checkIfUserIsFollowed(String username, String followed);
 }

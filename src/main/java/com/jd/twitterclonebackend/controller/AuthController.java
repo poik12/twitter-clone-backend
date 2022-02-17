@@ -52,14 +52,4 @@ public class AuthController {
         authService.deleteUserAccount();
     }
 
-    //TODO: DOESNT WORK
-    //    // CHANGE USER ROLE
-//    @PutMapping("/role")
-//    public ResponseEntity<?> addRoleToUser(String username, UserRole userRole) {
-//        userService.changeUserRole(username, userRole);
-//        return ResponseEntity.ok().build();
-//    }
-
-
-
 }

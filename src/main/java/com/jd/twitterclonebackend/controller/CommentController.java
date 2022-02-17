@@ -23,6 +23,7 @@ public class CommentController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    // GET ALL COMMENT FOR POST SORTED BY TIMESTAMP DESC
     @GetMapping("/by-post/{postId}")
     public ResponseEntity<List<CommentResponseDto>> getAllCommentsForPost(@PathVariable Long postId) {
         return ResponseEntity

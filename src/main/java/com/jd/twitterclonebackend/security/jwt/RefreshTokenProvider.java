@@ -62,7 +62,6 @@ public class RefreshTokenProvider extends JwtProvider {
                     userEntity,
                     refreshToken
             );
-
             return newRefreshTokenEntity.getToken();
 
         } else {
@@ -74,7 +73,6 @@ public class RefreshTokenProvider extends JwtProvider {
                     userEntity,
                     refreshToken
             );
-
             return newRefreshTokenEntity.getToken();
         }
     }
@@ -83,14 +81,11 @@ public class RefreshTokenProvider extends JwtProvider {
         // Create new refresh token entity
         RefreshTokenEntity newRefreshTokenEntity = new RefreshTokenEntity(
                 refreshToken,
-                Instant.now(),
                 EXPIRATION_TIME_OF_REFRESH_TOKEN,
                 userEntity
         );
-
         // Save created JWT in database
         refreshTokenRepository.save(newRefreshTokenEntity);
-
         return newRefreshTokenEntity;
     }
 
@@ -126,8 +121,6 @@ public class RefreshTokenProvider extends JwtProvider {
     // Refresh access token
     public AuthResponseDto refreshAccessToken(RefreshTokenRequestDto refreshTokenRequestDto) {
 
-
-
         // Check if refresh Token is valid
         RefreshTokenEntity refreshTokenEntity = validateRefreshToken(refreshTokenRequestDto.getRefreshToken());
         // Decode JWT(Remove Bearer from JWT, Verify algorithm signature)
@@ -148,56 +141,4 @@ public class RefreshTokenProvider extends JwtProvider {
                 .refreshToken(refreshTokenRequestDto.getRefreshToken())
                 .build();
     }
-
-
-//    // Refresh access token
-//    public void refreshAccessToken(HttpServletRequest request,
-//                                   HttpServletResponse response) throws IOException {
-//
-//        String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-//
-//        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-//            try {
-//                // Get back refresh token from authorization header
-//                String refreshToken = getTokenFromRequestHeader(authorizationHeader);
-//                // Check if refresh Token is valid
-//                RefreshTokenEntity refreshTokenEntity = validateRefreshToken(refreshToken);
-//                // Decode JWT(Remove Bearer from JWT, Verify algorithm signature)
-//                DecodedJWT decodedJWT = decodeJwt(authorizationHeader);
-//                // Get username from decoded JWT
-//                String username = decodedJWT.getSubject();
-//                // Check if user exists in database
-//                UserEntity userEntity = userRepository
-//                        .findByUsername(username)
-//                        .orElseThrow(() -> new UsernameNotFoundException(username));
-//                // Generate new access token for user
-//                String accessToken = accessTokenProvider.refreshAccessTokenUserEntity(userEntity);
-//
-////                // Create response for user
-////                new SecurityResponse().successfulRefreshTokenResponse(
-////                        response,
-////                        accessToken,
-////                        refreshToken,
-////                        "new_access_token"
-////                );
-//
-//                // Create response for user
-//                new SecurityResponse().successfulAuthenticationResponse(
-//                        response,
-//                        accessToken,
-//                        refreshTokenEntity,
-//                        userEntity.getUsername()
-//                );
-//
-//            } catch (Exception exception) {
-//                // Create response for user
-//                new SecurityResponse().failedAuthorizationResponse(
-//                        response,
-//                        exception,
-//                        "failed refresh access token");
-//            }
-//        } else {
-//            throw new InvalidTokenException(InvalidTokenEnum.MISSING_REFRESH_TOKEN.getMessage());
-//        }
-//    }
 }

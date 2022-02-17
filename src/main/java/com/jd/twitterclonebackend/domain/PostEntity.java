@@ -5,11 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -24,23 +26,22 @@ public class PostEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Lob
+    @Column(nullable = false, length = 280)
     private String description;
 
-    private String url;
-
-    @CreationTimestamp
-    private Instant createdAt;
-
-    private Long commentNo;
-
-    // Many posts created by one user
-    @ManyToOne(fetch = FetchType.LAZY) // some error during getting all post from db
+    @ManyToOne(fetch = FetchType.LAZY) // Many posts created by one user
     private UserEntity user;
 
     @OneToMany(mappedBy = "post")
     private List<CommentEntity> comments = new ArrayList<>();
 
+    private Long commentNo;
+
+    @CreationTimestamp
+    private Date createdAt;
+
+    @UpdateTimestamp
+    private Date updatedAt;
 
     // One post can have multiple images
 //    @OneToMany(cascade = CascadeType.ALL)

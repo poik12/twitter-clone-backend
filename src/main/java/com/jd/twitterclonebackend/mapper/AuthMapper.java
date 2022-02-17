@@ -37,8 +37,8 @@ public class AuthMapper {
                 .followerNo(0L)
                 .followingNo(0L)
                 .tweetNo(0L)
-                .userProfilePicture(fileService.convertImagePathToByteArray(DEFAULT_PROFILE_PICTURE_PATH))
-                .userBackgroundPicture(fileService.convertImagePathToByteArray(DEFAULT_BACKGROUND_PICTURE_PATH))
+                .profilePicture(fileService.convertImagePathToByteArray(DEFAULT_PROFILE_PICTURE_PATH))
+                .backgroundPicture(fileService.convertImagePathToByteArray(DEFAULT_BACKGROUND_PICTURE_PATH))
                 .description(null)
                 .build();
 

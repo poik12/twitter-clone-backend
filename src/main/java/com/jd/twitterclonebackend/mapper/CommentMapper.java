@@ -8,7 +8,6 @@ import com.jd.twitterclonebackend.dto.CommentRequestDto;
 import com.jd.twitterclonebackend.dto.CommentResponseDto;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
 import java.util.Objects;
 
 @Component
@@ -38,7 +37,7 @@ public class CommentMapper {
         return CommentResponseDto.builder()
                 .name(commentEntity.getUser().getName())
                 .username(commentEntity.getUser().getUsername())
-                .profileImage(commentEntity.getUser().getUserProfilePicture())
+                .profileImage(commentEntity.getUser().getProfilePicture())
                 .postId(commentEntity.getPost().getId())
                 .text(commentEntity.getText())
                 .timeOfCreation(getCommentTimeDuration(commentEntity))

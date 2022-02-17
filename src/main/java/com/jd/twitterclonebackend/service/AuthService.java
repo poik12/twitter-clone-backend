@@ -15,9 +15,4 @@ public interface AuthService {
     void deleteUserAccount();
     // Refresh access token
     AuthResponseDto refreshAccessToken(RefreshTokenRequestDto refreshTokenRequestDto);
-
-    // TODO: not ready yet
-    void changeUserRole(String username, UserRole userRole);
-
-
 }

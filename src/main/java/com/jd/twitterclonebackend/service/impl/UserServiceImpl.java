@@ -4,6 +4,8 @@ import com.jd.twitterclonebackend.domain.FollowerEntity;
 import com.jd.twitterclonebackend.domain.UserEntity;
 import com.jd.twitterclonebackend.dto.UserRequestDto;
 import com.jd.twitterclonebackend.dto.UserResponseDto;
+import com.jd.twitterclonebackend.exception.UserException;
+import com.jd.twitterclonebackend.exception.enums.InvalidUserEnum;
 import com.jd.twitterclonebackend.mapper.UserMapper;
 import com.jd.twitterclonebackend.repository.FollowerRepository;
 import com.jd.twitterclonebackend.repository.UserRepository;
@@ -35,7 +37,7 @@ public class UserServiceImpl implements UserService {
                 .findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username));
         // Map user entity to user response
-        return userMapper.mapFromEntityToDto(userEntity);
+        return userMapper.mapFromEntityToUserDto(userEntity);
     }
 
     @Override
@@ -44,7 +46,7 @@ public class UserServiceImpl implements UserService {
         return userRepository
                 .findAll()
                 .stream()
-                .map(userEntity -> userMapper.mapFromEntityToDto(userEntity))
+                .map(userEntity -> userMapper.mapFromEntityToUserDto(userEntity))
                 .collect(Collectors.toList());
     }
 
@@ -58,7 +60,7 @@ public class UserServiceImpl implements UserService {
                 .findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username));
         // Map user response to user entity
-        UserEntity updatedUserEntity = userMapper.mapFromDtoToEntity(
+        UserEntity updatedUserEntity = userMapper.mapFromUserDtoToEntity(
                 userEntity,
                 userRequestDto,
                 profileImageFile,
@@ -108,7 +110,10 @@ public class UserServiceImpl implements UserService {
         FollowerEntity followerEntity = followerRepository.findByToAndFrom(
                 userToUnfollow,
                 loggedUserEntity
-        );
+        ).orElseThrow(() -> {
+            throw new RuntimeException("Follower entity does not exist");
+        });
+
         followerRepository.delete(followerEntity);
         // Update no of following in logged user entity
         loggedUserEntity.setFollowingNo(loggedUserEntity.getFollowingNo() - 1);
@@ -118,28 +123,14 @@ public class UserServiceImpl implements UserService {
         userRepository.save(userToUnfollow);
     }
 
-
     @Override
-    public List<UserResponseDto> getAllFollowers() {
-        // Find logged user
-        UserEntity loggedUserEntity = userDetailsService.currentLoggedUserEntity();
+    public boolean checkIfUserIsFollowed(String followingUser, String followedUser) {
 
-        return followerRepository
-                .getAllFollowersByUser(loggedUserEntity)
+        UserResponseDto followerUserEntity = getUserByUsername(followingUser);
+
+        return followerUserEntity.getFollowing()
                 .stream()
-                .map(userEntity -> userMapper.mapFromEntityToDto(userEntity))
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<UserResponseDto> getAllFollowings() {
-        // Find logged user
-        UserEntity loggedUserEntity = userDetailsService.currentLoggedUserEntity();
-
-        return followerRepository
-                .getAllFollowingsByUser(loggedUserEntity)
-                .stream()
-                .map(userEntity -> userMapper.mapFromEntityToDto(userEntity))
-                .collect(Collectors.toList());
+                .map(following -> following.getUsername())
+                .anyMatch(followingUsername -> followingUsername.equals(followedUser));
     }
 }

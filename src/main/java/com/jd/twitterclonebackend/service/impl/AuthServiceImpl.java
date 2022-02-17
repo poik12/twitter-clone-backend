@@ -11,9 +11,7 @@ import com.jd.twitterclonebackend.exception.TokenException;
 import com.jd.twitterclonebackend.exception.UserAlreadyExistsException;
 import com.jd.twitterclonebackend.exception.UserException;
 import com.jd.twitterclonebackend.mapper.AuthMapper;
-import com.jd.twitterclonebackend.repository.RefreshTokenRepository;
-import com.jd.twitterclonebackend.repository.UserRepository;
-import com.jd.twitterclonebackend.repository.VerificationTokenRepository;
+import com.jd.twitterclonebackend.repository.*;
 import com.jd.twitterclonebackend.security.jwt.RefreshTokenProvider;
 import com.jd.twitterclonebackend.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +34,9 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final VerificationTokenRepository verificationTokenRepository;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final FollowerRepository followerRepository;
+    private final CommentRepository commentRepository;
+    private final PostRepository postRepository;
 
     private final AuthMapper authMapper;
 
@@ -96,7 +97,6 @@ public class AuthServiceImpl implements AuthService {
         // Create verification token object
         VerificationTokenEntity verificationTokenEntity = new VerificationTokenEntity(
                 randomGeneratedToken,
-                Instant.now(),
                 Instant.now().plus(15, ChronoUnit.MINUTES),
                 userEntity
         );
@@ -151,18 +151,20 @@ public class AuthServiceImpl implements AuthService {
         return verificationTokenEntityInDb;
     }
 
-    //    TODO: delete account
     // Delete account
-    @Override
     @Transactional
+    @Override
     public void deleteUserAccount() {
         // Get currently logged user
         UserEntity userEntity = userDetailsService.currentLoggedUserEntity();
-        // Delete refresh token, verification token and user entity
+
         refreshTokenRepository.deleteAllByUser(userEntity);
         verificationTokenRepository.deleteAllByUser(userEntity);
+        followerRepository.deleteAllByTo(userEntity);
+        followerRepository.deleteAllByFrom(userEntity);
+        commentRepository.deleteAllByUser(userEntity);
+        postRepository.deleteAllByUser(userEntity);
         userRepository.delete(userEntity);
-        // Delete posts and comments by user
     }
 
     // Refresh Access Token
@@ -170,19 +172,5 @@ public class AuthServiceImpl implements AuthService {
     public AuthResponseDto refreshAccessToken(RefreshTokenRequestDto refreshTokenRequestDto) {
         return refreshTokenProvider.refreshAccessToken(refreshTokenRequestDto);
     }
-
-    // TODO: doesnt work
-    @Override
-    public void changeUserRole(String username, UserRole userRole) {
-        log.info("Adding role {} to user {}", userRole, username);
-        UserEntity userEntity = userRepository
-                .findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username));
-
-        userEntity.setUserRole(userRole);
-
-        userRepository.save(userEntity);
-    }
-
 
 }

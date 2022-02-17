@@ -15,8 +15,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class SecurityResponse {
 
-
-
     public void successfulAuthenticationResponse(HttpServletResponse response,
                                                  String accessToken,
                                                  Instant expirationTime,

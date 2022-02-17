@@ -21,11 +21,8 @@ public class CommentEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Lob
+    @Column(nullable = false, length = 280)
     private String text;
-
-    @CreationTimestamp
-    private Instant createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private UserEntity user;
@@ -33,8 +30,9 @@ public class CommentEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private PostEntity post;
 
+    @CreationTimestamp
+    private Instant createdAt;
+
 //    @OneToMany
 //    private ImageFileEntity image;
-
-
 }
