@@ -1,14 +1,25 @@
 # Twitter Clone Backend Demo Web Application
 
+## Table of contents
+* [General info](#general-info)
+* [Technologies](#technologies)
+* [Dependencies](#dependencies)
+* [Entity Reliationship Diagram](#entity-relationship-diagram)
+* [Features](#features)
+* [Status](#status)
 
-Java Version: 17 LTS
----------------------------------------
 
-Spring Boot Version: 2.5.7
----------------------------------------
+## General info
+<img src = "readme_images/twitter-clone-architecture.jpg" >
 
-Dependencies
----------------------------------------
+
+## Technologies
+* Java - version  17 LTS
+* Spring Boot - version 2.5.7
+* MySQL - version 8.0
+
+
+## Dependencies
 1. Developer Tools
     - Lombok
 2. WEB
@@ -33,18 +44,12 @@ Dependencies
 9. Additional
     - TimeAgo - library for displaying dates as relative time ago language
 
-Architecture
----------------------------------------
-<img src = "readme_images/twitter-clone-architecture.jpg" >
 
-Entity Relationship Diagram
----------------------------------------
+## Entity Relationship Diagram
 
 
 
-
-Implemented Features
----------------------------------------
+## Features
 - authentication
   - sign up with email confirmation
   - login authentication
@@ -58,3 +63,7 @@ Implemented Features
   - update posts / not implemented
 - comments:
   - add comments to posts
+
+
+## Status
+Project is: _in progress_ / _suspended_
