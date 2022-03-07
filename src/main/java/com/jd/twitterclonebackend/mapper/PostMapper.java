@@ -1,8 +1,8 @@
 package com.jd.twitterclonebackend.mapper;
 
 import com.github.marlonlom.utilities.timeago.TimeAgo;
-import com.jd.twitterclonebackend.domain.PostEntity;
-import com.jd.twitterclonebackend.domain.UserEntity;
+import com.jd.twitterclonebackend.entity.PostEntity;
+import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.dto.PostRequestDto;
 import com.jd.twitterclonebackend.dto.PostResponseDto;
 import com.jd.twitterclonebackend.repository.CommentRepository;

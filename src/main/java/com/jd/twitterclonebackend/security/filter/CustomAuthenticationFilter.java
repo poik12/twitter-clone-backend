@@ -1,8 +1,8 @@
 package com.jd.twitterclonebackend.security.filter;
 
 import com.jd.twitterclonebackend.dto.LoginRequestDto;
-import com.jd.twitterclonebackend.exception.AuthException;
-import com.jd.twitterclonebackend.exception.enums.InvalidAuthEnum;
+import com.jd.twitterclonebackend.exception.UserException;
+import com.jd.twitterclonebackend.exception.enums.InvalidUserEnum;
 import com.jd.twitterclonebackend.security.SecurityResponse;
 import com.jd.twitterclonebackend.security.jwt.AccessTokenProvider;
 import com.jd.twitterclonebackend.security.jwt.RefreshTokenProvider;
@@ -43,7 +43,6 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request,
                                                 HttpServletResponse response) throws AuthenticationException {
-
         try {
             // Get authentication request from login request
             LoginRequestDto authenticationRequest = new ObjectMapper().readValue(
@@ -59,7 +58,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
             return authenticationManager.authenticate(authenticationToken);
 
         } catch (IOException e) {
-            throw new AuthException(InvalidAuthEnum.AUTHENTICATION_FAILED.getMessage() + e);
+            throw new UserException(InvalidUserEnum.AUTHENTICATION_FAILED.getMessage() + e);
         }
     }
 
@@ -69,21 +68,16 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
                                             HttpServletResponse response,
                                             FilterChain chain,
                                             Authentication authentication) throws IOException, ServletException {
-
         // Get user that was successfully authenticated
         User user = (User) authentication.getPrincipal();
-
         // Create access token for that user
         String accessToken = accessTokenProvider.createAccessTokenForPrincipal(user);
-
         // Get access token expiation time
         Instant accessTokenExpirationTime = accessTokenProvider.getAccessTokenExpirationTime();
-
         // Create refresh token for user
         String refreshToken = refreshTokenProvider.createRefreshTokenForPrincipal(user);
-
         // Create response for user
-        new SecurityResponse().successfulAuthenticationResponse(
+        SecurityResponse.successfulAuthenticationResponse(
                 response,
                 accessToken,
                 accessTokenExpirationTime,

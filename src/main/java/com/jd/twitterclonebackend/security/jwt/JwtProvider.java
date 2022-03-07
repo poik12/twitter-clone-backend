@@ -10,7 +10,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
 @Component
-public abstract class JwtProvider {
+abstract class JwtProvider {
 
     // JWT PROPERTIES
     // Access Token Properties

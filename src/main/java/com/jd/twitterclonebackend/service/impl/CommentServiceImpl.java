@@ -1,8 +1,8 @@
 package com.jd.twitterclonebackend.service.impl;
 
-import com.jd.twitterclonebackend.domain.CommentEntity;
-import com.jd.twitterclonebackend.domain.PostEntity;
-import com.jd.twitterclonebackend.domain.UserEntity;
+import com.jd.twitterclonebackend.entity.CommentEntity;
+import com.jd.twitterclonebackend.entity.PostEntity;
+import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.dto.CommentRequestDto;
 import com.jd.twitterclonebackend.dto.CommentResponseDto;
 import com.jd.twitterclonebackend.exception.enums.InvalidCommentEnum;

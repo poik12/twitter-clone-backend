@@ -1,4 +1,4 @@
-package com.jd.twitterclonebackend.domain;
+package com.jd.twitterclonebackend.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

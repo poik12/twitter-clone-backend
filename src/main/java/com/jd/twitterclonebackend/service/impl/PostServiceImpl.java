@@ -1,7 +1,7 @@
 package com.jd.twitterclonebackend.service.impl;
 
-import com.jd.twitterclonebackend.domain.PostEntity;
-import com.jd.twitterclonebackend.domain.UserEntity;
+import com.jd.twitterclonebackend.entity.PostEntity;
+import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.dto.PostRequestDto;
 import com.jd.twitterclonebackend.dto.PostResponseDto;
 import com.jd.twitterclonebackend.exception.enums.InvalidPostEnum;

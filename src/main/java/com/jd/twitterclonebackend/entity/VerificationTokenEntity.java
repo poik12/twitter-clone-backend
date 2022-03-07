@@ -1,4 +1,4 @@
-package com.jd.twitterclonebackend.domain;
+package com.jd.twitterclonebackend.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,11 +10,11 @@ import java.time.Instant;
 import java.util.Date;
 
 @Entity
-@Table(name = "refresh_tokens")
+@Table(name = "verification_tokens")
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class RefreshTokenEntity {
+@AllArgsConstructor
+public class VerificationTokenEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +30,9 @@ public class RefreshTokenEntity {
 
     private Instant expiresAt;
 
-    public RefreshTokenEntity(String token, Instant expiresAt, UserEntity user) {
+    private Instant confirmedAt;
+
+    public VerificationTokenEntity(String token, Instant expiresAt, UserEntity user) {
         this.token = token;
         this.expiresAt = expiresAt;
         this.user = user;

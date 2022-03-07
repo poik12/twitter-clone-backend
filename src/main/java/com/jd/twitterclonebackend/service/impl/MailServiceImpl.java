@@ -1,8 +1,8 @@
 package com.jd.twitterclonebackend.service.impl;
 
 import com.jd.twitterclonebackend.config.SecurityConfig;
-import com.jd.twitterclonebackend.domain.UserEntity;
-import com.jd.twitterclonebackend.dto.NotificationEmailDto;
+import com.jd.twitterclonebackend.entity.UserEntity;
+import com.jd.twitterclonebackend.dto.EmailNotificationDto;
 import com.jd.twitterclonebackend.exception.enums.InvalidEmailEnum;
 import com.jd.twitterclonebackend.exception.EmailException;
 import com.jd.twitterclonebackend.service.MailService;
@@ -30,9 +30,9 @@ public class MailServiceImpl implements MailService {
 
     // Create activation email with generated token for created user
     @Override
-    public NotificationEmailDto createActivationEmailForUser(UserEntity userEntity, String verificationToken) {
+    public EmailNotificationDto createActivationEmail(UserEntity userEntity, String verificationToken) {
 
-        return NotificationEmailDto.builder()
+        return EmailNotificationDto.builder()
                 .emailSubject(EMAIL_SUBJECT)
                 .emailRecipient(userEntity.getEmailAddress())
                 .recipientName(userEntity.getName())
@@ -43,7 +43,7 @@ public class MailServiceImpl implements MailService {
     // Send activation email with generated token to created user
     @Async
     @Override
-    public void sendEmailToUser(NotificationEmailDto notificationEmailDto) {
+    public void sendEmail(EmailNotificationDto emailNotificationDto) {
         // Create new mail, set sender, recipient, subject and body
         MimeMessagePreparator messagePreparator = mimeMessage -> {
 
@@ -53,12 +53,12 @@ public class MailServiceImpl implements MailService {
             );
 
             messageHelper.setFrom(EMAIL_SENDER);
-            messageHelper.setTo(notificationEmailDto.getEmailRecipient());
-            messageHelper.setSubject(notificationEmailDto.getEmailSubject());
+            messageHelper.setTo(emailNotificationDto.getEmailRecipient());
+            messageHelper.setSubject(emailNotificationDto.getEmailSubject());
             messageHelper.setText(
-                    buildEmailBodyForUser(
-                            notificationEmailDto.getRecipientName(),
-                            notificationEmailDto.getActivationLink()
+                    buildEmailBody(
+                            emailNotificationDto.getRecipientName(),
+                            emailNotificationDto.getActivationLink()
                     ),
                     true
             );
@@ -71,15 +71,14 @@ public class MailServiceImpl implements MailService {
         } catch (MailException e) {
             log.error("Exception occurred when sending mail", e);
             throw new EmailException(
-                    InvalidEmailEnum.SENDING_EMAIL_ERROR.getMessage(),
-                    notificationEmailDto.getEmailRecipient()
+                    InvalidEmailEnum.SENDING_EMAIL_ERROR.getMessage() + emailNotificationDto.getEmailRecipient()
             );
         }
     }
 
     // Email body
     @Override
-    public String buildEmailBodyForUser(String recipientName, String activationLink) {
+    public String buildEmailBody(String recipientName, String activationLink) {
         return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
                 "\n" +
                 "<span style=\"display:none;font-size:1px;color:#fff;max-height:0\"></span>\n" +

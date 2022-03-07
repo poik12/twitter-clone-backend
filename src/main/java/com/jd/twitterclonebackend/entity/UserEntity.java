@@ -1,6 +1,6 @@
-package com.jd.twitterclonebackend.domain;
+package com.jd.twitterclonebackend.entity;
 
-import com.jd.twitterclonebackend.domain.enums.UserRole;
+import com.jd.twitterclonebackend.entity.enums.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

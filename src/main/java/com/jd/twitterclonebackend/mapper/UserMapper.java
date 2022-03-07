@@ -1,6 +1,6 @@
 package com.jd.twitterclonebackend.mapper;
 
-import com.jd.twitterclonebackend.domain.UserEntity;
+import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.dto.FollowerDto;
 import com.jd.twitterclonebackend.dto.UserRequestDto;
 import com.jd.twitterclonebackend.dto.UserResponseDto;

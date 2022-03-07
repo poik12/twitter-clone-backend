@@ -1,14 +1,14 @@
 package com.jd.twitterclonebackend.service;
 
-import com.jd.twitterclonebackend.dto.NotificationEmailDto;
-import com.jd.twitterclonebackend.domain.UserEntity;
+import com.jd.twitterclonebackend.dto.EmailNotificationDto;
+import com.jd.twitterclonebackend.entity.UserEntity;
 
 public interface MailService {
 
-    NotificationEmailDto createActivationEmailForUser(UserEntity userEntity, String verificationToken);
+    EmailNotificationDto createActivationEmail(UserEntity userEntity, String verificationToken);
 
-    String buildEmailBodyForUser(String name, String link);
+    String buildEmailBody(String name, String link);
 
-    void sendEmailToUser(NotificationEmailDto notificationEmailDto);
+    void sendEmail(EmailNotificationDto emailNotificationDto);
 
 }

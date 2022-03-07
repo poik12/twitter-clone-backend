@@ -1,7 +1,7 @@
 package com.jd.twitterclonebackend.security.jwt;
 
 import com.auth0.jwt.JWT;
-import com.jd.twitterclonebackend.domain.UserEntity;
+import com.jd.twitterclonebackend.entity.UserEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;

@@ -50,7 +50,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
             } catch (Exception exception) {
                 log.error("Error logging in: {}", exception.getMessage());
-                new SecurityResponse().failedAuthorizationResponse(
+                SecurityResponse.failedAuthorizationResponse(
                         response,
                         exception,
                         "Authorization error");

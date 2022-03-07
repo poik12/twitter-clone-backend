@@ -2,8 +2,8 @@ package com.jd.twitterclonebackend.security.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.jd.twitterclonebackend.domain.RefreshTokenEntity;
-import com.jd.twitterclonebackend.domain.UserEntity;
+import com.jd.twitterclonebackend.entity.RefreshTokenEntity;
+import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.dto.AuthResponseDto;
 import com.jd.twitterclonebackend.dto.RefreshTokenRequestDto;
 import com.jd.twitterclonebackend.exception.enums.InvalidTokenEnum;

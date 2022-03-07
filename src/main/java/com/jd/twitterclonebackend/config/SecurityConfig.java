@@ -53,10 +53,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.csrf().disable();
         // Config Cross-Origin Resource Sharing in WebConfig Class
         httpSecurity.cors();
-
         // Stateless Session because of JWT
         httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
         // Swagger API
         // ACCESS THROUGH: http://localhost:8080/swagger-ui/index.html
         httpSecurity.authorizeRequests()
@@ -67,10 +65,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/swagger-ui/**",
                         "/webjars/**")
                 .permitAll();
-
         // H2 Database
         httpSecurity.authorizeRequests().antMatchers("h2-console/**").permitAll();
-
         // CONTROLLER MAPPINGS
         httpSecurity.authorizeRequests().antMatchers(API_VERSION + "/auth/**").permitAll();
         httpSecurity.authorizeRequests().antMatchers(API_VERSION + "/users/**").permitAll();
@@ -78,13 +74,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.authorizeRequests().antMatchers(API_VERSION + "/comments/**").permitAll();
 //        httpSecurity.authorizeRequests().antMatchers(HttpMethod.GET, "/api/user/**").hasAnyAuthority("ROLE_USER");
 //        httpSecurity.authorizeRequests().antMatchers(HttpMethod.POST, "/api/user/save/**").hasAnyAuthority("ROLE_ADMIN");
-
         httpSecurity.authorizeRequests().anyRequest().authenticated();
         httpSecurity.addFilter(customAuthenticationFilter);
-        httpSecurity.addFilterBefore(
-                customAuthorizationFilter,
-                UsernamePasswordAuthenticationFilter.class
-        );
+        httpSecurity.addFilterBefore(customAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean

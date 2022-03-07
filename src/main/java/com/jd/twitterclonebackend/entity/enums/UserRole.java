@@ -1,4 +1,4 @@
-package com.jd.twitterclonebackend.domain.enums;
+package com.jd.twitterclonebackend.entity.enums;
 
 public enum UserRole {
 
