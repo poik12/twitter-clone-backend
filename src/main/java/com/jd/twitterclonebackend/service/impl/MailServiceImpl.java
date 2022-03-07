@@ -1,6 +1,5 @@
 package com.jd.twitterclonebackend.service.impl;
 
-import com.jd.twitterclonebackend.config.SecurityConfig;
 import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.dto.EmailNotificationDto;
 import com.jd.twitterclonebackend.exception.enums.InvalidEmailEnum;
@@ -8,6 +7,7 @@ import com.jd.twitterclonebackend.exception.EmailException;
 import com.jd.twitterclonebackend.service.MailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -21,7 +21,9 @@ import org.springframework.stereotype.Service;
 public class MailServiceImpl implements MailService {
 
     // Email Properties
-    private static final String ACTIVATION_LINK = "http://localhost:8080"+ SecurityConfig.API_VERSION + "/auth/confirm?token=";
+    @Value(value = "${server.servlet.context-path}")
+    private static String api_version;
+    private static final String ACTIVATION_LINK = "http://localhost:8080" + api_version + "/auth/confirm?token=";
     private static final String EMAIL_SUBJECT = "Please Activate your Account";
     private static final String EMAIL_SENDER = "user.service@gmail.com";
     private static final String ENCODING = "UTF-8";

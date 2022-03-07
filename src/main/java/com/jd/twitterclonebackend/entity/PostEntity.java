@@ -44,6 +44,12 @@ public class PostEntity implements Serializable {
     ) // many comments belong to post
     private List<CommentEntity> comments;
 
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            mappedBy = "post"
+    )
+    private List<ImageFileEntity> images;
+
     private Long commentNo;
 
     @CreationTimestamp

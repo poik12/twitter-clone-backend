@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("${api-version}/auth")
+@RequestMapping(value = "/auth")
 @RequiredArgsConstructor
 public class AuthController {
 

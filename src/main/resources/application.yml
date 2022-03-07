@@ -1,0 +1,38 @@
+# Server Properties
+server:
+  port: 8080
+  servlet:
+    context-path: /api/v1
+
+spring:
+  # Database Properties
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  # JPA Hibernate Properties
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+#        generate_statistics: true # Generate ang log statistics
+#        query:
+#          in_clause_parameter_padding: true # Active parameter padding
+#      session:
+#        events:
+#          log:
+#            LOG_QUERIES_SLOWER_THAN_MS: 5 # Log slow queries
+  # mailtrap.io Properties
+  mail:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    protocol: ${MAIL_PROTOCOL}
+  # Console Properties
+  output:
+    ansi:
+      enabled: always

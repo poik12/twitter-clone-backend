@@ -33,7 +33,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
 
         // If user tries to sign in or get refresh token, don't do anything
-        if (request.getServletPath().equals(SecurityConfig.API_VERSION + "/auth/login")) {
+        if (request.getServletPath().equals("/auth/login")) {
             filterChain.doFilter(request, response);
         }
         // Get authorization header

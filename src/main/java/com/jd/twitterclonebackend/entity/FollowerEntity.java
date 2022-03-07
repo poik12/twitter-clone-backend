@@ -3,12 +3,13 @@ package com.jd.twitterclonebackend.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "followers")
 @Data
 @NoArgsConstructor
-public class FollowerEntity {
+public class FollowerEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)

@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Objects;
 
 @RestController
-@RequestMapping("${api-version}/posts")
+@RequestMapping(value = "/posts")
 @RequiredArgsConstructor
 public class PostController {
 

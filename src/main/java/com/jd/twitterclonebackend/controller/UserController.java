@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
-@RequestMapping("${api-version}/users")
+@RequestMapping(value = "/users")
 @RequiredArgsConstructor
 public class UserController {
 
