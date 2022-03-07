@@ -1,39 +1,24 @@
 package com.jd.twitterclonebackend.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 import java.util.List;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Value
 @Builder
 public class UserResponseDto {
 
-    private Long id;
-
-    private String name;
-
-    private String username;
-
-    private String createdAt;
-
-    private long tweetNo;
-
-    private long followingNo;
-
-    private long followerNo;
-
-    private byte[] userProfilePicture;
-
-    private byte[] userBackgroundPicture;
-
-    private String description;
-
-    private List<FollowerDto> followers;
-
-    private List<FollowerDto> following;
+    Long id;
+    String name;
+    String username;
+    String createdAt;
+    long tweetNo;
+    long followingNo;
+    long followerNo;
+    byte[] userProfilePicture;
+    byte[] userBackgroundPicture;
+    String description;
+    List<FollowerDto> followers;
+    List<FollowerDto> following;
 
 }

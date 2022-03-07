@@ -87,7 +87,9 @@ public class AuthServiceImpl implements AuthService {
         // Update token confirmation in db
         verificationTokenService.updateVerificationToken(token, Instant.now());
         // Return info about user account confirmation
-        return new EmailConfirmationDto("Email has been confirmed");
+        return EmailConfirmationDto.builder()
+                .message("Email has been confirmed")
+                .build();
     }
 
     // Delete account

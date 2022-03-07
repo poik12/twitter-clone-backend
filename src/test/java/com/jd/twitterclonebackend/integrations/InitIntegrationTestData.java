@@ -79,9 +79,9 @@ public abstract class InitIntegrationTestData {
     }
 
     protected PostRequestDto initPostRequestDto() {
-        PostRequestDto postRequestDto = new PostRequestDto();
-        postRequestDto.setDescription(POST_DESCRIPTION);
-        return postRequestDto;
+        return PostRequestDto.builder()
+                .description(POST_DESCRIPTION)
+                .build();
     }
 
 

@@ -1,5 +1,6 @@
 package com.jd.twitterclonebackend.controller;
 
+import com.jd.twitterclonebackend.config.swagger.ApiRestController;
 import com.jd.twitterclonebackend.dto.*;
 import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.service.AuthService;
@@ -13,6 +14,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping(value = "/auth")
 @RequiredArgsConstructor
+@ApiRestController
 public class AuthController {
 
     private final AuthService authService;

@@ -1,5 +1,6 @@
 package com.jd.twitterclonebackend.controller;
 
+import com.jd.twitterclonebackend.config.swagger.ApiRestController;
 import com.jd.twitterclonebackend.dto.CommentRequestDto;
 import com.jd.twitterclonebackend.dto.CommentResponseDto;
 import com.jd.twitterclonebackend.service.impl.CommentServiceImpl;
@@ -13,6 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/comments")
 @RequiredArgsConstructor
+@ApiRestController
 public class CommentController {
 
     private final CommentServiceImpl commentService;

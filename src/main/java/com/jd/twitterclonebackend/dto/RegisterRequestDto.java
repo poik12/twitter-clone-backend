@@ -2,20 +2,14 @@ package com.jd.twitterclonebackend.dto;
 
 import lombok.*;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Value
 @Builder
 public class RegisterRequestDto {
 
-    private String name;
-
-    private String emailAddress;
-
-    private String username;
-
-    private String password;
-
-    private String phoneNumber;
+    String name;
+    String emailAddress;
+    String username;
+    String password;
+    String phoneNumber;
 
 }

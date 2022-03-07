@@ -2,6 +2,7 @@ package com.jd.twitterclonebackend.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jd.twitterclonebackend.config.swagger.ApiRestController;
 import com.jd.twitterclonebackend.dto.PostRequestDto;
 import com.jd.twitterclonebackend.dto.PostResponseDto;
 import com.jd.twitterclonebackend.service.impl.PostServiceImpl;
@@ -15,6 +16,7 @@ import java.util.Objects;
 @RestController
 @RequestMapping(value = "/posts")
 @RequiredArgsConstructor
+@ApiRestController
 public class PostController {
 
     private final PostServiceImpl postService;

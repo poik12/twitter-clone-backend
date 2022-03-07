@@ -27,7 +27,9 @@ public class UserAuthenticationEntryPoint implements AuthenticationEntryPoint {
         response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         MAPPER.writeValue(
                 response.getOutputStream(),
-                new UnauthorizedPathDto("Unauthorized path")
+                UnauthorizedPathDto.builder()
+                        .message("Unauthorized path")
+                        .build()
         );
 
     }

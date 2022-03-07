@@ -58,7 +58,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // Stateless Session because of JWT
         httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         // Swagger API
-        // ACCESS THROUGH: http://localhost:8080/swagger-ui/index.html
+        // ACCESS THROUGH: http://localhost:8080/api/v1/swagger-ui/index.html
         httpSecurity.authorizeRequests()
                 .antMatchers(
                         "/v2/api-docs",

@@ -1,10 +1,13 @@
 package com.jd.twitterclonebackend.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Value;
 
-@AllArgsConstructor
+@Value
+@Builder
 public class UnauthorizedPathDto {
 
-    private String message;
+    String message;
 
 }
