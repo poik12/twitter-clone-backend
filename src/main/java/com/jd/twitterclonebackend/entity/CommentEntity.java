@@ -25,9 +25,17 @@ public class CommentEntity {
     private String text;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "user_id",
+            referencedColumnName = "id"
+    )
     private UserEntity user;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "post_id",
+            referencedColumnName = "id"
+    )
     private PostEntity post;
 
     @CreationTimestamp

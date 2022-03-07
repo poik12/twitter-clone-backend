@@ -55,11 +55,29 @@ public class UserEntity implements Serializable {
     @Column(length = 280)
     private String description;
 
-    @OneToMany(mappedBy="to") // relationship owner
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            mappedBy="to"
+    ) // user has many followers
     private List<FollowerEntity> followers;
 
-    @OneToMany(mappedBy="from") // relationship owner
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            mappedBy="from"
+    ) // user has many following
     private List<FollowerEntity> following;
+
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            mappedBy = "user"
+    ) // user has many posts
+    private List<PostEntity> posts;
+
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            mappedBy = "user"
+    ) // user has many comments
+    private List<CommentEntity> comments;
 
     @Enumerated(EnumType.STRING)
     private UserRole userRole;

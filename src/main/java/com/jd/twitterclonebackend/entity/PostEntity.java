@@ -29,10 +29,20 @@ public class PostEntity implements Serializable {
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY) // Many posts created by one user
+    @JoinColumn(
+            name = "user_id",
+            referencedColumnName = "id"
+    ) // many posts belong to one user
     private UserEntity user;
 
-    @OneToMany(mappedBy = "post")
-    private List<CommentEntity> comments = new ArrayList<>();
+//    @OneToMany(mappedBy = "post")
+//    private List<CommentEntity> comments = new ArrayList<>();
+
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            mappedBy = "post"
+    ) // many comments belong to post
+    private List<CommentEntity> comments;
 
     private Long commentNo;
 

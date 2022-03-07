@@ -23,6 +23,10 @@ public class VerificationTokenEntity {
     private String token;
 
     @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "user_id",
+            referencedColumnName = "id"
+    )
     private UserEntity user;
 
     @CreationTimestamp
