@@ -120,7 +120,10 @@ public class RefreshTokenProvider extends JwtProvider {
         // Check if user exists in database
         UserEntity userEntity = userRepository
                 .findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username));
+                .orElseThrow(() -> new UserException(
+                        InvalidUserEnum.USER_NOT_FOUND_WITH_USERNAME.getMessage() + username,
+                        HttpStatus.NOT_FOUND
+                ));
         // Generate new access token for user
         String accessToken = accessTokenProvider.refreshAccessTokenUserEntity(userEntity);
         // Create response for user

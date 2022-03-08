@@ -1,5 +1,7 @@
 package com.jd.twitterclonebackend.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jd.twitterclonebackend.entity.PostEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.dto.PostRequestDto;
@@ -37,8 +39,35 @@ public class PostServiceImpl implements PostService {
 
     private final PostMapper postMapper;
 
+//    @Override
+//    public void addPost(MultipartFile file, PostRequestDto postRequestDto) {
+//        // Get User who created post
+//        UserEntity userEntity = userDetailsService.currentLoggedUserEntity();
+//        // Map Post from request to post entity
+//        PostEntity postEntity = postMapper.mapFromDtoToEntity(postRequestDto, userEntity);
+//        // Save mapped post in repository
+//        postRepository.save(postEntity);
+//        // If file is not empty - upload into db
+//        if (Objects.nonNull(file)) {
+//            fileService.uploadImageFile(
+//                    postEntity,
+//                    file
+//            );
+//        }
+//    }
+
     @Override
-    public void addPost(MultipartFile file, PostRequestDto postRequestDto) {
+    public void addPost(MultipartFile file, String postRequest) {
+        // Map Post from string to postDTO
+        PostRequestDto postRequestDto = null;
+        try {
+            postRequestDto = new ObjectMapper().readValue(
+                    postRequest,
+                    PostRequestDto.class
+            );
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
         // Get User who created post
         UserEntity userEntity = userDetailsService.currentLoggedUserEntity();
         // Map Post from request to post entity

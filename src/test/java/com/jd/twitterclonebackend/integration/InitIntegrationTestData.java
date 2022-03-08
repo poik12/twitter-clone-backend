@@ -11,18 +11,16 @@ import com.jd.twitterclonebackend.entity.VerificationTokenEntity;
 import com.jd.twitterclonebackend.entity.enums.UserRole;
 import com.jd.twitterclonebackend.mapper.AuthMapper;
 import com.jd.twitterclonebackend.mapper.PostMapper;
-import com.jd.twitterclonebackend.repository.PostRepository;
-import com.jd.twitterclonebackend.repository.RefreshTokenRepository;
-import com.jd.twitterclonebackend.repository.UserRepository;
-import com.jd.twitterclonebackend.repository.VerificationTokenRepository;
+import com.jd.twitterclonebackend.repository.*;
 import com.jd.twitterclonebackend.security.jwt.RefreshTokenProvider;
-import com.jd.twitterclonebackend.service.FileService;
-import com.jd.twitterclonebackend.service.MailService;
-import com.jd.twitterclonebackend.service.VerificationTokenService;
+import com.jd.twitterclonebackend.service.*;
 import com.jd.twitterclonebackend.service.impl.AuthServiceImpl;
 import com.jd.twitterclonebackend.service.impl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
 
 import javax.transaction.Transactional;
@@ -41,9 +39,11 @@ public abstract class InitIntegrationTestData {
     @Autowired
     protected UserDetailsServiceImpl userDetailsService;
     @Autowired
-    protected AuthServiceImpl authService;
+    protected AuthService authService;
     @Autowired
     protected FileService fileService;
+    @Autowired
+    protected PostService postService;
 
     @Autowired
     protected VerificationTokenService verificationTokenService;
@@ -61,6 +61,8 @@ public abstract class InitIntegrationTestData {
     protected PostRepository postRepository;
     @Autowired
     protected UserRepository userRepository;
+    @Autowired
+    protected ImageFileRepository fileRepository;
     @Autowired
     protected VerificationTokenRepository verificationTokenRepository;
     @Autowired
@@ -123,8 +125,8 @@ public abstract class InitIntegrationTestData {
                 .phoneNumber(USER_PRIME_PHONE_NUMBER)
                 .enabled(true)
                 .userRole(UserRole.ROLE_USER)
-                .profilePicture(fileService.convertImagePathToByteArray(DEFAULT_PROFILE_PICTURE_PATH))
-                .backgroundPicture(fileService.convertImagePathToByteArray(DEFAULT_BACKGROUND_PICTURE_PATH))
+                .profilePicture(null)
+                .backgroundPicture(null)
                 .tweetNo(0L)
                 .followerNo(0L)
                 .followingNo(0L)
@@ -172,8 +174,8 @@ public abstract class InitIntegrationTestData {
                 .phoneNumber(USER_PRIME_PHONE_NUMBER)
                 .enabled(false)
                 .userRole(UserRole.ROLE_USER)
-                .profilePicture(fileService.convertImagePathToByteArray(DEFAULT_PROFILE_PICTURE_PATH))
-                .backgroundPicture(fileService.convertImagePathToByteArray(DEFAULT_BACKGROUND_PICTURE_PATH))
+                .profilePicture(null)
+                .backgroundPicture(null)
                 .tweetNo(0L)
                 .followerNo(0L)
                 .followingNo(0L)
@@ -227,23 +229,16 @@ public abstract class InitIntegrationTestData {
         return refreshTokenRepository.save(refreshTokenEntity);
     }
 
-//    protected UserEntity initCurrentLoggedUser() {
-//        UserEntity userEntity = initDatabaseByPrimeUserEnabled();
-//        Authentication authentication = new UsernamePasswordAuthenticationToken(
-//                userEntity.getUsername(),
-//                userEntity.getPassword()
-//        );
-//        SecurityContextHolder
-//                .getContext()
-//                .setAuthentication(authentication);
-//        return userDetailsService.currentLoggedUserEntity();
-//    }
-
-    protected PostRequestDto initPostRequestDto() {
-        return PostRequestDto.builder()
-                .description(POST_DESCRIPTION)
-                .build();
+    protected UserEntity initCurrentLoggedUser() {
+        UserEntity userEntity = initDatabaseByPrimeUserEnabled();
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                userEntity.getUsername(),
+                userEntity.getPassword()
+        );
+        SecurityContextHolder
+                .getContext()
+                .setAuthentication(authentication);
+        return userEntity;
     }
-
 
 }

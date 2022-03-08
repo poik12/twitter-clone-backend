@@ -21,26 +21,35 @@ public class PostController {
 
     private final PostServiceImpl postService;
 
+//    // ADD NEW POST
+//    @PostMapping
+//    public void addPost(
+//            @RequestParam(required = false, value = "file") MultipartFile file,
+//            @RequestParam(required = true, value = "postRequest") String postRequest
+//    ) throws JsonProcessingException {
+//
+//        // Map Post from string to postDTO
+//        PostRequestDto postRequestDtoMappedFromString = new ObjectMapper().readValue(
+//                postRequest,
+//                PostRequestDto.class
+//        );
+//
+//        // TODO: change post signature
+//        if (Objects.nonNull(file)) {
+//            postService.addPost(
+//                    file,
+//                    postRequestDtoMappedFromString
+//            );
+//        }
+//    }
+
     // ADD NEW POST
     @PostMapping
     public void addPost(
             @RequestParam(required = false, value = "file") MultipartFile file,
             @RequestParam(required = true, value = "postRequest") String postRequest
-    ) throws JsonProcessingException {
-
-        // Map Post from string to postDTO
-        PostRequestDto postRequestDtoMappedFromString = new ObjectMapper().readValue(
-                postRequest,
-                PostRequestDto.class
-        );
-
-        // TODO: change post signature
-        if (Objects.nonNull(file)) {
-            postService.addPost(
-                    file,
-                    postRequestDtoMappedFromString
-            );
-        }
+    ) {
+        postService.addPost(file, postRequest);
     }
 
     // GET ALL POSTS SORTED BY TIMESTAMP DESC
@@ -50,19 +59,19 @@ public class PostController {
     }
 
     // GET SINGLE POST BY ID
-    @GetMapping(value ="/{postId}")
+    @GetMapping(value = "/{postId}")
     public PostResponseDto getPostById(@PathVariable Long postId) {
         return postService.getPostById(postId);
     }
 
     // GET POSTS BY USERNAME
-    @GetMapping(value ="/by-user/{username}")
+    @GetMapping(value = "/by-user/{username}")
     public List<PostResponseDto> getPostsByUsername(@PathVariable String username) {
         return postService.getPostsByUsername(username);
     }
 
     // DELETE POST BY ID
-    @DeleteMapping(value ="/{postId}")
+    @DeleteMapping(value = "/{postId}")
     public void deletePostById(@PathVariable Long postId) {
         postService.deletePostById(postId);
     }

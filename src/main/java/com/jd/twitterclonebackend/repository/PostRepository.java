@@ -17,5 +17,7 @@ public interface PostRepository extends JpaRepository<PostEntity, Long> {
 
     List<PostEntity> findAllByOrderByCreatedAtDesc();
 
+    PostEntity findByDescription(String description);
+
     void deleteAllByUser(UserEntity userEntity);
 }

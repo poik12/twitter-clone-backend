@@ -265,6 +265,32 @@ class AuthServiceImplTest extends InitIntegrationTestData {
         assertThat(result.getMessage()).isEqualTo(InvalidTokenEnum.REFRESH_TOKEN_EXPIRED.getMessage());
     }
 
+    @Test
+    void should_throwUserException_whenUsernameFromTokenWasNotFound() {
+        // given
+        UserEntity userEntity = initDatabaseByPrimeUserEnabled();
+        RefreshTokenEntity refreshTokenEntity = initRefreshTokenInDatabase(userEntity);
+
+        RefreshTokenRequestDto refreshTokenRequestDto = RefreshTokenRequestDto.builder()
+                .refreshToken(refreshTokenEntity.getToken())
+                .username(userEntity.getUsername())
+                .build();
+
+        userEntity.setUsername(FAKE_USERNAME);
+        assertThat(userRepository.findByUsername(FAKE_USERNAME)).isNotEmpty();
+
+        // when
+        UserException result = assertThrows(
+                UserException.class,
+                () -> authService.refreshAccessToken(refreshTokenRequestDto)
+        );
+
+        // then
+        assertThat(result.getStatus()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(result.getMessage()).isEqualTo(InvalidUserEnum.USER_NOT_FOUND_WITH_USERNAME.getMessage() + USER_PRIME_USERNAME);
+
+    }
+
 
 
 }
