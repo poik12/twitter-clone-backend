@@ -14,6 +14,7 @@ import com.jd.twitterclonebackend.repository.UserRepository;
 import com.jd.twitterclonebackend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +38,10 @@ public class UserServiceImpl implements UserService {
         // Find user in repository by its username
         UserEntity userEntity = userRepository
                 .findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username));
+                .orElseThrow(() -> new UserException(
+                        InvalidUserEnum.USER_NOT_FOUND_WITH_USERNAME.getMessage(),
+                        HttpStatus.NOT_FOUND
+                ));
         // Map user entity to user response
         return userMapper.mapFromEntityToUserDto(userEntity);
     }
@@ -48,7 +52,7 @@ public class UserServiceImpl implements UserService {
         return userRepository
                 .findAll()
                 .stream()
-                .map(userEntity -> userMapper.mapFromEntityToUserDto(userEntity))
+                .map(userMapper::mapFromEntityToUserDto)
                 .collect(Collectors.toList());
     }
 
@@ -60,7 +64,10 @@ public class UserServiceImpl implements UserService {
         // Find user in repository by its username
         UserEntity userEntity = userRepository
                 .findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username));
+                .orElseThrow(() -> new UserException(
+                        InvalidUserEnum.USER_NOT_FOUND_WITH_USERNAME.getMessage(),
+                        HttpStatus.NOT_FOUND
+                ));
         // Map user response to user entity
         UserEntity updatedUserEntity = userMapper.mapFromUserDtoToEntity(
                 userEntity,
@@ -80,9 +87,10 @@ public class UserServiceImpl implements UserService {
         // Find user who will be followed by its username
         UserEntity userToFollow = userRepository
                 .findByUsername(username)
-                .orElseThrow(() ->
-                        new UserException(InvalidUserEnum.USER_NOT_FOUND_WITH_USERNAME + username)
-                );
+                .orElseThrow(() -> new UserException(
+                        InvalidUserEnum.USER_NOT_FOUND_WITH_USERNAME + username,
+                        HttpStatus.NOT_FOUND
+                ));
         // Create object of follower entity and save it in db
         FollowerEntity followerEntity = new FollowerEntity(
                 userToFollow,
@@ -105,15 +113,19 @@ public class UserServiceImpl implements UserService {
         // Find user who will be unfollowed by its username
         UserEntity userToUnfollow = userRepository
                 .findByUsername(username)
-                .orElseThrow(() ->
-                        new UserException(InvalidUserEnum.USER_NOT_FOUND_WITH_USERNAME + username)
-                );
+                .orElseThrow(() -> new UserException(
+                        InvalidUserEnum.USER_NOT_FOUND_WITH_USERNAME + username,
+                        HttpStatus.NOT_FOUND
+                ));
         // Find follower entity in db and delete
         FollowerEntity followerEntity = followerRepository.findByToAndFrom(
                 userToUnfollow,
                 loggedUserEntity
         ).orElseThrow(() -> {
-            throw new RuntimeException("Follower entity does not exist");
+            throw new UserException(
+                    InvalidUserEnum.FOLLOWER_ENTITY_DOES_NOT_EXIST.getMessage(),
+                    HttpStatus.NOT_FOUND
+            );
         });
 
         followerRepository.delete(followerEntity);

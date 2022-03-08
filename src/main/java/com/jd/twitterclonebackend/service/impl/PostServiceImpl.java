@@ -1,5 +1,7 @@
 package com.jd.twitterclonebackend.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jd.twitterclonebackend.entity.PostEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.dto.PostRequestDto;
@@ -17,6 +19,7 @@ import com.jd.twitterclonebackend.repository.UserRepository;
 import com.jd.twitterclonebackend.service.FileService;
 import com.jd.twitterclonebackend.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,14 +33,41 @@ public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
-    private final CommentRepository commentRepository;
+
     private final UserDetailsServiceImpl userDetailsService;
-    private final PostMapper postMapper;
     private final FileService fileService;
-    private final ImageFileRepository imageFileRepository;
+
+    private final PostMapper postMapper;
+
+//    @Override
+//    public void addPost(MultipartFile file, PostRequestDto postRequestDto) {
+//        // Get User who created post
+//        UserEntity userEntity = userDetailsService.currentLoggedUserEntity();
+//        // Map Post from request to post entity
+//        PostEntity postEntity = postMapper.mapFromDtoToEntity(postRequestDto, userEntity);
+//        // Save mapped post in repository
+//        postRepository.save(postEntity);
+//        // If file is not empty - upload into db
+//        if (Objects.nonNull(file)) {
+//            fileService.uploadImageFile(
+//                    postEntity,
+//                    file
+//            );
+//        }
+//    }
 
     @Override
-    public void addPost(MultipartFile file, PostRequestDto postRequestDto) {
+    public void addPost(MultipartFile file, String postRequest) {
+        // Map Post from string to postDTO
+        PostRequestDto postRequestDto = null;
+        try {
+            postRequestDto = new ObjectMapper().readValue(
+                    postRequest,
+                    PostRequestDto.class
+            );
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
         // Get User who created post
         UserEntity userEntity = userDetailsService.currentLoggedUserEntity();
         // Map Post from request to post entity
@@ -75,9 +105,10 @@ public class PostServiceImpl implements PostService {
         // Find post by id
         PostEntity postEntity = postRepository
                 .findById(postId)
-                .orElseThrow(() ->
-                        new PostException(InvalidPostEnum.POST_NOT_FOUND.getMessage() + postId)
-                );
+                .orElseThrow(() -> new PostException(
+                        InvalidPostEnum.POST_NOT_FOUND.getMessage() + postId,
+                        HttpStatus.NOT_FOUND
+                ));
 
         // Collect found post entity to list
         List<PostEntity> postList = new ArrayList<>();
@@ -99,9 +130,10 @@ public class PostServiceImpl implements PostService {
         // Find user in user repository
         UserEntity userEntity = userRepository
                 .findByUsername(username)
-                .orElseThrow(() ->
-                        new UserException(InvalidUserEnum.USER_NOT_FOUND_WITH_USERNAME.getMessage() + username)
-                );
+                .orElseThrow(() -> new UserException(
+                        InvalidUserEnum.USER_NOT_FOUND_WITH_USERNAME.getMessage() + username,
+                        HttpStatus.NOT_FOUND
+                ));
 
         // Find all posts by user entity, map them to dto and return
         List<PostEntity> postList = postRepository.findByUserAndOrderByCreatedAtDesc(userEntity);

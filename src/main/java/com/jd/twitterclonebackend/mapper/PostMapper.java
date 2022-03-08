@@ -26,7 +26,6 @@ public class PostMapper {
 
         return PostEntity.builder()
                 .description(postRequestDto.getDescription())
-//                .url(postRequest.getUrl())
                 .user(userEntity)
                 .commentNo(0L)
                 .build();

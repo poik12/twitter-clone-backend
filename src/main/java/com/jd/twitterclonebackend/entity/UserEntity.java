@@ -58,6 +58,7 @@ public class UserEntity implements Serializable {
     private String description;
 
     @OneToOne(
+            orphanRemoval = true,
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,
             mappedBy = "user"
@@ -65,6 +66,7 @@ public class UserEntity implements Serializable {
     private VerificationTokenEntity verificationTokenEntity;
 
     @OneToOne(
+            orphanRemoval = true,
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,
             mappedBy = "user"
@@ -72,18 +74,21 @@ public class UserEntity implements Serializable {
     private RefreshTokenEntity refreshTokenEntity;
 
     @OneToMany(
+            orphanRemoval = true,
             fetch = FetchType.LAZY,
             mappedBy="to"
     ) // user has many followers
     private List<FollowerEntity> followers;
 
     @OneToMany(
+            orphanRemoval = true,
             fetch = FetchType.LAZY,
             mappedBy="from"
     ) // user has many following
     private List<FollowerEntity> following;
 
     @OneToMany(
+            orphanRemoval = true,
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,
             mappedBy = "user"
@@ -91,6 +96,7 @@ public class UserEntity implements Serializable {
     private List<PostEntity> posts;
 
     @OneToMany(
+            orphanRemoval = true,
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,
             mappedBy = "user"

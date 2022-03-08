@@ -9,7 +9,9 @@ public enum InvalidUserEnum {
     USER_ALREADY_EXISTS_WITH_USERNAME("user already exists with username: "),
     USER_ALREADY_EXISTS_WITH_EMAIL("user already exists with email: "),
     INVALID_USERNAME_OR_PASSWORD("invalid username or password"),
-    USER_IS_EMPTY("user entity is empty");
+    USER_IS_EMPTY("user entity is empty"),
+
+    FOLLOWER_ENTITY_DOES_NOT_EXIST("Follower entity does not exist");
 
     private final String message;
 

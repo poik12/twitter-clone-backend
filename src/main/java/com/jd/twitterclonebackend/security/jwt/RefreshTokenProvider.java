@@ -6,11 +6,14 @@ import com.jd.twitterclonebackend.entity.RefreshTokenEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.dto.AuthResponseDto;
 import com.jd.twitterclonebackend.dto.RefreshTokenRequestDto;
+import com.jd.twitterclonebackend.exception.UserException;
 import com.jd.twitterclonebackend.exception.enums.InvalidTokenEnum;
 import com.jd.twitterclonebackend.exception.TokenException;
+import com.jd.twitterclonebackend.exception.enums.InvalidUserEnum;
 import com.jd.twitterclonebackend.repository.RefreshTokenRepository;
 import com.jd.twitterclonebackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -34,9 +37,10 @@ public class RefreshTokenProvider extends JwtProvider {
         // Find currently logged user in repository
         UserEntity userEntity = userRepository
                 .findByUsername(user.getUsername())
-                .orElseThrow(() ->
-                        new UsernameNotFoundException("User with username" + user.getUsername() + " not found.")
-                );
+                .orElseThrow(() -> new UserException(
+                        InvalidUserEnum.USER_NOT_FOUND_WITH_USERNAME.getMessage() + user.getUsername(),
+                        HttpStatus.NOT_FOUND
+                ));
 
         // Check if user already has refresh token in repository
         RefreshTokenEntity refreshTokenEntity = refreshTokenRepository.getRefreshTokenByUser(userEntity);
@@ -100,19 +104,6 @@ public class RefreshTokenProvider extends JwtProvider {
                 .sign(ALGORITHM);
     }
 
-    // Validate refresh token
-    public RefreshTokenEntity validateRefreshToken(String refreshToken) {
-        // Find refresh token in database
-        RefreshTokenEntity refreshTokenEntityFromDb = refreshTokenRepository
-                .findByToken(refreshToken)
-                .orElseThrow(() -> new TokenException(InvalidTokenEnum.INVALID_REFRESH_TOKEN.getMessage()));
-        // Check if refresh token has not expired
-        if (refreshTokenEntityFromDb.getExpiresAt().isBefore(Instant.now())) {
-            throw new TokenException(InvalidTokenEnum.REFRESH_TOKEN_EXPIRED.getMessage());
-        }
-        return refreshTokenEntityFromDb;
-    }
-
     // Delete refresh token from repository
     public void deleteRefreshToken(String refreshToken) {
         refreshTokenRepository.deleteByToken(refreshToken);
@@ -120,9 +111,8 @@ public class RefreshTokenProvider extends JwtProvider {
 
     // Refresh access token
     public AuthResponseDto refreshAccessToken(RefreshTokenRequestDto refreshTokenRequestDto) {
-
         // Check if refresh Token is valid
-        RefreshTokenEntity refreshTokenEntity = validateRefreshToken(refreshTokenRequestDto.getRefreshToken());
+        validateRefreshToken(refreshTokenRequestDto.getRefreshToken());
         // Decode JWT(Remove Bearer from JWT, Verify algorithm signature)
         DecodedJWT decodedJWT = decodeJwt("Bearer " + refreshTokenRequestDto.getRefreshToken());
         // Get username from decoded JWT
@@ -130,7 +120,10 @@ public class RefreshTokenProvider extends JwtProvider {
         // Check if user exists in database
         UserEntity userEntity = userRepository
                 .findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username));
+                .orElseThrow(() -> new UserException(
+                        InvalidUserEnum.USER_NOT_FOUND_WITH_USERNAME.getMessage() + username,
+                        HttpStatus.NOT_FOUND
+                ));
         // Generate new access token for user
         String accessToken = accessTokenProvider.refreshAccessTokenUserEntity(userEntity);
         // Create response for user
@@ -140,5 +133,23 @@ public class RefreshTokenProvider extends JwtProvider {
                 .expiresAt(String.valueOf(EXPIRATION_TIME_OF_ACCESS_TOKEN))
                 .refreshToken(refreshTokenRequestDto.getRefreshToken())
                 .build();
+    }
+
+    // Validate refresh token
+    public void validateRefreshToken(String refreshToken) {
+        // Find refresh token in database
+        RefreshTokenEntity refreshTokenEntityFromDb = refreshTokenRepository
+                .findByToken(refreshToken)
+                .orElseThrow(() -> new TokenException(
+                        InvalidTokenEnum.INVALID_REFRESH_TOKEN.getMessage(),
+                        HttpStatus.BAD_REQUEST
+                ));
+        // Check if refresh token has not expired
+        if (refreshTokenEntityFromDb.getExpiresAt().isBefore(Instant.now())) {
+            throw new TokenException(
+                    InvalidTokenEnum.REFRESH_TOKEN_EXPIRED.getMessage(),
+                    HttpStatus.BAD_REQUEST
+            );
+        }
     }
 }

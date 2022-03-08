@@ -1,0 +1,19 @@
+spring:
+  # Database properties
+  datasource:
+    url: jdbc:h2:mem:twitter_clone_db;DB_CLOSE_DELAY=-1
+    username: test
+    password: test
+    driver-class-name: org.h2.Driver
+  # Jpa properties
+  jpa:
+    hibernate:
+      ddl-auto: update
+  # Console properties
+  output:
+    ansi:
+      enabled: always
+  # Liquibase Properties
+  liquibase:
+    enabled: false
+

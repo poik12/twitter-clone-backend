@@ -26,21 +26,21 @@ public class CommentController {
     }
 
     // GET ALL COMMENT FOR POST SORTED BY TIMESTAMP DESC
-    @GetMapping("/by-post/{postId}")
+    @GetMapping(value ="/by-post/{postId}")
     public ResponseEntity<List<CommentResponseDto>> getAllCommentsForPost(@PathVariable Long postId) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(commentService.getAllCommentsForPost(postId));
     }
 
-    @GetMapping("/by-user/{username}")
+    @GetMapping(value ="/by-user/{username}")
     public ResponseEntity<List<CommentResponseDto>> getAllCommentsForUser(@PathVariable String username) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(commentService.getAllCommentsForUser(username));
     }
 
-    @DeleteMapping("/{commentId}")
+    @DeleteMapping(value ="/{commentId}")
     public ResponseEntity<Void> deleteCommentById(@PathVariable Long commentId) {
         commentService.deleteCommentById(commentId);
         return new ResponseEntity<>(HttpStatus.OK);

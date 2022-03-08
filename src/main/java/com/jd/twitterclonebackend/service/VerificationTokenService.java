@@ -13,5 +13,5 @@ public interface VerificationTokenService {
 
     void validateUserByVerificationToken(VerificationTokenEntity verificationTokenEntity);
 
-    void updateVerificationToken(String token, Instant time);
+    void updateVerificationToken(VerificationTokenEntity verificationTokenEntity);
 }

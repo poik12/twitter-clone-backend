@@ -10,6 +10,7 @@ import com.jd.twitterclonebackend.repository.UserRepository;
 import com.jd.twitterclonebackend.repository.VerificationTokenRepository;
 import com.jd.twitterclonebackend.service.VerificationTokenService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -45,10 +46,13 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
         // Find token in db
         VerificationTokenEntity verificationTokenEntity = verificationTokenRepository
                 .findByToken(token)
-                .orElseThrow(() -> new TokenException(InvalidTokenEnum.INVALID_VERIFICATION_TOKEN.getMessage()));
+                .orElseThrow(() -> new TokenException(
+                        InvalidTokenEnum.INVALID_VERIFICATION_TOKEN.getMessage(),
+                        HttpStatus.BAD_REQUEST
+                ));
         // Check if token isn't confirmed
         if (verificationTokenEntity.getConfirmedAt() != null) {
-            throw new TokenException(InvalidTokenEnum.EMAIL_ALREADY_CONFIRMED.getMessage());
+            throw new TokenException(InvalidTokenEnum.EMAIL_ALREADY_CONFIRMED.getMessage(), HttpStatus.BAD_REQUEST);
         }
         return verificationTokenEntity;
     }
@@ -60,11 +64,12 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
         UserEntity userEntity = userRepository
                 .findByUsername(username)
                 .orElseThrow(() -> new UserException(
-                        InvalidUserEnum.USER_NOT_FOUND_WITH_USERNAME.getMessage() + username
+                        InvalidUserEnum.USER_NOT_FOUND_WITH_USERNAME.getMessage() + username,
+                        HttpStatus.NOT_FOUND
                 ));
         // Check if user is enabled
         if (userEntity.getEnabled()) {
-            throw new TokenException(InvalidTokenEnum.USER_ALREADY_CONFIRMED.getMessage());
+            throw new TokenException(InvalidTokenEnum.USER_ALREADY_CONFIRMED.getMessage(), HttpStatus.BAD_REQUEST);
         }
         // Enable user and save in repository
         userEntity.setEnabled(true);
@@ -72,9 +77,9 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
     }
 
     @Override
-    public void updateVerificationToken(String token, Instant time) {
+    public void updateVerificationToken(VerificationTokenEntity verificationTokenEntity) {
         verificationTokenRepository.updateConfirmedAt(
-                token,
+                verificationTokenEntity.getToken(),
                 Instant.now()
         );
     }

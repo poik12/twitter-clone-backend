@@ -6,6 +6,7 @@ import com.jd.twitterclonebackend.exception.enums.InvalidUserEnum;
 import com.jd.twitterclonebackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -32,9 +33,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         // Find user entity in db by username
         UserEntity userEntity = userRepository
                 .findByUsername(username)
-                .orElseThrow(() ->
-                    new UserException(InvalidUserEnum.USER_NOT_FOUND_WITH_USERNAME.getMessage() + username)
-                );
+                .orElseThrow(() -> new UserException(
+                        InvalidUserEnum.USER_NOT_FOUND_WITH_USERNAME.getMessage() + username,
+                        HttpStatus.NOT_FOUND
+                ));
         // Create security.core.UserDetails.User
         return new User(
                 userEntity.getUsername(),
@@ -61,9 +63,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         // Find user in repository and return
         return userRepository
                 .findByUsername(username)
-                .orElseThrow(() ->
-                        new UserException(InvalidUserEnum.USER_NOT_FOUND_WITH_USERNAME.getMessage() + username)
-                );
+                .orElseThrow(() -> new UserException(
+                        InvalidUserEnum.USER_NOT_FOUND_WITH_USERNAME.getMessage() + username,
+                        HttpStatus.NOT_FOUND
+                ));
     }
 
 }

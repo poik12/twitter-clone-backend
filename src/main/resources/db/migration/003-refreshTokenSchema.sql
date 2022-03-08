@@ -1,5 +1,5 @@
 create table if not exists refresh_tokens (
-    id bigint auto_increment primary key,
+    id         bigint auto_increment primary key,
     created_at datetime(6)  null,
     expires_at datetime(6)  null,
     token      varchar(255) null,

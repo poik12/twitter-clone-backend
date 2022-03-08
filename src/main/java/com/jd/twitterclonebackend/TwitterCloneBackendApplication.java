@@ -11,8 +11,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Component;
 
 @SpringBootApplication(scanBasePackages = "com.jd.twitterclonebackend")
-@EnableJpaRepositories("com.jd.twitterclonebackend")
-@EntityScan("com.jd.twitterclonebackend")
+@EnableJpaRepositories(basePackages = "com.jd.twitterclonebackend")
+@EntityScan(basePackages = "com.jd.twitterclonebackend")
 public class TwitterCloneBackendApplication {
 
 	public static void main(String[] args) {
