@@ -1,4 +1,4 @@
-package com.jd.twitterclonebackend.domain;
+package com.jd.twitterclonebackend.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,10 +29,25 @@ public class PostEntity implements Serializable {
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY) // Many posts created by one user
+    @JoinColumn(
+            name = "user_id",
+            referencedColumnName = "id"
+    ) // many posts belong to one user
     private UserEntity user;
 
-    @OneToMany(mappedBy = "post")
-    private List<CommentEntity> comments = new ArrayList<>();
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            mappedBy = "post"
+    ) // many comments belong to post
+    private List<CommentEntity> comments;
+
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            mappedBy = "post"
+    )
+    private List<ImageFileEntity> images;
 
     private Long commentNo;
 

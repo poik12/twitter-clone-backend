@@ -1,10 +1,8 @@
 package com.jd.twitterclonebackend.controller;
 
-import com.jd.twitterclonebackend.domain.UserEntity;
-import com.jd.twitterclonebackend.dto.AuthResponseDto;
-import com.jd.twitterclonebackend.dto.LoginRequestDto;
-import com.jd.twitterclonebackend.dto.RefreshTokenRequestDto;
-import com.jd.twitterclonebackend.dto.RegisterRequestDto;
+import com.jd.twitterclonebackend.config.swagger.ApiRestController;
+import com.jd.twitterclonebackend.dto.*;
+import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,8 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("${api-version}/auth")
+@RequestMapping(value = "/auth")
 @RequiredArgsConstructor
+@ApiRestController
 public class AuthController {
 
     private final AuthService authService;
@@ -30,7 +29,7 @@ public class AuthController {
 
     // EMAIL CONFIRMATION
     @GetMapping("/confirm")
-    public String verifyAccount(@RequestParam("token") String token) {
+    public EmailConfirmationDto verifyAccount(@RequestParam("token") String token) {
         return authService.confirmUserAccount(token);
     }
 

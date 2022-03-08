@@ -1,9 +1,7 @@
 package com.jd.twitterclonebackend.service.impl;
 
-import com.jd.twitterclonebackend.domain.CommentEntity;
-import com.jd.twitterclonebackend.domain.ImageFileEntity;
-import com.jd.twitterclonebackend.domain.PostEntity;
-import com.jd.twitterclonebackend.domain.UserEntity;
+import com.jd.twitterclonebackend.entity.ImageFileEntity;
+import com.jd.twitterclonebackend.entity.PostEntity;
 import com.jd.twitterclonebackend.repository.ImageFileRepository;
 import com.jd.twitterclonebackend.service.FileService;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.zip.DataFormatException;

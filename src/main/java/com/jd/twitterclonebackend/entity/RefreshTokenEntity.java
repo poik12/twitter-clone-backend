@@ -1,4 +1,4 @@
-package com.jd.twitterclonebackend.domain;
+package com.jd.twitterclonebackend.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -6,15 +6,16 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.Date;
 
 @Entity
-@Table(name = "verification_tokens")
+@Table(name = "refresh_tokens")
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class VerificationTokenEntity {
+@NoArgsConstructor
+public class RefreshTokenEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,6 +24,10 @@ public class VerificationTokenEntity {
     private String token;
 
     @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "user_id",
+            referencedColumnName = "id"
+    )
     private UserEntity user;
 
     @CreationTimestamp
@@ -30,9 +35,7 @@ public class VerificationTokenEntity {
 
     private Instant expiresAt;
 
-    private Instant confirmedAt;
-
-    public VerificationTokenEntity(String token, Instant expiresAt, UserEntity user) {
+    public RefreshTokenEntity(String token, Instant expiresAt, UserEntity user) {
         this.token = token;
         this.expiresAt = expiresAt;
         this.user = user;

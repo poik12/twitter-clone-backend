@@ -1,6 +1,8 @@
 package com.jd.twitterclonebackend.service.impl;
 
-import com.jd.twitterclonebackend.domain.UserEntity;
+import com.jd.twitterclonebackend.entity.UserEntity;
+import com.jd.twitterclonebackend.exception.UserException;
+import com.jd.twitterclonebackend.exception.enums.InvalidUserEnum;
 import com.jd.twitterclonebackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,11 +32,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         // Find user entity in db by username
         UserEntity userEntity = userRepository
                 .findByUsername(username)
-                .orElseThrow(() -> {
-                    log.error("User not found in database");
-                    return new UsernameNotFoundException("User not found in database");
-                });
-
+                .orElseThrow(() ->
+                    new UserException(InvalidUserEnum.USER_NOT_FOUND_WITH_USERNAME.getMessage() + username)
+                );
         // Create security.core.UserDetails.User
         return new User(
                 userEntity.getUsername(),
@@ -61,9 +61,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         // Find user in repository and return
         return userRepository
                 .findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(
-                        "User with username" + username + " not found."
-                ));
+                .orElseThrow(() ->
+                        new UserException(InvalidUserEnum.USER_NOT_FOUND_WITH_USERNAME.getMessage() + username)
+                );
     }
 
 }

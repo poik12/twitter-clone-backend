@@ -1,4 +1,4 @@
-package com.jd.twitterclonebackend.config;
+package com.jd.twitterclonebackend.config.swagger;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +15,10 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import java.util.Collections;
 import java.util.List;
 
+/*
+    ACCESS THROUGH: http://localhost:8080/api/v1/swagger-ui/index.html
+    Show only controllers with annotation @ApiRestController
+ */
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
@@ -26,6 +30,7 @@ public class SwaggerConfig {
                 .select()
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.regex("^(?!/(error).*$).*$"))
+                .apis(RequestHandlerSelectors.withClassAnnotation(ApiRestController.class))
                 .build()
                 .securitySchemes(Collections.singletonList(createSchema()))
                 .securityContexts(Collections.singletonList(createContext()))

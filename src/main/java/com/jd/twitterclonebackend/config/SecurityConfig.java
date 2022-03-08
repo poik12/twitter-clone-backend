@@ -1,5 +1,6 @@
 package com.jd.twitterclonebackend.config;
 
+import com.jd.twitterclonebackend.security.UserAuthenticationEntryPoint;
 import com.jd.twitterclonebackend.security.filter.CustomAuthenticationFilter;
 import com.jd.twitterclonebackend.security.filter.CustomAuthorizationFilter;
 import com.jd.twitterclonebackend.security.jwt.AccessTokenProvider;
@@ -27,8 +28,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
     private final AccessTokenProvider accessTokenProvider;
     private final RefreshTokenProvider refreshTokenProvider;
-
-    public static final String API_VERSION = "/api/v1";
+    private final UserAuthenticationEntryPoint userAuthenticationEntryPoint;
 
     // Authentication
     @Override
@@ -45,20 +45,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 accessTokenProvider,
                 refreshTokenProvider
         );
-        customAuthenticationFilter.setFilterProcessesUrl(API_VERSION + "/auth/login");
+        customAuthenticationFilter.setFilterProcessesUrl("/auth/login");
 
         CustomAuthorizationFilter customAuthorizationFilter = new CustomAuthorizationFilter(accessTokenProvider);
 
+        // Catch exceptions and return JSON instead of stacktrace
+        httpSecurity.exceptionHandling().authenticationEntryPoint(userAuthenticationEntryPoint);
         // Disable Cross-Site Request Forgery
         httpSecurity.csrf().disable();
         // Config Cross-Origin Resource Sharing in WebConfig Class
         httpSecurity.cors();
-
         // Stateless Session because of JWT
         httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
         // Swagger API
-        // ACCESS THROUGH: http://localhost:8080/swagger-ui/index.html
+        // ACCESS THROUGH: http://localhost:8080/api/v1/swagger-ui/index.html
         httpSecurity.authorizeRequests()
                 .antMatchers(
                         "/v2/api-docs",
@@ -67,24 +67,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/swagger-ui/**",
                         "/webjars/**")
                 .permitAll();
-
         // H2 Database
         httpSecurity.authorizeRequests().antMatchers("h2-console/**").permitAll();
-
         // CONTROLLER MAPPINGS
-        httpSecurity.authorizeRequests().antMatchers(API_VERSION + "/auth/**").permitAll();
-        httpSecurity.authorizeRequests().antMatchers(API_VERSION + "/users/**").permitAll();
-        httpSecurity.authorizeRequests().antMatchers(API_VERSION + "/posts/**").permitAll();
-        httpSecurity.authorizeRequests().antMatchers(API_VERSION + "/comments/**").permitAll();
+        httpSecurity.authorizeRequests().antMatchers("/auth/**").permitAll();
+        httpSecurity.authorizeRequests().antMatchers("/users/**").permitAll();
+        httpSecurity.authorizeRequests().antMatchers("/posts/**").permitAll();
+        httpSecurity.authorizeRequests().antMatchers("/comments/**").permitAll();
 //        httpSecurity.authorizeRequests().antMatchers(HttpMethod.GET, "/api/user/**").hasAnyAuthority("ROLE_USER");
 //        httpSecurity.authorizeRequests().antMatchers(HttpMethod.POST, "/api/user/save/**").hasAnyAuthority("ROLE_ADMIN");
-
         httpSecurity.authorizeRequests().anyRequest().authenticated();
         httpSecurity.addFilter(customAuthenticationFilter);
-        httpSecurity.addFilterBefore(
-                customAuthorizationFilter,
-                UsernamePasswordAuthenticationFilter.class
-        );
+        httpSecurity.addFilterBefore(customAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean

@@ -1,13 +1,14 @@
 package com.jd.twitterclonebackend.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class LoginRequestDto {
 
-    private String username;
-    private String password;
+    String username;
+    String password;
 
 }

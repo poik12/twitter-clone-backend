@@ -1,8 +1,8 @@
 package com.jd.twitterclonebackend.integrations;
 
-import com.jd.twitterclonebackend.domain.UserEntity;
+import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.dto.PostRequestDto;
-import com.jd.twitterclonebackend.domain.enums.UserRole;
+import com.jd.twitterclonebackend.entity.enums.UserRole;
 import com.jd.twitterclonebackend.mapper.PostMapper;
 import com.jd.twitterclonebackend.repository.PostRepository;
 import com.jd.twitterclonebackend.service.impl.UserDetailsServiceImpl;
@@ -14,7 +14,7 @@ import org.springframework.test.context.ContextConfiguration;
 import javax.transaction.Transactional;
 
 @SpringBootTest
-@ContextConfiguration(locations = "/test-context.xml")
+//@ContextConfiguration(locations = "/test-context.xml")
 @Transactional // cleans db after each test
 @RequiredArgsConstructor
 public abstract class InitIntegrationTestData {
@@ -79,9 +79,9 @@ public abstract class InitIntegrationTestData {
     }
 
     protected PostRequestDto initPostRequestDto() {
-        PostRequestDto postRequestDto = new PostRequestDto();
-        postRequestDto.setDescription(POST_DESCRIPTION);
-        return postRequestDto;
+        return PostRequestDto.builder()
+                .description(POST_DESCRIPTION)
+                .build();
     }
 
 

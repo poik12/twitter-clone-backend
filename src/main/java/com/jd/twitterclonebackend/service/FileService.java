@@ -1,6 +1,6 @@
 package com.jd.twitterclonebackend.service;
 
-import com.jd.twitterclonebackend.domain.PostEntity;
+import com.jd.twitterclonebackend.entity.PostEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;

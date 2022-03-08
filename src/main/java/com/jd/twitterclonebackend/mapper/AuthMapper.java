@@ -1,7 +1,7 @@
 package com.jd.twitterclonebackend.mapper;
 
-import com.jd.twitterclonebackend.domain.UserEntity;
-import com.jd.twitterclonebackend.domain.enums.UserRole;
+import com.jd.twitterclonebackend.entity.UserEntity;
+import com.jd.twitterclonebackend.entity.enums.UserRole;
 import com.jd.twitterclonebackend.dto.RegisterRequestDto;
 import com.jd.twitterclonebackend.service.FileService;
 import lombok.RequiredArgsConstructor;
@@ -43,9 +43,5 @@ public class AuthMapper {
                 .build();
 
     }
-
-//    private PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
 
 }

@@ -1,8 +1,8 @@
 package com.jd.twitterclonebackend.mapper;
 
 import com.github.marlonlom.utilities.timeago.TimeAgo;
-import com.jd.twitterclonebackend.domain.PostEntity;
-import com.jd.twitterclonebackend.domain.UserEntity;
+import com.jd.twitterclonebackend.entity.PostEntity;
+import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.dto.PostRequestDto;
 import com.jd.twitterclonebackend.dto.PostResponseDto;
 import com.jd.twitterclonebackend.repository.CommentRepository;
@@ -32,22 +32,22 @@ public class PostMapper {
                 .build();
     }
 
-    public PostResponseDto mapFromEntityToDto(PostEntity postEntity) {
-
-        if (Objects.isNull(postEntity)) {
-            return null;
-        }
-
-        return PostResponseDto.builder()
-                .id(postEntity.getId())
-                .description(postEntity.getDescription())
-                .createdAt(postEntity.getCreatedAt())
-                .commentNo(getCommentCount(postEntity))
-                .postTimeDuration(getPostTimeDuration(postEntity))
-                .username(postEntity.getUser().getUsername())
-                .name(postEntity.getUser().getName())
-                .build();
-    }
+//    public PostResponseDto mapFromEntityToDto(PostEntity postEntity) {
+//
+//        if (Objects.isNull(postEntity)) {
+//            return null;
+//        }
+//
+//        return PostResponseDto.builder()
+//                .id(postEntity.getId())
+//                .description(postEntity.getDescription())
+//                .createdAt(postEntity.getCreatedAt())
+//                .commentNo(getCommentCount(postEntity))
+//                .postTimeDuration(getPostTimeDuration(postEntity))
+//                .username(postEntity.getUser().getUsername())
+//                .name(postEntity.getUser().getName())
+//                .build();
+//    }
 
     // TODO: OVERLOADED METHOD
     public PostResponseDto mapFromEntityToDto(PostEntity postEntity, Map<Long, byte[]> imageFileMap) {
@@ -64,12 +64,7 @@ public class PostMapper {
                 .postTimeDuration(getPostTimeDuration(postEntity))
                 .username(postEntity.getUser().getUsername())
                 .name(postEntity.getUser().getName())
-                .fileContent(
-                        getImageFileByPostId(
-                                postEntity.getId(),
-                                imageFileMap
-                        )
-                )
+                .fileContent(getImageFileByPostId(postEntity.getId(), imageFileMap))
                 .userProfilePicture(postEntity.getUser().getProfilePicture())
                 .build();
         

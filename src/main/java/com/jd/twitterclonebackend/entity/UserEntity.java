@@ -1,6 +1,6 @@
-package com.jd.twitterclonebackend.domain;
+package com.jd.twitterclonebackend.entity;
 
-import com.jd.twitterclonebackend.domain.enums.UserRole;
+import com.jd.twitterclonebackend.entity.enums.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -35,6 +36,7 @@ public class UserEntity implements Serializable {
     private String password;
 
     @Column(nullable = false)
+    @Email
     private String emailAddress;
 
     @Column(nullable = false)
@@ -55,16 +57,50 @@ public class UserEntity implements Serializable {
     @Column(length = 280)
     private String description;
 
-    @OneToMany(mappedBy="to") // relationship owner
+    @OneToOne(
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            mappedBy = "user"
+    )
+    private VerificationTokenEntity verificationTokenEntity;
+
+    @OneToOne(
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            mappedBy = "user"
+    )
+    private RefreshTokenEntity refreshTokenEntity;
+
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            mappedBy="to"
+    ) // user has many followers
     private List<FollowerEntity> followers;
 
-    @OneToMany(mappedBy="from") // relationship owner
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            mappedBy="from"
+    ) // user has many following
     private List<FollowerEntity> following;
+
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            mappedBy = "user"
+    ) // user has many posts
+    private List<PostEntity> posts;
+
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            mappedBy = "user"
+    ) // user has many comments
+    private List<CommentEntity> comments;
 
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
-    private Boolean enabled;
+    private Boolean enabled = false;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp

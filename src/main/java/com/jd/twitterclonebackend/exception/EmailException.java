@@ -1,9 +1,9 @@
 package com.jd.twitterclonebackend.exception;
 
-public class EmailException extends MainException {
+public class EmailException extends RuntimeException {
 
-    public EmailException(String message, String emailRecipient) {
-        super(message, emailRecipient);
+    public EmailException(String message) {
+        super(message);
     }
 
 }

@@ -1,9 +1,9 @@
 package com.jd.twitterclonebackend.mapper;
 
 import com.github.marlonlom.utilities.timeago.TimeAgo;
-import com.jd.twitterclonebackend.domain.CommentEntity;
-import com.jd.twitterclonebackend.domain.PostEntity;
-import com.jd.twitterclonebackend.domain.UserEntity;
+import com.jd.twitterclonebackend.entity.CommentEntity;
+import com.jd.twitterclonebackend.entity.PostEntity;
+import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.dto.CommentRequestDto;
 import com.jd.twitterclonebackend.dto.CommentResponseDto;
 import org.springframework.stereotype.Component;

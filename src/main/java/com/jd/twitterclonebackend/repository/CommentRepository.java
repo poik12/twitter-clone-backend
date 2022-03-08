@@ -1,8 +1,8 @@
 package com.jd.twitterclonebackend.repository;
 
-import com.jd.twitterclonebackend.domain.CommentEntity;
-import com.jd.twitterclonebackend.domain.PostEntity;
-import com.jd.twitterclonebackend.domain.UserEntity;
+import com.jd.twitterclonebackend.entity.CommentEntity;
+import com.jd.twitterclonebackend.entity.PostEntity;
+import com.jd.twitterclonebackend.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

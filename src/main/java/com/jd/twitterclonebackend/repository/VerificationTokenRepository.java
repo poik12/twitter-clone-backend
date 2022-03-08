@@ -1,7 +1,7 @@
 package com.jd.twitterclonebackend.repository;
 
-import com.jd.twitterclonebackend.domain.UserEntity;
-import com.jd.twitterclonebackend.domain.VerificationTokenEntity;
+import com.jd.twitterclonebackend.entity.UserEntity;
+import com.jd.twitterclonebackend.entity.VerificationTokenEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

@@ -1,7 +1,7 @@
 package com.jd.twitterclonebackend.service.impl;
 
-import com.jd.twitterclonebackend.domain.PostEntity;
-import com.jd.twitterclonebackend.domain.UserEntity;
+import com.jd.twitterclonebackend.entity.PostEntity;
+import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.dto.PostRequestDto;
 import com.jd.twitterclonebackend.dto.PostResponseDto;
 import com.jd.twitterclonebackend.exception.enums.InvalidPostEnum;
@@ -9,6 +9,7 @@ import com.jd.twitterclonebackend.exception.enums.InvalidUserEnum;
 import com.jd.twitterclonebackend.exception.PostException;
 import com.jd.twitterclonebackend.exception.UserException;
 import com.jd.twitterclonebackend.mapper.PostMapper;
+import com.jd.twitterclonebackend.mapper.mapstruct.NewPostMapper;
 import com.jd.twitterclonebackend.repository.CommentRepository;
 import com.jd.twitterclonebackend.repository.ImageFileRepository;
 import com.jd.twitterclonebackend.repository.PostRepository;
@@ -121,8 +122,9 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional
     public void deletePostById(Long postId) {
-        imageFileRepository.deleteByPostId(postId);
-        commentRepository.deleteByPostId(postId);
+        // TODO: check if cascade words - should delete comments and images from repo
+//        imageFileRepository.deleteByPostId(postId);
+//        commentRepository.deleteByPostId(postId);
         postRepository.deleteById(postId);
     }
 }

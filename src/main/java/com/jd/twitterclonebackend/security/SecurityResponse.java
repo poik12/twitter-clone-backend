@@ -15,7 +15,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class SecurityResponse {
 
-    public void successfulAuthenticationResponse(HttpServletResponse response,
+    public static void successfulAuthenticationResponse(HttpServletResponse response,
                                                  String accessToken,
                                                  Instant expirationTime,
                                                  String refreshToken,
@@ -36,7 +36,7 @@ public class SecurityResponse {
         );
     }
 
-    public void successfulRefreshTokenResponse(HttpServletResponse response,
+    public static void successfulRefreshTokenResponse(HttpServletResponse response,
                                                  String accessToken,
                                                  String refreshToken,
                                                  String info) throws IOException {
@@ -52,7 +52,7 @@ public class SecurityResponse {
         );
     }
 
-    public void failedAuthorizationResponse(HttpServletResponse response,
+    public static void failedAuthorizationResponse(HttpServletResponse response,
                                             Exception exception,
                                             String header) throws IOException {
         response.setHeader("authorization error", exception.getMessage());

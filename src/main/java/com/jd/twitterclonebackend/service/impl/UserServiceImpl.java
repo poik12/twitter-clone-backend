@@ -1,12 +1,14 @@
 package com.jd.twitterclonebackend.service.impl;
 
-import com.jd.twitterclonebackend.domain.FollowerEntity;
-import com.jd.twitterclonebackend.domain.UserEntity;
+import com.jd.twitterclonebackend.dto.FollowerDto;
+import com.jd.twitterclonebackend.entity.FollowerEntity;
+import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.dto.UserRequestDto;
 import com.jd.twitterclonebackend.dto.UserResponseDto;
 import com.jd.twitterclonebackend.exception.UserException;
 import com.jd.twitterclonebackend.exception.enums.InvalidUserEnum;
 import com.jd.twitterclonebackend.mapper.UserMapper;
+import com.jd.twitterclonebackend.mapper.mapstruct.NewUserMapper;
 import com.jd.twitterclonebackend.repository.FollowerRepository;
 import com.jd.twitterclonebackend.repository.UserRepository;
 import com.jd.twitterclonebackend.service.UserService;
@@ -79,7 +81,7 @@ public class UserServiceImpl implements UserService {
         UserEntity userToFollow = userRepository
                 .findByUsername(username)
                 .orElseThrow(() ->
-                        new UsernameNotFoundException("User with username: " + username + " was not found")
+                        new UserException(InvalidUserEnum.USER_NOT_FOUND_WITH_USERNAME + username)
                 );
         // Create object of follower entity and save it in db
         FollowerEntity followerEntity = new FollowerEntity(
@@ -104,7 +106,7 @@ public class UserServiceImpl implements UserService {
         UserEntity userToUnfollow = userRepository
                 .findByUsername(username)
                 .orElseThrow(() ->
-                        new UsernameNotFoundException("User with username: " + username + " was not found")
+                        new UserException(InvalidUserEnum.USER_NOT_FOUND_WITH_USERNAME + username)
                 );
         // Find follower entity in db and delete
         FollowerEntity followerEntity = followerRepository.findByToAndFrom(
@@ -130,7 +132,7 @@ public class UserServiceImpl implements UserService {
 
         return followerUserEntity.getFollowing()
                 .stream()
-                .map(following -> following.getUsername())
+                .map(FollowerDto::getUsername)
                 .anyMatch(followingUsername -> followingUsername.equals(followedUser));
     }
 }
