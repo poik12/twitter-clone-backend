@@ -2,10 +2,12 @@ package com.jd.twitterclonebackend.dto;
 
 import lombok.*;
 
-@Value
+@Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class PostRequestDto {
 
-    String description;
+    private String description;
 
 }

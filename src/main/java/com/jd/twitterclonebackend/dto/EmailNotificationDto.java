@@ -1,16 +1,16 @@
 package com.jd.twitterclonebackend.dto;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.Value;
+import lombok.*;
 
-@Value
+@Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class EmailNotificationDto {
 
-    String emailSubject;
-    String emailRecipient;
-    String recipientName;
-    String activationLink;
+    private String emailSubject;
+    private String emailRecipient;
+    private String recipientName;
+    private String activationLink;
 
 }

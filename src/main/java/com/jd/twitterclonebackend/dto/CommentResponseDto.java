@@ -2,15 +2,17 @@ package com.jd.twitterclonebackend.dto;
 
 import lombok.*;
 
-@Value
+@Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class CommentResponseDto {
 
-    String username;
-    String name;
-    byte[] profileImage;
-    Long postId;
-    String timeOfCreation;
-    String text;
+    private String username;
+    private String name;
+    private byte[] profileImage;
+    private Long postId;
+    private String timeOfCreation;
+    private String text;
 
 }

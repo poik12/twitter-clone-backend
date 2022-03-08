@@ -1,18 +1,18 @@
 package com.jd.twitterclonebackend.dto;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.Value;
+import lombok.*;
 
-@Value
+@Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserRequestDto {
 
-    String name;
-    String username;
-//    private String description;
-    String emailAddress;
-    String phoneNumber;
-    String password;
+    private String name;
+    private String username;
+//     private String description;
+    private String emailAddress;
+    private String phoneNumber;
+    private String password;
 
 }

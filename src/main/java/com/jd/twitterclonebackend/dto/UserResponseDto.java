@@ -4,21 +4,23 @@ import lombok.*;
 
 import java.util.List;
 
-@Value
+@Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserResponseDto {
 
-    Long id;
-    String name;
-    String username;
-    String createdAt;
-    long tweetNo;
-    long followingNo;
-    long followerNo;
-    byte[] userProfilePicture;
-    byte[] userBackgroundPicture;
-    String description;
-    List<FollowerDto> followers;
-    List<FollowerDto> following;
+    private Long id;
+    private String name;
+    private String username;
+    private String createdAt;
+    private long tweetNo;
+    private long followingNo;
+    private long followerNo;
+    private byte[] userProfilePicture;
+    private byte[] userBackgroundPicture;
+    private String description;
+    private List<FollowerDto> followers;
+    private List<FollowerDto> following;
 
 }

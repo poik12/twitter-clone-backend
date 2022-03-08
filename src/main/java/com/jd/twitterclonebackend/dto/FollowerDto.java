@@ -1,28 +1,28 @@
 package com.jd.twitterclonebackend.dto;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.Value;
+import lombok.*;
 
 import javax.persistence.Lob;
 
-@Value
+@Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class FollowerDto {
 
 
-    Long id;
-    String name;
-    String username;
-    String emailAddress;
+    private Long id;
+    private String name;
+    private String username;
+    private String emailAddress;
 
     @Lob
-    byte[] userProfilePicture;
+    private byte[] userProfilePicture;
     @Lob
-    byte[] userBackgroundPicture;
+    private byte[] userBackgroundPicture;
 
-    Long tweetNo;
-    Long followerNo;
-    Long followingNo;
+    private long tweetNo;
+    private long followerNo;
+    private long followingNo;
 
 }

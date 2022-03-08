@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -35,6 +36,7 @@ public class UserEntity implements Serializable {
     private String password;
 
     @Column(nullable = false)
+    @Email
     private String emailAddress;
 
     @Column(nullable = false)
@@ -55,6 +57,20 @@ public class UserEntity implements Serializable {
     @Column(length = 280)
     private String description;
 
+    @OneToOne(
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            mappedBy = "user"
+    )
+    private VerificationTokenEntity verificationTokenEntity;
+
+    @OneToOne(
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            mappedBy = "user"
+    )
+    private RefreshTokenEntity refreshTokenEntity;
+
     @OneToMany(
             fetch = FetchType.LAZY,
             mappedBy="to"
@@ -68,12 +84,14 @@ public class UserEntity implements Serializable {
     private List<FollowerEntity> following;
 
     @OneToMany(
+            cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,
             mappedBy = "user"
     ) // user has many posts
     private List<PostEntity> posts;
 
     @OneToMany(
+            cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,
             mappedBy = "user"
     ) // user has many comments
@@ -82,7 +100,7 @@ public class UserEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
-    private Boolean enabled;
+    private Boolean enabled = false;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp

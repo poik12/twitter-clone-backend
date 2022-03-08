@@ -14,7 +14,7 @@ import org.springframework.test.context.ContextConfiguration;
 import javax.transaction.Transactional;
 
 @SpringBootTest
-@ContextConfiguration(locations = "/test-context.xml")
+//@ContextConfiguration(locations = "/test-context.xml")
 @Transactional // cleans db after each test
 @RequiredArgsConstructor
 public abstract class InitIntegrationTestData {

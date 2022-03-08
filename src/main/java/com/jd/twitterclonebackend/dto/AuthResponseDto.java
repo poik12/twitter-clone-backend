@@ -2,13 +2,15 @@ package com.jd.twitterclonebackend.dto;
 
 import lombok.*;
 
-@Value
+@Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class AuthResponseDto {
 
-    String username;
-    String authenticationToken;
-    String expiresAt;
-    String refreshToken;
+    private String username;
+    private String authenticationToken;
+    private String expiresAt;
+    private String refreshToken;
 
 }

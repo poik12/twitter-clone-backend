@@ -35,16 +35,15 @@ public class PostEntity implements Serializable {
     ) // many posts belong to one user
     private UserEntity user;
 
-//    @OneToMany(mappedBy = "post")
-//    private List<CommentEntity> comments = new ArrayList<>();
-
     @OneToMany(
+            cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,
             mappedBy = "post"
     ) // many comments belong to post
     private List<CommentEntity> comments;
 
     @OneToMany(
+            cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,
             mappedBy = "post"
     )

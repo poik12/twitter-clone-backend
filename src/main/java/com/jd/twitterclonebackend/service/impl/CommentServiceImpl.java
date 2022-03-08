@@ -12,6 +12,7 @@ import com.jd.twitterclonebackend.exception.CommentException;
 import com.jd.twitterclonebackend.exception.PostException;
 import com.jd.twitterclonebackend.exception.UserException;
 import com.jd.twitterclonebackend.mapper.CommentMapper;
+import com.jd.twitterclonebackend.mapper.mapstruct.NewCommentMapper;
 import com.jd.twitterclonebackend.repository.CommentRepository;
 import com.jd.twitterclonebackend.repository.PostRepository;
 import com.jd.twitterclonebackend.repository.UserRepository;

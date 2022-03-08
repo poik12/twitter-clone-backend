@@ -5,17 +5,19 @@ import lombok.*;
 import java.time.Instant;
 import java.util.Date;
 
-@Value
+@Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class PostResponseDto {
 
-    Long id;
-    String name;
-    String username;
-    String description;
-    Integer commentNo;
-    Date createdAt;
-    String postTimeDuration;
-    byte[] fileContent;
-    byte[] userProfilePicture;
+    private Long id;
+    private String name;
+    private String username;
+    private String description;
+    private Integer commentNo;
+    private Date createdAt;
+    private String postTimeDuration;
+    private byte[] fileContent;
+    private byte[] userProfilePicture;
 }

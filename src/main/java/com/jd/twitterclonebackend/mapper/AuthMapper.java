@@ -44,8 +44,4 @@ public class AuthMapper {
 
     }
 
-//    private PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
-
 }

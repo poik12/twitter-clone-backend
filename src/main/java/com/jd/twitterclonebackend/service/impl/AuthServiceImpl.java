@@ -1,8 +1,8 @@
 package com.jd.twitterclonebackend.service.impl;
 
+import com.jd.twitterclonebackend.dto.*;
 import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.entity.VerificationTokenEntity;
-import com.jd.twitterclonebackend.dto.*;
 import com.jd.twitterclonebackend.exception.UserException;
 import com.jd.twitterclonebackend.exception.enums.InvalidUserEnum;
 import com.jd.twitterclonebackend.mapper.AuthMapper;
@@ -11,8 +11,8 @@ import com.jd.twitterclonebackend.repository.UserRepository;
 import com.jd.twitterclonebackend.repository.VerificationTokenRepository;
 import com.jd.twitterclonebackend.security.jwt.RefreshTokenProvider;
 import com.jd.twitterclonebackend.service.AuthService;
-import com.jd.twitterclonebackend.service.VerificationTokenService;
 import com.jd.twitterclonebackend.service.MailService;
+import com.jd.twitterclonebackend.service.VerificationTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,7 +53,7 @@ public class AuthServiceImpl implements AuthService {
         );
         // todo: repair mail sending
         // Send activation email with generated token to created user
-//        mailService.sendEmail(activationEmail);
+        mailService.sendEmail(activationEmail);
         return userEntity;
     }
 
@@ -99,9 +99,10 @@ public class AuthServiceImpl implements AuthService {
         // Get currently logged user
         UserEntity userEntity = userDetailsService.currentLoggedUserEntity();
         // Delete refresh token, verification token and user account
-        refreshTokenRepository.deleteAllByUser(userEntity);
-        verificationTokenRepository.deleteAllByUser(userEntity);
-        userRepository.delete(userEntity);
+        // TODO: check if cascade type all works
+//        refreshTokenRepository.deleteAllByUser(userEntity);
+//        verificationTokenRepository.deleteAllByUser(userEntity);
+//        userRepository.delete(userEntity);
     }
 
     // Refresh Access Token
