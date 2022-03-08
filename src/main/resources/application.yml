@@ -13,7 +13,7 @@ spring:
   # JPA Hibernate Properties
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     show-sql: true
     properties:
       hibernate:
@@ -25,6 +25,9 @@ spring:
 #        events:
 #          log:
 #            LOG_QUERIES_SLOWER_THAN_MS: 5 # Log slow queries
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+
   # mailtrap.io Properties
   mail:
     host: ${MAIL_HOST}
