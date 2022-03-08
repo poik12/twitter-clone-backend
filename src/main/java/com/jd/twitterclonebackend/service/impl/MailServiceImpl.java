@@ -7,7 +7,7 @@ import com.jd.twitterclonebackend.exception.enums.InvalidEmailEnum;
 import com.jd.twitterclonebackend.service.MailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -72,8 +72,8 @@ public class MailServiceImpl implements MailService {
         } catch (MailException e) {
             log.error("Exception occurred when sending mail", e);
             throw new EmailException(
-                    InvalidEmailEnum.SENDING_EMAIL_ERROR.getMessage() + emailNotificationDto.getEmailRecipient()
-            );
+                    InvalidEmailEnum.SENDING_EMAIL_ERROR.getMessage() + emailNotificationDto.getEmailRecipient(),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

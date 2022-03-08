@@ -8,6 +8,7 @@ import com.jd.twitterclonebackend.security.jwt.AccessTokenProvider;
 import com.jd.twitterclonebackend.security.jwt.RefreshTokenProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -58,7 +59,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
             return authenticationManager.authenticate(authenticationToken);
 
         } catch (IOException e) {
-            throw new UserException(InvalidUserEnum.AUTHENTICATION_FAILED.getMessage() + e);
+            throw new UserException(InvalidUserEnum.AUTHENTICATION_FAILED.getMessage() + e, HttpStatus.BAD_REQUEST);
         }
     }
 

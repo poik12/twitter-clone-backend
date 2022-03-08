@@ -18,6 +18,7 @@ import com.jd.twitterclonebackend.repository.PostRepository;
 import com.jd.twitterclonebackend.repository.UserRepository;
 import com.jd.twitterclonebackend.service.CommentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -43,7 +44,8 @@ public class CommentServiceImpl implements CommentService {
         PostEntity postEntity = postRepository
                 .findById(commentRequestDto.getPostId())
                 .orElseThrow(() -> new PostException(
-                        InvalidPostEnum.POST_FOR_COMMENT_NOT_FOUND.getMessage() + commentRequestDto.getPostId()
+                        InvalidPostEnum.POST_FOR_COMMENT_NOT_FOUND.getMessage() + commentRequestDto.getPostId(),
+                        HttpStatus.NOT_FOUND
                 ));
         // Map Comment from comment request Dto to comment entity
         CommentEntity commentEntity = commentMapper.mapFromDtoToEntity(
@@ -66,13 +68,14 @@ public class CommentServiceImpl implements CommentService {
         PostEntity postEntity = postRepository
                 .findById(postId)
                 .orElseThrow(() -> new PostException(
-                        InvalidPostEnum.POST_FOR_COMMENT_NOT_FOUND.getMessage() + postId
+                        InvalidPostEnum.POST_FOR_COMMENT_NOT_FOUND.getMessage() + postId,
+                        HttpStatus.NOT_FOUND
                 ));
         // Get all comments for found post, map them to DTO and collect to list
         return commentRepository
                 .findAllByPostAndOrderByCreatedAtDesc(postEntity)
                 .stream()
-                .map(commentEntity -> commentMapper.mapFromEntityToDto(commentEntity))
+                .map(commentMapper::mapFromEntityToDto)
                 .collect(Collectors.toList());
     }
 
@@ -81,14 +84,15 @@ public class CommentServiceImpl implements CommentService {
         // Find user who created comments in user repository by username
         UserEntity userEntity = userRepository
                 .findByUsername(username)
-                .orElseThrow(() ->
-                        new UserException(InvalidUserEnum.USER_NOT_FOUND_WITH_USERNAME.getMessage() + username)
-                );
+                .orElseThrow(() -> new UserException(
+                        InvalidUserEnum.USER_NOT_FOUND_WITH_USERNAME.getMessage() + username,
+                        HttpStatus.NOT_FOUND
+                ));
         // Get all comments created by user, map them to dto, collect to list and return
         return commentRepository
                 .findAllByUserAndOrderByCreatedAtDesc(userEntity)
                 .stream()
-                .map(commentEntity -> commentMapper.mapFromEntityToDto(commentEntity))
+                .map(commentMapper::mapFromEntityToDto)
                 .collect(Collectors.toList());
     }
 
@@ -96,9 +100,10 @@ public class CommentServiceImpl implements CommentService {
     public void deleteCommentById(Long commentId) {
         CommentEntity commentEntity = commentRepository
                 .findById(commentId)
-                .orElseThrow(() ->
-                        new CommentException(InvalidCommentEnum.COMMENT_NOT_FOUND_WITH_ID.getMessage() + commentId)
-                );
+                .orElseThrow(() -> new CommentException(
+                        InvalidCommentEnum.COMMENT_NOT_FOUND_WITH_ID.getMessage() + commentId,
+                        HttpStatus.NOT_FOUND
+                ));
         commentRepository.delete(commentEntity);
     }
 }

@@ -14,6 +14,7 @@ import com.jd.twitterclonebackend.service.AuthService;
 import com.jd.twitterclonebackend.service.MailService;
 import com.jd.twitterclonebackend.service.VerificationTokenService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,7 +52,6 @@ public class AuthServiceImpl implements AuthService {
                 userEntity,
                 token
         );
-        // todo: repair mail sending
         // Send activation email with generated token to created user
         mailService.sendEmail(activationEmail);
         return userEntity;
@@ -64,7 +64,8 @@ public class AuthServiceImpl implements AuthService {
                 .findByUsername(registerDto.getUsername())
                 .ifPresent((userEntity) -> {
                     throw new UserException(
-                            InvalidUserEnum.USER_ALREADY_EXISTS_WITH_USERNAME.getMessage() + userEntity.getUsername()
+                            InvalidUserEnum.USER_ALREADY_EXISTS_WITH_USERNAME.getMessage() + userEntity.getUsername(),
+                            HttpStatus.BAD_REQUEST
                     );
                 });
         // Check if user with email address currently exists in db, if exists throw exception
@@ -72,7 +73,8 @@ public class AuthServiceImpl implements AuthService {
                 .findByEmailAddress(registerDto.getEmailAddress())
                 .ifPresent((userEntity) -> {
                     throw new UserException(
-                            InvalidUserEnum.USER_ALREADY_EXISTS_WITH_EMAIL.getMessage() + userEntity.getEmailAddress()
+                            InvalidUserEnum.USER_ALREADY_EXISTS_WITH_EMAIL.getMessage() + userEntity.getEmailAddress(),
+                            HttpStatus.BAD_REQUEST
                     );
                 });
     }

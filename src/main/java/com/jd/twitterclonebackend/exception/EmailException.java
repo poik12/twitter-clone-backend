@@ -1,9 +1,17 @@
 package com.jd.twitterclonebackend.exception;
 
+import org.springframework.http.HttpStatus;
+
 public class EmailException extends RuntimeException {
 
-    public EmailException(String message) {
+    private final HttpStatus status;
+
+    public EmailException(String message, HttpStatus status) {
         super(message);
+        this.status = status;
     }
 
+    public HttpStatus getStatus() {
+        return status;
+    }
 }
