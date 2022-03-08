@@ -1,9 +1,9 @@
 package com.jd.twitterclonebackend.security.filter;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.jd.twitterclonebackend.config.SecurityConfig;
 import com.jd.twitterclonebackend.security.SecurityResponse;
 import com.jd.twitterclonebackend.security.jwt.AccessTokenProvider;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,13 +19,10 @@ import java.io.IOException;
 import java.util.*;
 
 @Slf4j
+@RequiredArgsConstructor
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
     private final AccessTokenProvider accessTokenProvider;
-
-    public CustomAuthorizationFilter(AccessTokenProvider accessTokenProvider) {
-        this.accessTokenProvider = accessTokenProvider;
-    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -50,7 +47,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
             } catch (Exception exception) {
                 log.error("Error logging in: {}", exception.getMessage());
-                SecurityResponse.failedAuthorizationResponse(
+                SecurityResponse.failedAuthenticationResponse(
                         response,
                         exception,
                         "Authorization error");
@@ -75,7 +72,6 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                 .forEach(role -> {
                     authorities.add(new SimpleGrantedAuthority(role));
                 });
-
         // Create and return authentication token
         return new UsernamePasswordAuthenticationToken(
                 username,

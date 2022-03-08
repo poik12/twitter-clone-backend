@@ -7,6 +7,7 @@ import com.jd.twitterclonebackend.security.SecurityResponse;
 import com.jd.twitterclonebackend.security.jwt.AccessTokenProvider;
 import com.jd.twitterclonebackend.security.jwt.RefreshTokenProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,21 +25,12 @@ import java.io.IOException;
 import java.time.Instant;
 
 @Slf4j
+@RequiredArgsConstructor
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
     private final AccessTokenProvider accessTokenProvider;
     private final RefreshTokenProvider refreshTokenProvider;
-
-
-    public CustomAuthenticationFilter(AuthenticationManager authenticationManager,
-                                      AccessTokenProvider accessTokenProvider,
-                                      RefreshTokenProvider refreshTokenProvider) {
-        this.authenticationManager = authenticationManager;
-        this.accessTokenProvider = accessTokenProvider;
-        this.refreshTokenProvider = refreshTokenProvider;
-
-    }
 
     // Login authentication
     @Override
@@ -87,4 +79,14 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         );
     }
 
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request,
+                                              HttpServletResponse response,
+                                              AuthenticationException failed) throws IOException, ServletException {
+        log.error("Error logging in: {}", failed.getMessage());
+        SecurityResponse.failedAuthenticationResponse(
+                response,
+                failed,
+                "Authorization error");
+    }
 }
