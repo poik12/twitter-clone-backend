@@ -87,7 +87,7 @@ public class AuthServiceImpl implements AuthService {
         // Validate User with verification token
         verificationTokenService.validateUserByVerificationToken(verificationTokenEntity);
         // Update token confirmation in db
-        verificationTokenService.updateVerificationToken(token, Instant.now());
+        verificationTokenService.updateVerificationToken(verificationTokenEntity);
         // Return info about user account confirmation
         return EmailConfirmationDto.builder()
                 .message("Email has been confirmed")
@@ -101,10 +101,9 @@ public class AuthServiceImpl implements AuthService {
         // Get currently logged user
         UserEntity userEntity = userDetailsService.currentLoggedUserEntity();
         // Delete refresh token, verification token and user account
-        // TODO: check if cascade type all works
-//        refreshTokenRepository.deleteAllByUser(userEntity);
-//        verificationTokenRepository.deleteAllByUser(userEntity);
-//        userRepository.delete(userEntity);
+        refreshTokenRepository.deleteAllByUser(userEntity);
+        verificationTokenRepository.deleteAllByUser(userEntity);
+        userRepository.delete(userEntity);
     }
 
     // Refresh Access Token

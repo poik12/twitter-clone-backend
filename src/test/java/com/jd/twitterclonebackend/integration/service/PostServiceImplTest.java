@@ -1,9 +1,9 @@
-package com.jd.twitterclonebackend.integrations.service;
+package com.jd.twitterclonebackend.integration.service;
 
 import com.jd.twitterclonebackend.entity.PostEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.dto.PostRequestDto;
-import com.jd.twitterclonebackend.integrations.InitIntegrationTestData;
+import com.jd.twitterclonebackend.integration.InitIntegrationTestData;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -15,7 +15,7 @@ class PostServiceImplTest extends InitIntegrationTestData {
     @Test
     void should_addPost_whenPostRequestDto() {
         // given
-        UserEntity userEntity = initDatabaseByPrimeUser();
+        UserEntity userEntity = initDatabaseByPrimeUserEnabled();
         PostRequestDto postRequestDto = initPostRequestDto();
 
         // when
@@ -27,8 +27,6 @@ class PostServiceImplTest extends InitIntegrationTestData {
         assertThat(postEntity.getDescription()).isEqualTo(postRequestDto.getDescription());
         assertThat(postEntity.getUser()).isEqualTo(userEntity);
         assertThat(postEntity.getCommentNo()).isEqualTo(0);
-
-
     }
     
     @Test

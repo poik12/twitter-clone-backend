@@ -50,19 +50,19 @@ public class PostController {
     }
 
     // GET SINGLE POST BY ID
-    @GetMapping("/{postId}")
+    @GetMapping(value ="/{postId}")
     public PostResponseDto getPostById(@PathVariable Long postId) {
         return postService.getPostById(postId);
     }
 
     // GET POSTS BY USERNAME
-    @GetMapping("/by-user/{username}")
+    @GetMapping(value ="/by-user/{username}")
     public List<PostResponseDto> getPostsByUsername(@PathVariable String username) {
         return postService.getPostsByUsername(username);
     }
 
     // DELETE POST BY ID
-    @DeleteMapping("/{postId}")
+    @DeleteMapping(value ="/{postId}")
     public void deletePostById(@PathVariable Long postId) {
         postService.deletePostById(postId);
     }

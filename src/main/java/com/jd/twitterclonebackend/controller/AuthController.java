@@ -20,7 +20,7 @@ public class AuthController {
     private final AuthService authService;
 
     // USER REGISTRATION
-    @PostMapping("/register")
+    @PostMapping(value = "/register")
     public ResponseEntity<UserEntity> createAccount(@RequestBody RegisterRequestDto registerRequestDto) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -28,25 +28,25 @@ public class AuthController {
     }
 
     // EMAIL CONFIRMATION
-    @GetMapping("/confirm")
+    @GetMapping(value ="/confirm")
     public EmailConfirmationDto verifyAccount(@RequestParam("token") String token) {
         return authService.confirmUserAccount(token);
     }
 
     // LOGIN WITH JWT
-    @PostMapping("/login")
+    @PostMapping(value ="/login")
     public void login(@RequestBody LoginRequestDto loginRequestDto) {
         // Method only for swagger, CustomAuthenticationFilter does all the rest
     }
 
     // REFRESH ACCESS TOKEN
-    @PostMapping("/token/refresh")
+    @PostMapping(value ="/token/refresh")
     public AuthResponseDto refreshAccessToken(@Valid @RequestBody RefreshTokenRequestDto refreshTokenRequestDto) {
         return authService.refreshAccessToken(refreshTokenRequestDto);
     }
 
     // DELETE ACCOUNT
-    @DeleteMapping("/delete")
+    @DeleteMapping(value ="/delete")
     public void deleteAccount() {
         authService.deleteUserAccount();
     }

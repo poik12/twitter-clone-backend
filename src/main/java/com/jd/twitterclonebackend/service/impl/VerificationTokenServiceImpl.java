@@ -77,9 +77,9 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
     }
 
     @Override
-    public void updateVerificationToken(String token, Instant time) {
+    public void updateVerificationToken(VerificationTokenEntity verificationTokenEntity) {
         verificationTokenRepository.updateConfirmedAt(
-                token,
+                verificationTokenEntity.getToken(),
                 Instant.now()
         );
     }

@@ -22,7 +22,7 @@ public class UserController {
     private final UserService userService;
 
     // GET USER DETAILS
-    @GetMapping("/{username}")
+    @GetMapping(value ="/{username}")
     public UserResponseDto getUserDetails(@PathVariable String username) {
         return userService.getUserByUsername(username);
     }
@@ -35,7 +35,7 @@ public class UserController {
     }
 
     // UPDATE USER DETAILS
-    @PutMapping("/{username}")
+    @PutMapping(value ="/{username}")
     public void updateUserDetails(
             @PathVariable String username,
             @RequestParam(required = false, value = "userDetailsRequest") String userDetailsRequest,
@@ -57,19 +57,19 @@ public class UserController {
     }
 
     // CHECK IF USER IS FOLLOWED BY USERNAME
-    @GetMapping("{from}/{to}")
+    @GetMapping(value ="{from}/{to}")
     public boolean checkIfUserIfFollowed(@PathVariable String from, @PathVariable String to) {
         return userService.checkIfUserIsFollowed(from, to);
     }
 
     // FOLLOW USER BY ITS USERNAME
-    @PostMapping("/follow")
+    @PostMapping(value ="/follow")
     public void followUser(@RequestBody String username) {
         userService.followUser(username);
     }
 
     // UNFOLLOW USER BY ITS USERNAME
-    @PostMapping("/unfollow")
+    @PostMapping(value ="/unfollow")
     public void unfollowUser(@RequestBody String username) { userService.unfollowUser(username); }
 
 }
