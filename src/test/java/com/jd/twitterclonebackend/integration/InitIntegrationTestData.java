@@ -2,8 +2,12 @@ package com.jd.twitterclonebackend.integration;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.jd.twitterclonebackend.dto.RefreshTokenRequestDto;
 import com.jd.twitterclonebackend.dto.RegisterRequestDto;
+import com.jd.twitterclonebackend.entity.PostEntity;
 import com.jd.twitterclonebackend.entity.RefreshTokenEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.dto.PostRequestDto;
@@ -18,14 +22,17 @@ import com.jd.twitterclonebackend.service.impl.AuthServiceImpl;
 import com.jd.twitterclonebackend.service.impl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.time.Instant;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @SpringBootTest
@@ -239,6 +246,43 @@ public abstract class InitIntegrationTestData {
                 .getContext()
                 .setAuthentication(authentication);
         return userEntity;
+    }
+
+    protected String initPostRequestAsJson() {
+        PostRequestDto postRequestDto = PostRequestDto.builder()
+                .description(POST_DESCRIPTION)
+                .build();
+
+        String postRequestJSON = null;
+        ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        try {
+            postRequestJSON = objectWriter.writeValueAsString(postRequestDto);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return postRequestJSON;
+    }
+
+    protected MultipartFile initMultiPartFile() {
+        byte[] content = fileService.convertImagePathToByteArray(DEFAULT_BACKGROUND_PICTURE_PATH);
+        return new MockMultipartFile(
+                "file.txt",
+                "file.txt",
+                "text/plain",
+                content
+        );
+    }
+
+    protected List<PostEntity> initPostsInDatabase() {
+        initCurrentLoggedUser();
+        String postRequestAsJson = initPostRequestAsJson();
+        MultipartFile file = initMultiPartFile();
+
+        postService.addPost(file, postRequestAsJson);
+        postService.addPost(file, postRequestAsJson);
+        postService.addPost(null, postRequestAsJson);
+
+        return postRepository.findAll();
     }
 
 }
