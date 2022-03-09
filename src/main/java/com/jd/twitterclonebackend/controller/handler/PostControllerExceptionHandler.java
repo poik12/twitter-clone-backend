@@ -1,7 +1,7 @@
 package com.jd.twitterclonebackend.controller.handler;
 
 import com.jd.twitterclonebackend.controller.PostController;
-import com.jd.twitterclonebackend.controller.handler.dtos.ErrorMessage;
+import com.jd.twitterclonebackend.controller.handler.dtos.ErrorMessageDto;
 import com.jd.twitterclonebackend.exception.PostException;
 import com.jd.twitterclonebackend.exception.UserException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -11,16 +11,16 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class PostControllerExceptionHandler {
 
     @ExceptionHandler(value = UserException.class)
-    public ErrorMessage handleException(UserException userException) {
-        return ErrorMessage.builder()
+    public ErrorMessageDto handleException(UserException userException) {
+        return ErrorMessageDto.builder()
                 .status(userException.getStatus())
                 .message(userException.getMessage())
                 .build();
     }
 
     @ExceptionHandler(value = PostException.class)
-    public ErrorMessage handleException(PostException postException) {
-        return ErrorMessage.builder()
+    public ErrorMessageDto handleException(PostException postException) {
+        return ErrorMessageDto.builder()
                 .status(postException.getStatus())
                 .message(postException.getMessage())
                 .build();

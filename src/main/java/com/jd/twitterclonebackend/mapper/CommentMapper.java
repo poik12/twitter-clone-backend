@@ -45,7 +45,7 @@ public class CommentMapper {
     }
 
     // Creation time of comment passed when it was created
-    String getCommentTimeDuration(CommentEntity commentEntity) {
+    private String getCommentTimeDuration(CommentEntity commentEntity) {
         return TimeAgo.using(commentEntity.getCreatedAt().toEpochMilli());
     }
 

@@ -8,9 +8,7 @@ import com.jd.twitterclonebackend.security.jwt.RefreshTokenProvider;
 import com.jd.twitterclonebackend.service.AuthService;
 import com.jd.twitterclonebackend.service.MailService;
 import com.jd.twitterclonebackend.service.VerificationTokenService;
-import com.jd.twitterclonebackend.service.impl.AuthServiceImpl;
 import com.jd.twitterclonebackend.service.impl.UserDetailsServiceImpl;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -24,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
-class AuthServiceTest extends UnitTestData {
+class AuthServiceTest extends InitUnitTestData {
 
     @Mock
     private UserRepository userRepository;
