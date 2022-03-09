@@ -9,14 +9,13 @@ import com.jd.twitterclonebackend.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
 public class PostMapper {
-
-    private final CommentRepository commentRepository;
 
     public PostEntity mapFromDtoToEntity(PostRequestDto postRequestDto, UserEntity userEntity) {
 
@@ -27,6 +26,7 @@ public class PostMapper {
         return PostEntity.builder()
                 .description(postRequestDto.getDescription())
                 .user(userEntity)
+                .comments(Collections.emptyList())
                 .commentNo(0L)
                 .build();
     }
@@ -75,9 +75,9 @@ public class PostMapper {
     }
 
     // Number of comments
-    private Integer getCommentCount(PostEntity postEntity) {
+    private Long getCommentCount(PostEntity postEntity) {
 //        return commentRepository.findAllByPost(postEntity).size();
-        return postEntity.getComments().size();
+        return (long) postEntity.getComments().size();
     }
 
     // Creation time of post

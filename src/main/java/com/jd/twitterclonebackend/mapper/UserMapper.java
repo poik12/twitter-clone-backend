@@ -1,12 +1,11 @@
 package com.jd.twitterclonebackend.mapper;
 
-import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.dto.FollowerDto;
 import com.jd.twitterclonebackend.dto.UserRequestDto;
 import com.jd.twitterclonebackend.dto.UserResponseDto;
-import com.jd.twitterclonebackend.repository.FollowerRepository;
+import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.service.FileService;
-import com.jd.twitterclonebackend.service.impl.PostServiceImpl;
+import com.jd.twitterclonebackend.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -21,10 +20,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserMapper {
 
-    private final PostServiceImpl postService;
+    private final PostService postService;
     private final FileService fileService;
     private final PasswordEncoder passwordEncoder;
-    private final FollowerRepository followerRepository;
 
     public UserResponseDto mapFromEntityToUserDto(UserEntity userEntity) {
 
@@ -93,7 +91,7 @@ public class UserMapper {
             userEntity.setUsername(userRequestDto.getUsername());
         }
         if (!userRequestDto.getEmailAddress().isBlank()) {
-            userEntity.setEmailAddress(userRequestDto.getUsername());
+            userEntity.setEmailAddress(userRequestDto.getEmailAddress());
         }
         if (!userRequestDto.getPhoneNumber().isBlank()) {
             userEntity.setPhoneNumber(userRequestDto.getPhoneNumber());

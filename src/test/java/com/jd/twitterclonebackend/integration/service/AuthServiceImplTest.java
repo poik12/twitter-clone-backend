@@ -11,7 +11,7 @@ import com.jd.twitterclonebackend.exception.TokenException;
 import com.jd.twitterclonebackend.exception.UserException;
 import com.jd.twitterclonebackend.exception.enums.InvalidTokenEnum;
 import com.jd.twitterclonebackend.exception.enums.InvalidUserEnum;
-import com.jd.twitterclonebackend.integration.InitIntegrationTestData;
+import com.jd.twitterclonebackend.integration.IntegrationTestInitData;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,13 +19,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class AuthServiceImplTest extends InitIntegrationTestData {
+class AuthServiceImplTest extends IntegrationTestInitData {
 
     @Test
     void should_createUserAccount_byRegisterRequestDto() {
@@ -56,7 +55,7 @@ class AuthServiceImplTest extends InitIntegrationTestData {
         // then
         assertThat(result.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(result.getMessage())
-                .isEqualTo(InvalidUserEnum.USER_ALREADY_EXISTS_WITH_USERNAME + registerRequestDto.getUsername());
+                .isEqualTo(InvalidUserEnum.USER_ALREADY_EXISTS_WITH_USERNAME.getMessage() + registerRequestDto.getUsername());
     }
 
     @Test
@@ -74,7 +73,7 @@ class AuthServiceImplTest extends InitIntegrationTestData {
         // then
         assertThat(result.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(result.getMessage())
-                .isEqualTo(InvalidUserEnum.USER_ALREADY_EXISTS_WITH_EMAIL + registerRequestDto.getEmailAddress());
+                .isEqualTo(InvalidUserEnum.USER_ALREADY_EXISTS_WITH_EMAIL.getMessage() + registerRequestDto.getEmailAddress());
     }
 
     @Test
@@ -132,7 +131,7 @@ class AuthServiceImplTest extends InitIntegrationTestData {
         verificationTokenEntity.setUser(userEntity);
 
         // when
-        UserException result = assertThrows(UserException.class,
+        var result = assertThrows(UserException.class,
                 () -> authService.confirmUserAccount(VERIFICATION_TOKEN)
         );
 
@@ -149,7 +148,7 @@ class AuthServiceImplTest extends InitIntegrationTestData {
         verificationTokenEntity.getUser().setEnabled(true);
 
         // when
-        TokenException result = assertThrows(TokenException.class,
+        var result = assertThrows(TokenException.class,
                 () -> authService.confirmUserAccount(VERIFICATION_TOKEN)
         );
 
@@ -287,7 +286,7 @@ class AuthServiceImplTest extends InitIntegrationTestData {
 
         // then
         assertThat(result.getStatus()).isEqualTo(HttpStatus.NOT_FOUND);
-        assertThat(result.getMessage()).isEqualTo(InvalidUserEnum.USER_NOT_FOUND_WITH_USERNAME.getMessage() + USER_PRIME_USERNAME);
+        assertThat(result.getMessage()).isEqualTo(InvalidUserEnum.USER_NOT_FOUND_WITH_USERNAME.getMessage() + FAKE_USERNAME);
 
     }
 

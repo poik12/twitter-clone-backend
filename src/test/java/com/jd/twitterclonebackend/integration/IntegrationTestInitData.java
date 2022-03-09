@@ -2,8 +2,13 @@ package com.jd.twitterclonebackend.integration;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.jd.twitterclonebackend.dto.RefreshTokenRequestDto;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.jd.twitterclonebackend.dto.RegisterRequestDto;
+import com.jd.twitterclonebackend.dto.UserRequestDto;
+import com.jd.twitterclonebackend.dto.UserResponseDto;
+import com.jd.twitterclonebackend.entity.PostEntity;
 import com.jd.twitterclonebackend.entity.RefreshTokenEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.dto.PostRequestDto;
@@ -14,18 +19,20 @@ import com.jd.twitterclonebackend.mapper.PostMapper;
 import com.jd.twitterclonebackend.repository.*;
 import com.jd.twitterclonebackend.security.jwt.RefreshTokenProvider;
 import com.jd.twitterclonebackend.service.*;
-import com.jd.twitterclonebackend.service.impl.AuthServiceImpl;
 import com.jd.twitterclonebackend.service.impl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.time.Instant;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @SpringBootTest
@@ -34,7 +41,7 @@ import java.util.UUID;
         username = "mockUsername",
         password = "mockPassword"
 )
-public abstract class InitIntegrationTestData {
+public abstract class IntegrationTestInitData {
 
     @Autowired
     protected UserDetailsServiceImpl userDetailsService;
@@ -87,6 +94,13 @@ public abstract class InitIntegrationTestData {
     protected static final String USER_SECOND_PASSWORD = "user2";
     protected static final String USER_SECOND_PHONE_NUMBER = "222_222_222";
     protected static final String USER_SECOND_TEST_DESCRIPTION = "Test Description 2";
+
+    protected static final String USER_UPDATE_NAME = "Test User 1 UPDATE";
+    protected static final String USER_UPDATE_USERNAME = "user1 UPDATE";
+    protected static final String USER_UPDATE_EMAIL_ADDRESS = "test-user-1 UPDATE@gmail.com";
+    protected static final String USER_UPDATE_PASSWORD = "user1 UPDATE";
+    protected static final String USER_UPDATE_PHONE_NUMBER = "111_111_111 UPDATE";
+    protected static final String USER_UPDATE_TEST_DESCRIPTION = "Test Description 1 UPDATE";
 
     protected static final String VERIFICATION_TOKEN = UUID.randomUUID().toString();
     protected static final String FAKE_VERIFICATION_TOKEN = UUID.randomUUID().toString();
@@ -185,7 +199,7 @@ public abstract class InitIntegrationTestData {
 
     protected UserEntity initSecondUser() {
         return UserEntity.builder()
-                .id(1L)
+                .id(2L)
                 .name(USER_SECOND_NAME)
                 .username(USER_SECOND_USERNAME)
                 .emailAddress(USER_SECOND_EMAIL_ADDRESS)
@@ -193,8 +207,8 @@ public abstract class InitIntegrationTestData {
                 .phoneNumber(USER_SECOND_PHONE_NUMBER)
                 .enabled(false)
                 .userRole(UserRole.ROLE_USER)
-                .profilePicture(fileService.convertImagePathToByteArray(DEFAULT_PROFILE_PICTURE_PATH))
-                .backgroundPicture(fileService.convertImagePathToByteArray(DEFAULT_BACKGROUND_PICTURE_PATH))
+                .profilePicture(null)
+                .backgroundPicture(null)
                 .tweetNo(0L)
                 .followerNo(0L)
                 .followingNo(0L)
@@ -239,6 +253,70 @@ public abstract class InitIntegrationTestData {
                 .getContext()
                 .setAuthentication(authentication);
         return userEntity;
+    }
+
+    protected <T> String initRequestDtoAsJson(T requestDto) {
+        String requestJSON = null;
+        ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        try {
+            requestJSON = objectWriter.writeValueAsString(requestDto);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return requestJSON;
+    }
+
+    protected MultipartFile initMultiPartFile() {
+        byte[] content = fileService.convertImagePathToByteArray(DEFAULT_BACKGROUND_PICTURE_PATH);
+        return new MockMultipartFile(
+                "file.txt",
+                "file.txt",
+                "text/plain",
+                content
+        );
+    }
+
+    protected PostRequestDto initPostRequestDto() {
+            return PostRequestDto.builder()
+                .description(POST_DESCRIPTION)
+                .build();
+    }
+
+
+    protected List<PostEntity> initPostsInDatabase() {
+        initCurrentLoggedUser();
+        String postRequestAsJson = initRequestDtoAsJson(initPostRequestDto());
+        MultipartFile file = initMultiPartFile();
+
+        postService.addPost(file, postRequestAsJson);
+        postService.addPost(file, postRequestAsJson);
+        postService.addPost(null, postRequestAsJson);
+
+        return postRepository.findAll();
+    }
+
+    protected UserResponseDto initUserResponseDto(UserEntity userEntity) {
+        return UserResponseDto.builder()
+                .id(userEntity.getId())
+                .name(userEntity.getName())
+                .username(userEntity.getUsername())
+                .tweetNo(userEntity.getTweetNo())
+                .followingNo(userEntity.getFollowingNo())
+                .followerNo(userEntity.getFollowerNo())
+                .userProfilePicture(userEntity.getProfilePicture())
+                .userBackgroundPicture(userEntity.getBackgroundPicture())
+                .description(userEntity.getDescription())
+                .build();
+    }
+
+    protected UserRequestDto initUserRequestDto() {
+        return UserRequestDto.builder()
+                .name(USER_UPDATE_NAME)
+                .username(USER_UPDATE_USERNAME)
+                .emailAddress(USER_UPDATE_EMAIL_ADDRESS)
+                .password(USER_UPDATE_PASSWORD)
+                .phoneNumber(USER_UPDATE_PHONE_NUMBER)
+                .build();
     }
 
 }

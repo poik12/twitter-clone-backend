@@ -7,6 +7,7 @@ import com.jd.twitterclonebackend.dto.UserRequestDto;
 import com.jd.twitterclonebackend.dto.UserResponseDto;
 import com.jd.twitterclonebackend.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,20 +24,24 @@ public class UserController {
 
     // GET USER DETAILS
     @GetMapping(value ="/{username}")
-    public UserResponseDto getUserDetails(@PathVariable String username) {
-        return userService.getUserByUsername(username);
+    public ResponseEntity<UserResponseDto> getUserDetails(@PathVariable String username) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(userService.getUserByUsername(username));
     }
 
     // GET ALL USERS
     // TODO: pagination etc. some nested exception
     @GetMapping
     public ResponseEntity<List<UserResponseDto>> getUsers() {
-        return ResponseEntity.ok().body(userService.getUsers());
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(userService.getUsers());
     }
 
     // UPDATE USER DETAILS
     @PutMapping(value ="/{username}")
-    public void updateUserDetails(
+    public ResponseEntity<Void> updateUserDetails(
             @PathVariable String username,
             @RequestParam(required = false, value = "userDetailsRequest") String userDetailsRequest,
             @RequestParam(required = false, value = "profileImage") MultipartFile profileImageFile,
@@ -54,6 +59,8 @@ public class UserController {
                 profileImageFile,
                 backgroundImageFile
         );
+
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     // CHECK IF USER IS FOLLOWED BY USERNAME

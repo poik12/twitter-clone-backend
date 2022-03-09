@@ -15,7 +15,7 @@ public class PostResponseDto {
     private String name;
     private String username;
     private String description;
-    private Integer commentNo;
+    private Long commentNo;
     private Date createdAt;
     private String postTimeDuration;
     private byte[] fileContent;

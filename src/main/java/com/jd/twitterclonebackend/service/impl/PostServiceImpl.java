@@ -11,9 +11,6 @@ import com.jd.twitterclonebackend.exception.enums.InvalidUserEnum;
 import com.jd.twitterclonebackend.exception.PostException;
 import com.jd.twitterclonebackend.exception.UserException;
 import com.jd.twitterclonebackend.mapper.PostMapper;
-import com.jd.twitterclonebackend.mapper.mapstruct.NewPostMapper;
-import com.jd.twitterclonebackend.repository.CommentRepository;
-import com.jd.twitterclonebackend.repository.ImageFileRepository;
 import com.jd.twitterclonebackend.repository.PostRepository;
 import com.jd.twitterclonebackend.repository.UserRepository;
 import com.jd.twitterclonebackend.service.FileService;
@@ -89,7 +86,7 @@ public class PostServiceImpl implements PostService {
         // Get map of post id and content in byte from db
         Map<Long, byte[]> imageFilesMap = fileService.getAllImageFiles();
 
-        //Find all post in repository and map them from entities to dto
+        //Find all posts in repository sorted by created timestamp and map them from entities to dto
         return postRepository
                 .findAllByOrderByCreatedAtDesc()
                 .stream()
@@ -106,7 +103,7 @@ public class PostServiceImpl implements PostService {
         PostEntity postEntity = postRepository
                 .findById(postId)
                 .orElseThrow(() -> new PostException(
-                        InvalidPostEnum.POST_NOT_FOUND.getMessage() + postId,
+                        InvalidPostEnum.POST_NOT_FOUND_WITH_ID.getMessage() + postId,
                         HttpStatus.NOT_FOUND
                 ));
 

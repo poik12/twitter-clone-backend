@@ -1,4 +1,4 @@
-package com.jd.twitterclonebackend.handler;
+package com.jd.twitterclonebackend.message;
 
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
