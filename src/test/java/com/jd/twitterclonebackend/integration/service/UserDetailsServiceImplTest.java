@@ -3,7 +3,7 @@ package com.jd.twitterclonebackend.integration.service;
 import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.exception.UserException;
 import com.jd.twitterclonebackend.exception.enums.InvalidUserEnum;
-import com.jd.twitterclonebackend.integration.InitIntegrationTestData;
+import com.jd.twitterclonebackend.integration.IntegrationTestInitData;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
-class UserDetailsServiceImplTest extends InitIntegrationTestData {
+class UserDetailsServiceImplTest extends IntegrationTestInitData {
 
 
     @Test

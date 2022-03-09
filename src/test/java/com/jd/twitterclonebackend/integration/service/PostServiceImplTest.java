@@ -4,7 +4,7 @@ import com.jd.twitterclonebackend.entity.ImageFileEntity;
 import com.jd.twitterclonebackend.entity.PostEntity;
 import com.jd.twitterclonebackend.exception.PostException;
 import com.jd.twitterclonebackend.exception.enums.InvalidPostEnum;
-import com.jd.twitterclonebackend.integration.InitIntegrationTestData;
+import com.jd.twitterclonebackend.integration.IntegrationTestInitData;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,9 +13,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
-import java.util.function.Consumer;
 
-class PostServiceImplTest extends InitIntegrationTestData {
+class PostServiceImplTest extends IntegrationTestInitData {
 
     @Test
     void should_addPost_withoutFile() {

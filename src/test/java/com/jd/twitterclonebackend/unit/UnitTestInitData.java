@@ -1,7 +1,9 @@
 package com.jd.twitterclonebackend.unit;
 
 import com.jd.twitterclonebackend.dto.CommentRequestDto;
+import com.jd.twitterclonebackend.dto.PostRequestDto;
 import com.jd.twitterclonebackend.dto.RegisterRequestDto;
+import com.jd.twitterclonebackend.dto.UserRequestDto;
 import com.jd.twitterclonebackend.entity.CommentEntity;
 import com.jd.twitterclonebackend.entity.PostEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
@@ -14,7 +16,7 @@ import java.util.Collections;
 import java.util.Date;
 
 @ExtendWith(value = MockitoExtension.class)
-public abstract class InitUnitTestData {
+public abstract class UnitTestInitData {
 
     protected static final String USER_PRIME_NAME = "Test User 1";
     protected static final String USER_PRIME_USERNAME = "user1";
@@ -22,6 +24,13 @@ public abstract class InitUnitTestData {
     protected static final String USER_PRIME_PASSWORD = "user1";
     protected static final String USER_PRIME_PHONE_NUMBER = "111_111_111";
     protected static final String USER_PRIME_TEST_DESCRIPTION = "Test Description 1";
+
+    protected static final String USER_UPDATE_NAME = "Test User 1 UPDATE";
+    protected static final String USER_UPDATE_USERNAME = "user1 UPDATE";
+    protected static final String USER_UPDATE_EMAIL_ADDRESS = "test-user-1 UPDATE@gmail.com";
+    protected static final String USER_UPDATE_PASSWORD = "user1 UPDATE";
+    protected static final String USER_UPDATE_PHONE_NUMBER = "111_111_111 UPDATE";
+    protected static final String USER_UPDATE_TEST_DESCRIPTION = "Test Description 1 UPDATE";
 
     protected static final String POST_DESCRIPTION = "Test Description 1";
 
@@ -47,12 +56,16 @@ public abstract class InitUnitTestData {
                 .phoneNumber(USER_PRIME_PHONE_NUMBER)
                 .enabled(true)
                 .userRole(UserRole.ROLE_USER)
-                .profilePicture(null)
-                .backgroundPicture(null)
+                .profilePicture("byte".getBytes())
+                .backgroundPicture("byte".getBytes())
                 .tweetNo(0L)
                 .followerNo(0L)
                 .followingNo(0L)
+                .followers(Collections.emptyList())
+                .following(Collections.emptyList())
                 .description(USER_PRIME_TEST_DESCRIPTION)
+                .createdAt(Date.from(Instant.now()))
+                .updatedAt(Date.from(Instant.now()))
                 .build();
     }
 
@@ -82,6 +95,22 @@ public abstract class InitUnitTestData {
                 .user(userEntity)
                 .text(COMMENT_TEXT)
                 .createdAt(Instant.now())
+                .build();
+    }
+
+    protected PostRequestDto initPostRequestDto() {
+        return PostRequestDto.builder()
+                .description(POST_DESCRIPTION)
+                .build();
+    }
+
+    protected UserRequestDto initUserRequestDto() {
+        return UserRequestDto.builder()
+                .name(USER_UPDATE_NAME)
+                .username(USER_UPDATE_USERNAME)
+                .emailAddress(USER_UPDATE_EMAIL_ADDRESS)
+                .password(USER_UPDATE_PASSWORD)
+                .phoneNumber(USER_UPDATE_PHONE_NUMBER)
                 .build();
     }
 

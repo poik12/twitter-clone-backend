@@ -3,11 +3,9 @@ package com.jd.twitterclonebackend.unit.mapper;
 import com.jd.twitterclonebackend.dto.RegisterRequestDto;
 import com.jd.twitterclonebackend.mapper.AuthMapper;
 import com.jd.twitterclonebackend.service.FileService;
-import com.jd.twitterclonebackend.unit.InitUnitTestData;
+import com.jd.twitterclonebackend.unit.UnitTestInitData;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -15,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-class AuthMapperTest extends InitUnitTestData {
+class AuthMapperTest extends UnitTestInitData {
 
     @InjectMocks
     private AuthMapper authMapper;
@@ -30,11 +28,11 @@ class AuthMapperTest extends InitUnitTestData {
         // given
         RegisterRequestDto registerRequestDto = initRegisterRequestDto();
 
+        // when
         when(passwordEncoder.encode(any()))
                 .thenReturn(registerRequestDto.getPassword());
-
-        // when
         var result = authMapper.mapFromDtoToEntity(registerRequestDto);
+        System.out.println(result);
 
         // then
         assertAll(

@@ -1,4 +1,4 @@
-package com.jd.twitterclonebackend.handler;
+package com.jd.twitterclonebackend.message;
 
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;

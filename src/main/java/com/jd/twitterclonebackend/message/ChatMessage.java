@@ -1,10 +1,8 @@
-package com.jd.twitterclonebackend.handler;
+package com.jd.twitterclonebackend.message;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.Instant;
 
 @Data
 @AllArgsConstructor

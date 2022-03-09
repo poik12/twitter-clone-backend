@@ -11,7 +11,7 @@ import com.jd.twitterclonebackend.exception.TokenException;
 import com.jd.twitterclonebackend.exception.UserException;
 import com.jd.twitterclonebackend.exception.enums.InvalidTokenEnum;
 import com.jd.twitterclonebackend.exception.enums.InvalidUserEnum;
-import com.jd.twitterclonebackend.integration.InitIntegrationTestData;
+import com.jd.twitterclonebackend.integration.IntegrationTestInitData;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,13 +19,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class AuthServiceImplTest extends InitIntegrationTestData {
+class AuthServiceImplTest extends IntegrationTestInitData {
 
     @Test
     void should_createUserAccount_byRegisterRequestDto() {

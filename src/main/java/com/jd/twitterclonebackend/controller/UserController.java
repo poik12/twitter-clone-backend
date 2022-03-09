@@ -7,6 +7,7 @@ import com.jd.twitterclonebackend.dto.UserRequestDto;
 import com.jd.twitterclonebackend.dto.UserResponseDto;
 import com.jd.twitterclonebackend.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,8 +24,10 @@ public class UserController {
 
     // GET USER DETAILS
     @GetMapping(value ="/{username}")
-    public UserResponseDto getUserDetails(@PathVariable String username) {
-        return userService.getUserByUsername(username);
+    public ResponseEntity<UserResponseDto> getUserDetails(@PathVariable String username) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(userService.getUserByUsername(username));
     }
 
     // GET ALL USERS

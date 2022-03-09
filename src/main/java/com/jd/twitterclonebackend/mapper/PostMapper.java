@@ -17,8 +17,6 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class PostMapper {
 
-    private final CommentRepository commentRepository;
-
     public PostEntity mapFromDtoToEntity(PostRequestDto postRequestDto, UserEntity userEntity) {
 
         if (Objects.isNull(postRequestDto)) {

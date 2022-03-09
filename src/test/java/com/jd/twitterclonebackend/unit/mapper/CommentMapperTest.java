@@ -6,13 +6,13 @@ import com.jd.twitterclonebackend.entity.CommentEntity;
 import com.jd.twitterclonebackend.entity.PostEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.mapper.CommentMapper;
-import com.jd.twitterclonebackend.unit.InitUnitTestData;
+import com.jd.twitterclonebackend.unit.UnitTestInitData;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class CommentMapperTest extends InitUnitTestData {
+class CommentMapperTest extends UnitTestInitData {
 
     @InjectMocks
     private CommentMapper commentMapper;
@@ -31,6 +31,7 @@ class CommentMapperTest extends InitUnitTestData {
                 userEntity
         );
         System.out.println(result);
+
         // then
         assertAll(
                 () -> {

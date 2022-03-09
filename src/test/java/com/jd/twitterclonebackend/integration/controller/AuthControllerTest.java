@@ -7,8 +7,9 @@ import com.jd.twitterclonebackend.dto.RegisterRequestDto;
 import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.exception.UserException;
 import com.jd.twitterclonebackend.exception.enums.InvalidUserEnum;
-import com.jd.twitterclonebackend.integration.InitIntegrationTestData;
+import com.jd.twitterclonebackend.integration.IntegrationTestInitData;
 import com.jd.twitterclonebackend.service.AuthService;
+import com.jd.twitterclonebackend.unit.UnitTestInitData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-class AuthControllerTest extends InitIntegrationTestData {
+class AuthControllerTest extends IntegrationTestInitData {
 
     public MockMvc mockMvc;
 
@@ -54,10 +54,9 @@ class AuthControllerTest extends InitIntegrationTestData {
         RegisterRequestDto registerRequestDto = initRegisterRequestDtoForPrimeUser();
         UserEntity userEntity = initPrimeUser();
 
-        when(authService.createUserAccount(any()))
-                .thenReturn(userEntity);
-
         // when then
+        when(authService.createUserAccount(any())).thenReturn(userEntity);
+
         mockMvc.perform(
                         post("/auth/register")
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -70,6 +69,7 @@ class AuthControllerTest extends InitIntegrationTestData {
                 .andExpect(jsonPath("$.name").value(userEntity.getName()))
                 .andExpect(jsonPath("$.emailAddress").value(userEntity.getEmailAddress()))
                 .andExpect(jsonPath("$.phoneNumber").value(userEntity.getPhoneNumber()));
+
         verify(authService).createUserAccount(registerRequestDto);
     }
 

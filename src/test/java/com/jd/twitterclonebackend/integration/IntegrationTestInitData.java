@@ -5,8 +5,8 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.jd.twitterclonebackend.dto.RefreshTokenRequestDto;
 import com.jd.twitterclonebackend.dto.RegisterRequestDto;
+import com.jd.twitterclonebackend.dto.UserResponseDto;
 import com.jd.twitterclonebackend.entity.PostEntity;
 import com.jd.twitterclonebackend.entity.RefreshTokenEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
@@ -18,7 +18,6 @@ import com.jd.twitterclonebackend.mapper.PostMapper;
 import com.jd.twitterclonebackend.repository.*;
 import com.jd.twitterclonebackend.security.jwt.RefreshTokenProvider;
 import com.jd.twitterclonebackend.service.*;
-import com.jd.twitterclonebackend.service.impl.AuthServiceImpl;
 import com.jd.twitterclonebackend.service.impl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -41,7 +40,7 @@ import java.util.UUID;
         username = "mockUsername",
         password = "mockPassword"
 )
-public abstract class InitIntegrationTestData {
+public abstract class IntegrationTestInitData {
 
     @Autowired
     protected UserDetailsServiceImpl userDetailsService;
@@ -283,6 +282,20 @@ public abstract class InitIntegrationTestData {
         postService.addPost(null, postRequestAsJson);
 
         return postRepository.findAll();
+    }
+
+    protected UserResponseDto initUserResponseDto(UserEntity userEntity) {
+        return UserResponseDto.builder()
+                .id(userEntity.getId())
+                .name(userEntity.getName())
+                .username(userEntity.getUsername())
+                .tweetNo(userEntity.getTweetNo())
+                .followingNo(userEntity.getFollowingNo())
+                .followerNo(userEntity.getFollowerNo())
+                .userProfilePicture(userEntity.getProfilePicture())
+                .userBackgroundPicture(userEntity.getBackgroundPicture())
+                .description(userEntity.getDescription())
+                .build();
     }
 
 }
