@@ -55,7 +55,7 @@ class AuthServiceImplTest extends IntegrationTestInitData {
         // then
         assertThat(result.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(result.getMessage())
-                .isEqualTo(InvalidUserEnum.USER_ALREADY_EXISTS_WITH_USERNAME + registerRequestDto.getUsername());
+                .isEqualTo(InvalidUserEnum.USER_ALREADY_EXISTS_WITH_USERNAME.getMessage() + registerRequestDto.getUsername());
     }
 
     @Test
@@ -73,7 +73,7 @@ class AuthServiceImplTest extends IntegrationTestInitData {
         // then
         assertThat(result.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(result.getMessage())
-                .isEqualTo(InvalidUserEnum.USER_ALREADY_EXISTS_WITH_EMAIL + registerRequestDto.getEmailAddress());
+                .isEqualTo(InvalidUserEnum.USER_ALREADY_EXISTS_WITH_EMAIL.getMessage() + registerRequestDto.getEmailAddress());
     }
 
     @Test
@@ -131,7 +131,7 @@ class AuthServiceImplTest extends IntegrationTestInitData {
         verificationTokenEntity.setUser(userEntity);
 
         // when
-        UserException result = assertThrows(UserException.class,
+        var result = assertThrows(UserException.class,
                 () -> authService.confirmUserAccount(VERIFICATION_TOKEN)
         );
 
@@ -148,7 +148,7 @@ class AuthServiceImplTest extends IntegrationTestInitData {
         verificationTokenEntity.getUser().setEnabled(true);
 
         // when
-        TokenException result = assertThrows(TokenException.class,
+        var result = assertThrows(TokenException.class,
                 () -> authService.confirmUserAccount(VERIFICATION_TOKEN)
         );
 
@@ -286,7 +286,7 @@ class AuthServiceImplTest extends IntegrationTestInitData {
 
         // then
         assertThat(result.getStatus()).isEqualTo(HttpStatus.NOT_FOUND);
-        assertThat(result.getMessage()).isEqualTo(InvalidUserEnum.USER_NOT_FOUND_WITH_USERNAME.getMessage() + USER_PRIME_USERNAME);
+        assertThat(result.getMessage()).isEqualTo(InvalidUserEnum.USER_NOT_FOUND_WITH_USERNAME.getMessage() + FAKE_USERNAME);
 
     }
 

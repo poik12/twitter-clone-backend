@@ -1,5 +1,6 @@
 package com.jd.twitterclonebackend.integration.service;
 
+import com.jd.twitterclonebackend.dto.PostRequestDto;
 import com.jd.twitterclonebackend.entity.ImageFileEntity;
 import com.jd.twitterclonebackend.entity.PostEntity;
 import com.jd.twitterclonebackend.exception.PostException;
@@ -20,7 +21,8 @@ class PostServiceImplTest extends IntegrationTestInitData {
     void should_addPost_withoutFile() {
         // given
         initCurrentLoggedUser();
-        String postRequestJson = initPostRequestAsJson();
+        PostRequestDto postRequestDto = initPostRequestDto();
+        String postRequestJson = initRequestDtoAsJson(postRequestDto);
 
         // when
         postService.addPost(null, postRequestJson);
@@ -36,7 +38,8 @@ class PostServiceImplTest extends IntegrationTestInitData {
     void should_addPost_withFile() {
         // given
         initCurrentLoggedUser();
-        String postRequestJson = initPostRequestAsJson();
+        PostRequestDto postRequestDto = initPostRequestDto();
+        String postRequestJson = initRequestDtoAsJson(postRequestDto);
         MultipartFile file = initMultiPartFile();
 
         // when

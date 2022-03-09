@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.jd.twitterclonebackend.dto.RegisterRequestDto;
+import com.jd.twitterclonebackend.dto.UserRequestDto;
 import com.jd.twitterclonebackend.dto.UserResponseDto;
 import com.jd.twitterclonebackend.entity.PostEntity;
 import com.jd.twitterclonebackend.entity.RefreshTokenEntity;
@@ -93,6 +94,13 @@ public abstract class IntegrationTestInitData {
     protected static final String USER_SECOND_PASSWORD = "user2";
     protected static final String USER_SECOND_PHONE_NUMBER = "222_222_222";
     protected static final String USER_SECOND_TEST_DESCRIPTION = "Test Description 2";
+
+    protected static final String USER_UPDATE_NAME = "Test User 1 UPDATE";
+    protected static final String USER_UPDATE_USERNAME = "user1 UPDATE";
+    protected static final String USER_UPDATE_EMAIL_ADDRESS = "test-user-1 UPDATE@gmail.com";
+    protected static final String USER_UPDATE_PASSWORD = "user1 UPDATE";
+    protected static final String USER_UPDATE_PHONE_NUMBER = "111_111_111 UPDATE";
+    protected static final String USER_UPDATE_TEST_DESCRIPTION = "Test Description 1 UPDATE";
 
     protected static final String VERIFICATION_TOKEN = UUID.randomUUID().toString();
     protected static final String FAKE_VERIFICATION_TOKEN = UUID.randomUUID().toString();
@@ -191,7 +199,7 @@ public abstract class IntegrationTestInitData {
 
     protected UserEntity initSecondUser() {
         return UserEntity.builder()
-                .id(1L)
+                .id(2L)
                 .name(USER_SECOND_NAME)
                 .username(USER_SECOND_USERNAME)
                 .emailAddress(USER_SECOND_EMAIL_ADDRESS)
@@ -199,8 +207,8 @@ public abstract class IntegrationTestInitData {
                 .phoneNumber(USER_SECOND_PHONE_NUMBER)
                 .enabled(false)
                 .userRole(UserRole.ROLE_USER)
-                .profilePicture(fileService.convertImagePathToByteArray(DEFAULT_PROFILE_PICTURE_PATH))
-                .backgroundPicture(fileService.convertImagePathToByteArray(DEFAULT_BACKGROUND_PICTURE_PATH))
+                .profilePicture(null)
+                .backgroundPicture(null)
                 .tweetNo(0L)
                 .followerNo(0L)
                 .followingNo(0L)
@@ -247,19 +255,15 @@ public abstract class IntegrationTestInitData {
         return userEntity;
     }
 
-    protected String initPostRequestAsJson() {
-        PostRequestDto postRequestDto = PostRequestDto.builder()
-                .description(POST_DESCRIPTION)
-                .build();
-
-        String postRequestJSON = null;
+    protected <T> String initRequestDtoAsJson(T requestDto) {
+        String requestJSON = null;
         ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
         try {
-            postRequestJSON = objectWriter.writeValueAsString(postRequestDto);
+            requestJSON = objectWriter.writeValueAsString(requestDto);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        return postRequestJSON;
+        return requestJSON;
     }
 
     protected MultipartFile initMultiPartFile() {
@@ -272,9 +276,16 @@ public abstract class IntegrationTestInitData {
         );
     }
 
+    protected PostRequestDto initPostRequestDto() {
+            return PostRequestDto.builder()
+                .description(POST_DESCRIPTION)
+                .build();
+    }
+
+
     protected List<PostEntity> initPostsInDatabase() {
         initCurrentLoggedUser();
-        String postRequestAsJson = initPostRequestAsJson();
+        String postRequestAsJson = initRequestDtoAsJson(initPostRequestDto());
         MultipartFile file = initMultiPartFile();
 
         postService.addPost(file, postRequestAsJson);
@@ -295,6 +306,16 @@ public abstract class IntegrationTestInitData {
                 .userProfilePicture(userEntity.getProfilePicture())
                 .userBackgroundPicture(userEntity.getBackgroundPicture())
                 .description(userEntity.getDescription())
+                .build();
+    }
+
+    protected UserRequestDto initUserRequestDto() {
+        return UserRequestDto.builder()
+                .name(USER_UPDATE_NAME)
+                .username(USER_UPDATE_USERNAME)
+                .emailAddress(USER_UPDATE_EMAIL_ADDRESS)
+                .password(USER_UPDATE_PASSWORD)
+                .phoneNumber(USER_UPDATE_PHONE_NUMBER)
                 .build();
     }
 

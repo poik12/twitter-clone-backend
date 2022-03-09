@@ -34,12 +34,14 @@ public class UserController {
     // TODO: pagination etc. some nested exception
     @GetMapping
     public ResponseEntity<List<UserResponseDto>> getUsers() {
-        return ResponseEntity.ok().body(userService.getUsers());
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(userService.getUsers());
     }
 
     // UPDATE USER DETAILS
     @PutMapping(value ="/{username}")
-    public void updateUserDetails(
+    public ResponseEntity<Void> updateUserDetails(
             @PathVariable String username,
             @RequestParam(required = false, value = "userDetailsRequest") String userDetailsRequest,
             @RequestParam(required = false, value = "profileImage") MultipartFile profileImageFile,
@@ -57,6 +59,8 @@ public class UserController {
                 profileImageFile,
                 backgroundImageFile
         );
+
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     // CHECK IF USER IS FOLLOWED BY USERNAME
