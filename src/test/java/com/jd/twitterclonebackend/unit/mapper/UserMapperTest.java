@@ -71,7 +71,7 @@ class UserMapperTest extends UnitTestInitData {
         // when
         when(passwordEncoder.encode(any()))
                 .thenReturn(userDetailsRequestDto.getPassword());
-        when(fileService.convertImageFileToByteArray(any()))
+        when(fileService.convertFileToByteArray(any()))
                 .thenReturn("byteUpdate".getBytes());
         when(jsonMapper.mapFromJsonToDto(any(), any()))
                 .thenReturn(userDetailsRequestDto);

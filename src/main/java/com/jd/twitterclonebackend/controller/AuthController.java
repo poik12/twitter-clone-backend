@@ -33,8 +33,10 @@ public class AuthController {
 
     // EMAIL CONFIRMATION
     @GetMapping(path ="/confirm")
-    public EmailConfirmationDto verifyAccount(@RequestParam("token") String token) {
-        return authService.confirmUserAccount(token);
+    public ResponseEntity<EmailConfirmationDto> verifyAccount(@RequestParam("token") String token) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(authService.confirmUserAccount(token));
     }
 
     // LOGIN WITH JWT
@@ -45,14 +47,20 @@ public class AuthController {
 
     // REFRESH ACCESS TOKEN
     @PostMapping(path ="/token/refresh")
-    public AuthResponseDto refreshAccessToken(@Valid @RequestBody RefreshTokenRequestDto refreshTokenRequestDto) {
-        return authService.refreshAccessToken(refreshTokenRequestDto);
+    public ResponseEntity<AuthResponseDto> refreshAccessToken(@Valid @RequestBody RefreshTokenRequestDto refreshTokenRequestDto) {
+        return  ResponseEntity
+                .status(HttpStatus.OK)
+                .body(authService.refreshAccessToken(refreshTokenRequestDto));
     }
 
     // DELETE ACCOUNT
     @DeleteMapping(path ="/delete")
-    public void deleteAccount() {
+    public ResponseEntity<Void> deleteAccount() {
         authService.deleteUserAccount();
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .build();
+
     }
 
 }

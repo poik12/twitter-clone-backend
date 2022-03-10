@@ -6,6 +6,7 @@ import com.jd.twitterclonebackend.repository.ImageFileRepository;
 import com.jd.twitterclonebackend.service.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -15,7 +16,10 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
@@ -29,56 +33,43 @@ public class FileServiceImpl implements FileService {
 
     // UPLOAD IMAGE INTO DATABASE
     @Override
-    public void uploadImageFile(PostEntity post, MultipartFile file) {
-
-        try {
-            System.out.println("Original image byte size - " + file.getBytes().length);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void uploadImageFile(PostEntity postEntity, MultipartFile file) {
 
         String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
 
-        ImageFileEntity imageFileEntity = new ImageFileEntity();
+        byte[] content = convertFileToByteArray(file);
 
-        try {
-            imageFileEntity.setName(fileName);
-            imageFileEntity.setContent(compressBytes(file.getBytes()));
-            imageFileEntity.setSize(file.getSize());
-            imageFileEntity.setPost(post);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        ImageFileEntity imageFileEntity = ImageFileEntity.builder()
+                .name(fileName)
+                .content(compressBytes(content))
+                .size(file.getSize())
+                .post(postEntity)
+                .build();
 
         imageFileRepository.save(imageFileEntity);
     }
 
     // Compress the image bytes before storing it in database
-    private byte[] compressBytes(byte[] data) {
+    private byte[] compressBytes(byte[] content) {
 
         Deflater deflater = new Deflater();
-        deflater.setInput(data);
+        deflater.setInput(content);
         deflater.finish();
 
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
-
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(content.length);
         byte[] buffer = new byte[1024];
 
+        log.info("Original image byte size: " + content.length);
         while (!deflater.finished()) {
             int count = deflater.deflate(buffer);
-            outputStream.write(
-                    buffer,
-                    0,
-                    count
-            );
-
+            outputStream.write(buffer, 0, count);
             try {
                 outputStream.close();
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
-        System.out.println("Compressed image byte size - " + outputStream.toByteArray().length);
+        log.info("Compressed image byte size: " + outputStream.toByteArray().length);
 
         return outputStream.toByteArray();
     }
@@ -95,54 +86,40 @@ public class FileServiceImpl implements FileService {
                         imageFileEntity -> decompressBytes(imageFileEntity.getContent()
                         ))
                 );
-
     }
 
     // GET IMAGE FILE MAP BY POST LIST
     @Override
     public Map<Long, byte[]> getImageFilesByPostList(List<PostEntity> postList) {
-
-        Map<Long, byte[]> imageFileMap = new HashMap<>();
-
-        for (PostEntity postEntity : postList) {
-
-            ImageFileEntity imageFileEntity = imageFileRepository.getByPost(postEntity);
-
-            if (Objects.isNull(imageFileEntity)) {
-                continue;
-            } else {
-                imageFileMap.put(
-                        imageFileEntity.getPost().getId(),
-                        decompressBytes(imageFileEntity.getContent())
-                );
-            }
-        }
-        return imageFileMap;
+        return postList.stream()
+                .map(imageFileRepository::getByPost)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toMap(
+                        fileEntity -> fileEntity.getPost().getId(),
+                        fileEntity -> decompressBytes(fileEntity.getContent())
+                ));
     }
 
     // Uncompress retrieved image bytes from database
-    public byte[] decompressBytes(byte[] data) {
+    public byte[] decompressBytes(byte[] content) {
 
         Inflater inflater = new Inflater();
-        inflater.setInput(data);
+        inflater.setInput(content);
 
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
-
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(content.length);
         byte[] buffer = new byte[1024];
 
+        log.info("Compressed image byte size: " + outputStream.toByteArray().length);
         try {
             while (!inflater.finished()) {
                 int count = inflater.inflate(buffer);
-                outputStream.write(
-                        buffer,
-                        0,
-                        count
-                );
+                outputStream.write(buffer, 0, count);
                 outputStream.close();
             }
         } catch (DataFormatException | IOException e) {
             e.printStackTrace();
         }
+        log.info("Decompressed image byte size: " + outputStream.toByteArray().length);
 
         return outputStream.toByteArray();
     }
@@ -150,29 +127,30 @@ public class FileServiceImpl implements FileService {
     // CONVERT IMAGE TO BYTE ARRAY USING IMAGE PATH
     @Override
     @Nullable
-    public byte[] convertImagePathToByteArray(String imagePath) {
-        byte[] pictureBytes = null;
-
+    public byte[] convertFilePathToByteArray(String filePath) {
+        byte[] content = null;
         try {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            BufferedImage bufferedImage = ImageIO.read(new File(imagePath));
+            BufferedImage bufferedImage = ImageIO.read(new File(filePath));
             ImageIO.write(bufferedImage, "png", byteArrayOutputStream);
-            pictureBytes = byteArrayOutputStream.toByteArray();
+            content = byteArrayOutputStream.toByteArray();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return pictureBytes;
+        return content;
     }
 
-    // CONVERT IMAGE TO BYTE ARRAY USING IMAGE FILE
+    // CONVERT FILE TO BYTE ARRAY USING IMAGE FILE
     @Override
-    public byte[] convertImageFileToByteArray(MultipartFile imageFile) {
+    @Nullable
+    public byte[] convertFileToByteArray(MultipartFile file) {
+        byte[] content = null;
         try {
-            return imageFile.getBytes();
+            content = file.getBytes();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
+        return content;
     }
 
 }

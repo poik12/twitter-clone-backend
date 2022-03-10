@@ -120,8 +120,8 @@ public abstract class IntegrationTestInitData {
                 .phoneNumber(USER_PRIME_PHONE_NUMBER)
                 .enabled(false)
                 .userRole(UserRole.ROLE_USER)
-                .profilePicture(fileService.convertImagePathToByteArray(DEFAULT_PROFILE_PICTURE_PATH))
-                .backgroundPicture(fileService.convertImagePathToByteArray(DEFAULT_BACKGROUND_PICTURE_PATH))
+                .profilePicture(fileService.convertFilePathToByteArray(DEFAULT_PROFILE_PICTURE_PATH))
+                .backgroundPicture(fileService.convertFilePathToByteArray(DEFAULT_BACKGROUND_PICTURE_PATH))
                 .tweetNo(0L)
                 .followerNo(0L)
                 .followingNo(0L)
@@ -158,8 +158,8 @@ public abstract class IntegrationTestInitData {
                 .phoneNumber(USER_SECOND_PHONE_NUMBER)
                 .enabled(true)
                 .userRole(UserRole.ROLE_USER)
-                .profilePicture(fileService.convertImagePathToByteArray(DEFAULT_PROFILE_PICTURE_PATH))
-                .backgroundPicture(fileService.convertImagePathToByteArray(DEFAULT_BACKGROUND_PICTURE_PATH))
+                .profilePicture(fileService.convertFilePathToByteArray(DEFAULT_PROFILE_PICTURE_PATH))
+                .backgroundPicture(fileService.convertFilePathToByteArray(DEFAULT_BACKGROUND_PICTURE_PATH))
                 .tweetNo(0L)
                 .followerNo(0L)
                 .followingNo(0L)
@@ -267,7 +267,7 @@ public abstract class IntegrationTestInitData {
     }
 
     protected MultipartFile initMultiPartFile() {
-        byte[] content = fileService.convertImagePathToByteArray(DEFAULT_BACKGROUND_PICTURE_PATH);
+        byte[] content = fileService.convertFilePathToByteArray(DEFAULT_BACKGROUND_PICTURE_PATH);
         return new MockMultipartFile(
                 "file.txt",
                 "file.txt",

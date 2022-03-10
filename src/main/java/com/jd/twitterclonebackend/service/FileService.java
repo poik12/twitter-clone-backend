@@ -8,13 +8,13 @@ import java.util.Map;
 
 public interface FileService {
     // Upload image file into db
-    void uploadImageFile(PostEntity post, MultipartFile file);
-    // Get image file from db
+    void uploadImageFile(PostEntity postEntity, MultipartFile file);
+    // Get image file map from db
     Map<Long, byte[]> getAllImageFiles();
     // Get image file by post list
     Map<Long, byte[]> getImageFilesByPostList(List<PostEntity> postList);
     // Get array from image path
-    byte[] convertImagePathToByteArray(String imagePath);
+    byte[] convertFilePathToByteArray(String imagePath);
     // Get array from multipart file
-    byte[] convertImageFileToByteArray(MultipartFile imageFile);
+    byte[] convertFileToByteArray(MultipartFile imageFile);
 }

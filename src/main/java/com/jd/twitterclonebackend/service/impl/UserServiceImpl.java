@@ -59,42 +59,6 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
-//    @Override
-//    public void updateUserByUsername(String username,
-//                                     UserRequestDto userRequestDto,
-//                                     MultipartFile profileImageFile,
-//                                     MultipartFile backgroundImageFile) {
-//        // Find user in repository by its username
-//        UserEntity userEntity = userRepository
-//                .findByUsername(username)
-//                .orElseThrow(() -> new UserException(
-//                        InvalidUserEnum.USER_NOT_FOUND_WITH_USERNAME.getMessage(),
-//                        HttpStatus.NOT_FOUND
-//                ));
-//
-//        //        UserDetailsRequestDto userDetailsRequestDto = new UserDetailsRequestDto();
-////        try {
-////            userDetailsRequestDto = new ObjectMapper().readValue(
-////                    userDetailsRequestJson,
-////                    UserDetailsRequestDto.class
-////            );
-////        } catch (JsonProcessingException e) {
-////            e.printStackTrace();
-////        }
-//
-//
-//
-//        // Map user response to user entity
-//        UserEntity updatedUserEntity = userMapper.mapFromUserDtoToEntity(
-//                userEntity,
-//                userRequestDto,
-//                profileImageFile,
-//                backgroundImageFile
-//        );
-//        // Save updated user entity in db
-//        userRepository.save(updatedUserEntity);
-//    }
-
     @Override
     public void updateUserDetails(String userDetailsRequestJson,
                                   MultipartFile profileImageFile,
@@ -171,10 +135,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean checkIfUserIsFollowed(String followingUser, String followedUser) {
-
-        UserResponseDto followerUserEntity = getUserByUsername(followingUser);
-
-        return followerUserEntity.getFollowing()
+        return getUserByUsername(followingUser)
+                .getFollowing()
                 .stream()
                 .map(FollowerDto::getUsername)
                 .anyMatch(followingUsername -> followingUsername.equals(followedUser));

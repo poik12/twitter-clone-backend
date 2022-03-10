@@ -84,10 +84,10 @@ public abstract class NewUserMapper {
             userEntity.setPassword(passwordEncoder.encode(userDetailsRequestDto.getPassword()));
         }
         if (Objects.nonNull(profileImageFile)) {
-            userEntity.setProfilePicture(fileService.convertImageFileToByteArray(profileImageFile));
+            userEntity.setProfilePicture(fileService.convertFileToByteArray(profileImageFile));
         }
         if (Objects.nonNull(backgroundImageFile)) {
-            userEntity.setBackgroundPicture(fileService.convertImageFileToByteArray(backgroundImageFile));
+            userEntity.setBackgroundPicture(fileService.convertFileToByteArray(backgroundImageFile));
         }
 
         return userEntity;

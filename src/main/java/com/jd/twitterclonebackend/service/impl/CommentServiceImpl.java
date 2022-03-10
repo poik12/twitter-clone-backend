@@ -36,7 +36,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Transactional
     @Override
-    public void createComment(CommentRequestDto commentRequestDto) {
+    public void addComment(CommentRequestDto commentRequestDto) {
         // Get user who created post
         UserEntity userEntity = userDetailsService.currentLoggedUserEntity();
         // Find post for comment

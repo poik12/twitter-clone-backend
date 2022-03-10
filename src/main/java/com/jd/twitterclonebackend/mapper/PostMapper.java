@@ -37,24 +37,6 @@ public class PostMapper {
                 .build();
     }
 
-//    public PostResponseDto mapFromEntityToDto(PostEntity postEntity) {
-//
-//        if (Objects.isNull(postEntity)) {
-//            return null;
-//        }
-//
-//        return PostResponseDto.builder()
-//                .id(postEntity.getId())
-//                .description(postEntity.getDescription())
-//                .createdAt(postEntity.getCreatedAt())
-//                .commentNo(getCommentCount(postEntity))
-//                .postTimeDuration(getPostTimeDuration(postEntity))
-//                .username(postEntity.getUser().getUsername())
-//                .name(postEntity.getUser().getName())
-//                .build();
-//    }
-
-    // TODO: OVERLOADED METHOD
     public PostResponseDto mapFromEntityToDto(PostEntity postEntity, Map<Long, byte[]> imageFileMap) {
 
         if (Objects.isNull(postEntity)) {
@@ -72,7 +54,7 @@ public class PostMapper {
                 .fileContent(getImageFileByPostId(postEntity.getId(), imageFileMap))
                 .userProfilePicture(postEntity.getUser().getProfilePicture())
                 .build();
-        
+
     }
 
     // Get image file content in byte[] by post id
@@ -82,8 +64,7 @@ public class PostMapper {
 
     // Number of comments
     private Long getCommentCount(PostEntity postEntity) {
-//        return commentRepository.findAllByPost(postEntity).size();
-        return (long) postEntity.getComments().size();
+        return Long.parseLong(String.valueOf(postEntity.getComments().size()));
     }
 
     // Creation time of post

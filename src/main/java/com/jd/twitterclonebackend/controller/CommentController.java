@@ -20,9 +20,11 @@ public class CommentController {
     private final CommentServiceImpl commentService;
 
     @PostMapping
-    public ResponseEntity<Void> createComment(@RequestBody CommentRequestDto commentRequestDto) {
-        commentService.createComment(commentRequestDto);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<Void> addComment(@RequestBody CommentRequestDto commentRequestDto) {
+        commentService.addComment(commentRequestDto);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .build();
     }
 
     // GET ALL COMMENT FOR POST SORTED BY TIMESTAMP DESC
@@ -43,7 +45,9 @@ public class CommentController {
     @DeleteMapping(path ="/{commentId}")
     public ResponseEntity<Void> deleteCommentById(@PathVariable Long commentId) {
         commentService.deleteCommentById(commentId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .build();
     }
 
 

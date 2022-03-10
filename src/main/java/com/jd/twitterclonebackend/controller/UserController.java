@@ -20,7 +20,7 @@ public class UserController {
     private final UserService userService;
 
     // GET USER DETAILS
-    @GetMapping(path ="/{username}")
+    @GetMapping(path = "/{username}")
     public ResponseEntity<UserResponseDto> getUserDetails(@PathVariable String username) {
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -43,31 +43,35 @@ public class UserController {
             @RequestParam(required = false, value = "profileImage") MultipartFile profileImageFile,
             @RequestParam(required = false, value = "backgroundImage") MultipartFile backgroundImageFile) {
 
-
         userService.updateUserDetails(
                 userDetailsRequestJson,
                 profileImageFile,
                 backgroundImageFile
         );
-
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     // CHECK IF USER IS FOLLOWED BY USERNAME
-    @GetMapping(path ="/{from}/{to}")
-    public boolean checkIfUserIfFollowed(@PathVariable String from,
-                                         @PathVariable String to) {
-        return userService.checkIfUserIsFollowed(from, to);
+    @GetMapping(path = "/{from}/{to}")
+    public ResponseEntity<Boolean> checkIfUserIfFollowed(@PathVariable String from,
+                                                         @PathVariable String to) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(userService.checkIfUserIsFollowed(from, to));
     }
 
     // FOLLOW USER BY ITS USERNAME
-    @PostMapping(path ="/follow")
-    public void followUser(@RequestBody String username) {
+    @PostMapping(path = "/follow")
+    public ResponseEntity<Void> followUser(@RequestBody String username) {
         userService.followUser(username);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     // UNFOLLOW USER BY ITS USERNAME
-    @PostMapping(path ="/unfollow")
-    public void unfollowUser(@RequestBody String username) { userService.unfollowUser(username); }
+    @PostMapping(path = "/unfollow")
+    public ResponseEntity<Void> unfollowUser(@RequestBody String username) {
+        userService.unfollowUser(username);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 
 }
