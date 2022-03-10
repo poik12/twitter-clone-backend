@@ -5,8 +5,11 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.jd.twitterclonebackend.dto.request.CommentRequestDto;
 import com.jd.twitterclonebackend.dto.request.RegisterRequestDto;
 import com.jd.twitterclonebackend.dto.request.UserDetailsRequestDto;
+import com.jd.twitterclonebackend.dto.response.CommentResponseDto;
+import com.jd.twitterclonebackend.dto.response.PostResponseDto;
 import com.jd.twitterclonebackend.dto.response.UserResponseDto;
 import com.jd.twitterclonebackend.entity.PostEntity;
 import com.jd.twitterclonebackend.entity.RefreshTokenEntity;
@@ -107,9 +110,10 @@ public abstract class IntegrationTestInitData {
 
     protected static final String FAKE_REFRESH_TOKEN = UUID.randomUUID().toString();
 
-
-
     protected static final String POST_DESCRIPTION = "Post Description";
+
+    protected static final String COMMENT_TEXT = "Comment text";
+
 
     protected UserEntity initDatabaseByPrimeUserDisabled() {
         UserEntity userEntity = UserEntity.builder()
@@ -282,6 +286,19 @@ public abstract class IntegrationTestInitData {
                 .build();
     }
 
+    protected PostResponseDto initPostResponseDto() {
+        return PostResponseDto.builder()
+                .id(1L)
+                .name(USER_PRIME_NAME)
+                .username(USER_PRIME_USERNAME)
+                .description(USER_PRIME_TEST_DESCRIPTION)
+                .commentNo(0L)
+                .createdAt(Date.from(Instant.now()))
+                .postTimeDuration(null)
+                .fileContent(null)
+                .userProfilePicture(null)
+                .build();
+    }
 
     protected List<PostEntity> initPostsInDatabase() {
         initCurrentLoggedUser();
@@ -294,6 +311,26 @@ public abstract class IntegrationTestInitData {
 
         return postRepository.findAll();
     }
+
+    protected CommentRequestDto initCommentRequestDto() {
+        return CommentRequestDto.builder()
+                .username(USER_PRIME_USERNAME)
+                .postId(1L)
+                .text(COMMENT_TEXT)
+                .build();
+    }
+
+    protected CommentResponseDto initCommentResponseDto() {
+        return CommentResponseDto.builder()
+                .username(USER_PRIME_USERNAME)
+                .name(USER_PRIME_NAME)
+                .profileImage(null)
+                .postId(1L)
+                .timeOfCreation(null)
+                .text(COMMENT_TEXT)
+                .build();
+    }
+
 
     protected UserResponseDto initUserResponseDto(UserEntity userEntity) {
         return UserResponseDto.builder()

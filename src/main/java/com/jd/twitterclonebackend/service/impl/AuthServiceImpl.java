@@ -10,6 +10,7 @@ import com.jd.twitterclonebackend.entity.VerificationTokenEntity;
 import com.jd.twitterclonebackend.exception.UserException;
 import com.jd.twitterclonebackend.exception.enums.InvalidUserEnum;
 import com.jd.twitterclonebackend.mapper.AuthMapper;
+import com.jd.twitterclonebackend.mapper.mapstruct.NewAuthMapper;
 import com.jd.twitterclonebackend.repository.RefreshTokenRepository;
 import com.jd.twitterclonebackend.repository.UserRepository;
 import com.jd.twitterclonebackend.repository.VerificationTokenRepository;

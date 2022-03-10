@@ -162,18 +162,53 @@ class UserControllerTest extends IntegrationTestInitData {
     }
 
     @Test
-    void updateUserDetails() {
+    void should_checkIfUserIsFollowed_byFollowingAndFollower() throws Exception {
+        // given
+        UserEntity primeUserEntity = initPrimeUser();
+        UserEntity secondUserEntity = initSecondUser();
+
+        // when then
+        when(userService.checkIfUserIsFollowed(any(), any()))
+                .thenReturn(true);
+
+        mockMvc.perform(
+                get("/users/{from}/{to}",
+                        primeUserEntity.getUsername(), secondUserEntity.getUsername())
+                        .accept(MediaType.APPLICATION_JSON_VALUE)
+                )
+                .andDo(print())
+                .andExpect(status().isOk());
+
     }
 
     @Test
-    void checkIfUserIfFollowed() {
+    void should_followUser_byUsername() throws Exception {
+        // given
+        UserEntity primeUserEntity = initPrimeUser();
+
+        // when then
+        mockMvc.perform(
+                        get("/users/follow")
+                                .param("username", primeUserEntity.getUsername())
+                                .accept(MediaType.APPLICATION_JSON_VALUE)
+                )
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 
     @Test
-    void followUser() {
+    void should_unfollowUser_byUsername() throws Exception {
+        // given
+        UserEntity primeUserEntity = initPrimeUser();
+
+        // when then
+        mockMvc.perform(
+                        get("/users/unfollow")
+                                .param("username", primeUserEntity.getUsername())
+                                .accept(MediaType.APPLICATION_JSON_VALUE)
+                )
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 
-    @Test
-    void unfollowUser() {
-    }
 }

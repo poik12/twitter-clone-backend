@@ -36,6 +36,9 @@ public abstract class UnitTestInitData {
 
     protected static final String COMMENT_TEXT = "Test Description 1";
 
+    protected static final Date CREATED_AT = Date.from(Instant.now());
+    protected static final Date UPDATED_AT = Date.from(Instant.now());
+
     protected RegisterRequestDto initRegisterRequestDto() {
         return RegisterRequestDto.builder()
                 .name(USER_PRIME_NAME)

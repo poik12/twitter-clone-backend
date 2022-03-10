@@ -53,7 +53,7 @@ public class UserController {
 
     // CHECK IF USER IS FOLLOWED BY USERNAME
     @GetMapping(path = "/{from}/{to}")
-    public ResponseEntity<Boolean> checkIfUserIfFollowed(@PathVariable String from,
+    public ResponseEntity<Boolean> checkIfUserIsFollowed(@PathVariable String from,
                                                          @PathVariable String to) {
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -62,14 +62,14 @@ public class UserController {
 
     // FOLLOW USER BY ITS USERNAME
     @PostMapping(path = "/follow")
-    public ResponseEntity<Void> followUser(@RequestBody String username) {
+    public ResponseEntity<Void> followUser(@RequestParam(value = "username") String username) {
         userService.followUser(username);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     // UNFOLLOW USER BY ITS USERNAME
     @PostMapping(path = "/unfollow")
-    public ResponseEntity<Void> unfollowUser(@RequestBody String username) {
+    public ResponseEntity<Void> unfollowUser(@RequestParam(value = "username") String username) {
         userService.unfollowUser(username);
         return ResponseEntity.status(HttpStatus.OK).build();
     }

@@ -3,7 +3,7 @@ package com.jd.twitterclonebackend.controller;
 import com.jd.twitterclonebackend.config.swagger.ApiRestController;
 import com.jd.twitterclonebackend.dto.request.CommentRequestDto;
 import com.jd.twitterclonebackend.dto.response.CommentResponseDto;
-import com.jd.twitterclonebackend.service.impl.CommentServiceImpl;
+import com.jd.twitterclonebackend.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +17,7 @@ import java.util.List;
 @ApiRestController
 public class CommentController {
 
-    private final CommentServiceImpl commentService;
+    private final CommentService commentService;
 
     @PostMapping
     public ResponseEntity<Void> addComment(@RequestBody CommentRequestDto commentRequestDto) {

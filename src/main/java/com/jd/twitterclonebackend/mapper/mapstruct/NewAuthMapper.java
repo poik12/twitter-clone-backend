@@ -6,10 +6,13 @@ import com.jd.twitterclonebackend.entity.enums.UserRole;
 import com.jd.twitterclonebackend.service.FileService;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
+import org.mapstruct.ReportingPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Mapper(
+        unmappedTargetPolicy = ReportingPolicy.IGNORE,
         componentModel = "spring",
         imports = {UserRole.class}
 )
@@ -23,18 +26,19 @@ public abstract class NewAuthMapper {
     @Autowired
     protected PasswordEncoder passwordEncoder;
 
-
-    @Mapping(target = "password", expression = "java(passwordEncoder.encode(registerRequestDto.getPassword()))")
-    @Mapping(target = "userRole", constant = "ROLE_USER")
-    @Mapping(target = "enabled", constant = "false")
-//    @Mapping(target = "followerNo", expression = "java(0L)")
-//    @Mapping(target = "followingNo", expression = "java(0L)")
-//    @Mapping(target = "tweetNo", expression = "java(0L)")
-//    @Mapping(target = "description", expression = "java(null)")
-    @Mapping(target = "profilePicture",
-            expression = "java(fileService.convertImagePathToByteArray(DEFAULT_PROFILE_PICTURE_PATH))")
-    @Mapping(target = "backgroundPicture",
-            expression = "java(fileService.convertImagePathToByteArray(DEFAULT_BACKGROUND_PICTURE_PATH))")
+    @Mappings(value = {
+            @Mapping(target = "password", expression = "java(passwordEncoder.encode(registerRequestDto.getPassword()))"),
+            @Mapping(target = "userRole", constant = "ROLE_USER"),
+            @Mapping(target = "enabled", constant = "false"),
+            @Mapping(target = "followerNo", expression = "java(0L)"),
+            @Mapping(target = "followingNo", expression = "java(0L)"),
+            @Mapping(target = "tweetNo", expression = "java(0L)"),
+//            @Mapping(target = "description", expression = "null"),
+            @Mapping(target = "profilePicture",
+                    expression = "java(fileService.convertFilePathToByteArray(DEFAULT_PROFILE_PICTURE_PATH))"),
+            @Mapping(target = "backgroundPicture",
+                    expression = "java(fileService.convertFilePathToByteArray(DEFAULT_BACKGROUND_PICTURE_PATH))"),
+    })
     public abstract UserEntity mapFromDtoToEntity(RegisterRequestDto registerRequestDto);
 
 }
