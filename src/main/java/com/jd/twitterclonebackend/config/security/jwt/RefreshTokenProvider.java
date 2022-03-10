@@ -1,11 +1,11 @@
-package com.jd.twitterclonebackend.security.jwt;
+package com.jd.twitterclonebackend.config.security.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.jd.twitterclonebackend.entity.RefreshTokenEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
-import com.jd.twitterclonebackend.dto.AuthResponseDto;
-import com.jd.twitterclonebackend.dto.RefreshTokenRequestDto;
+import com.jd.twitterclonebackend.dto.response.AuthResponseDto;
+import com.jd.twitterclonebackend.dto.request.RefreshTokenRequestDto;
 import com.jd.twitterclonebackend.exception.UserException;
 import com.jd.twitterclonebackend.exception.enums.InvalidTokenEnum;
 import com.jd.twitterclonebackend.exception.TokenException;
@@ -15,7 +15,6 @@ import com.jd.twitterclonebackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

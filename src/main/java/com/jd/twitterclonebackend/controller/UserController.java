@@ -1,10 +1,7 @@
 package com.jd.twitterclonebackend.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jd.twitterclonebackend.config.swagger.ApiRestController;
-import com.jd.twitterclonebackend.dto.UserRequestDto;
-import com.jd.twitterclonebackend.dto.UserResponseDto;
+import com.jd.twitterclonebackend.dto.response.UserResponseDto;
 import com.jd.twitterclonebackend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,7 +20,7 @@ public class UserController {
     private final UserService userService;
 
     // GET USER DETAILS
-    @GetMapping(value ="/{username}")
+    @GetMapping(path = "/{username}")
     public ResponseEntity<UserResponseDto> getUserDetails(@PathVariable String username) {
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -40,43 +37,41 @@ public class UserController {
     }
 
     // UPDATE USER DETAILS
-    @PutMapping(value ="/{username}")
+    @PutMapping
     public ResponseEntity<Void> updateUserDetails(
-            @PathVariable String username,
-            @RequestParam(required = false, value = "userDetailsRequest") String userDetailsRequest,
+            @RequestParam(required = false, value = "userDetailsRequest") String userDetailsRequestJson,
             @RequestParam(required = false, value = "profileImage") MultipartFile profileImageFile,
-            @RequestParam(required = false, value = "backgroundImage") MultipartFile backgroundImageFile
-    ) throws JsonProcessingException {
+            @RequestParam(required = false, value = "backgroundImage") MultipartFile backgroundImageFile) {
 
-        UserRequestDto userRequestDto = new ObjectMapper().readValue(
-                userDetailsRequest,
-                UserRequestDto.class
-        );
-
-        userService.updateUserByUsername(
-                username,
-                userRequestDto,
+        userService.updateUserDetails(
+                userDetailsRequestJson,
                 profileImageFile,
                 backgroundImageFile
         );
-
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     // CHECK IF USER IS FOLLOWED BY USERNAME
-    @GetMapping(value ="{from}/{to}")
-    public boolean checkIfUserIfFollowed(@PathVariable String from, @PathVariable String to) {
-        return userService.checkIfUserIsFollowed(from, to);
+    @GetMapping(path = "/{from}/{to}")
+    public ResponseEntity<Boolean> checkIfUserIsFollowed(@PathVariable String from,
+                                                         @PathVariable String to) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(userService.checkIfUserIsFollowed(from, to));
     }
 
     // FOLLOW USER BY ITS USERNAME
-    @PostMapping(value ="/follow")
-    public void followUser(@RequestBody String username) {
+    @PostMapping(path = "/follow")
+    public ResponseEntity<Void> followUser(@RequestParam(value = "username") String username) {
         userService.followUser(username);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     // UNFOLLOW USER BY ITS USERNAME
-    @PostMapping(value ="/unfollow")
-    public void unfollowUser(@RequestBody String username) { userService.unfollowUser(username); }
+    @PostMapping(path = "/unfollow")
+    public ResponseEntity<Void> unfollowUser(@RequestParam(value = "username") String username) {
+        userService.unfollowUser(username);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 
 }

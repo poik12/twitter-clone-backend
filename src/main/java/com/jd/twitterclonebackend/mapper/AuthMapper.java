@@ -2,7 +2,7 @@ package com.jd.twitterclonebackend.mapper;
 
 import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.entity.enums.UserRole;
-import com.jd.twitterclonebackend.dto.RegisterRequestDto;
+import com.jd.twitterclonebackend.dto.request.RegisterRequestDto;
 import com.jd.twitterclonebackend.service.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,8 +37,8 @@ public class AuthMapper {
                 .followerNo(0L)
                 .followingNo(0L)
                 .tweetNo(0L)
-                .profilePicture(fileService.convertImagePathToByteArray(DEFAULT_PROFILE_PICTURE_PATH))
-                .backgroundPicture(fileService.convertImagePathToByteArray(DEFAULT_BACKGROUND_PICTURE_PATH))
+                .profilePicture(fileService.convertFilePathToByteArray(DEFAULT_PROFILE_PICTURE_PATH))
+                .backgroundPicture(fileService.convertFilePathToByteArray(DEFAULT_BACKGROUND_PICTURE_PATH))
                 .description(null)
                 .build();
 

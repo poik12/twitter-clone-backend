@@ -1,7 +1,8 @@
 package com.jd.twitterclonebackend.unit.mapper;
 
-import com.jd.twitterclonebackend.dto.UserRequestDto;
+import com.jd.twitterclonebackend.dto.request.UserDetailsRequestDto;
 import com.jd.twitterclonebackend.entity.UserEntity;
+import com.jd.twitterclonebackend.mapper.JsonMapper;
 import com.jd.twitterclonebackend.mapper.UserMapper;
 import com.jd.twitterclonebackend.service.FileService;
 import com.jd.twitterclonebackend.service.PostService;
@@ -29,6 +30,8 @@ class UserMapperTest extends UnitTestInitData {
     private FileService fileService;
     @Mock
     private PasswordEncoder passwordEncoder;
+    @Mock
+    private JsonMapper jsonMapper;
 
     @Test
     void should_mapFromUserEntity_toUserResponseDto() {
@@ -60,17 +63,22 @@ class UserMapperTest extends UnitTestInitData {
     void should_mapFromUserRequestDto_toUserEntity() {
         // given
         UserEntity userEntity = initUserEntity();
-        UserRequestDto userRequestDto = initUserRequestDto();
+        String userDetailsRequestJson = "";
+        UserDetailsRequestDto userDetailsRequestDto = initUserRequestDto();
         MultipartFile profileImageFile = new MockMultipartFile("byteUpdate", "byteUpdate".getBytes());
         MultipartFile backgroundImageFile = new MockMultipartFile("byteUpdate", "byteUpdate".getBytes());
 
         // when
-        when(passwordEncoder.encode(any())).thenReturn(userRequestDto.getPassword());
-        when(fileService.convertImageFileToByteArray(any())).thenReturn("byteUpdate".getBytes());
+        when(passwordEncoder.encode(any()))
+                .thenReturn(userDetailsRequestDto.getPassword());
+        when(fileService.convertFileToByteArray(any()))
+                .thenReturn("byteUpdate".getBytes());
+        when(jsonMapper.mapFromJsonToDto(any(), any()))
+                .thenReturn(userDetailsRequestDto);
 
         var result = userMapper.mapFromUserDtoToEntity(
                 userEntity,
-                userRequestDto,
+                userDetailsRequestJson,
                 profileImageFile,
                 backgroundImageFile
         );
@@ -79,11 +87,11 @@ class UserMapperTest extends UnitTestInitData {
         // then
         assertAll(
                 () -> {
-                    assertEquals(userRequestDto.getName(), result.getName());
-                    assertEquals(userRequestDto.getUsername(), result.getUsername());
-                    assertEquals(userRequestDto.getEmailAddress(), result.getEmailAddress());
-                    assertEquals(userRequestDto.getPhoneNumber(), result.getPhoneNumber());
-                    assertEquals(userRequestDto.getPassword(), result.getPassword());
+                    assertEquals(userDetailsRequestDto.getName(), result.getName());
+                    assertEquals(userDetailsRequestDto.getUsername(), result.getUsername());
+                    assertEquals(userDetailsRequestDto.getEmailAddress(), result.getEmailAddress());
+                    assertEquals(userDetailsRequestDto.getPhoneNumber(), result.getPhoneNumber());
+                    assertEquals(userDetailsRequestDto.getPassword(), result.getPassword());
 //                    assertEquals(profileImageFile, result.getProfilePicture());
 //                    assertEquals(backgroundImageFile, result.getBackgroundPicture());
                     // TODO: Change image mapping

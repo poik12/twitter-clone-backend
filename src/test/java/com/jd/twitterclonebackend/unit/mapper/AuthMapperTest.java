@@ -1,7 +1,10 @@
 package com.jd.twitterclonebackend.unit.mapper;
 
-import com.jd.twitterclonebackend.dto.RegisterRequestDto;
+import com.jd.twitterclonebackend.dto.request.RegisterRequestDto;
+import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.mapper.AuthMapper;
+import com.jd.twitterclonebackend.mapper.mapstruct.NewAuthMapper;
+import com.jd.twitterclonebackend.mapper.mapstruct.NewAuthMapperImpl;
 import com.jd.twitterclonebackend.service.FileService;
 import com.jd.twitterclonebackend.unit.UnitTestInitData;
 import org.junit.jupiter.api.Test;
@@ -11,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class AuthMapperTest extends UnitTestInitData {
@@ -28,9 +32,16 @@ class AuthMapperTest extends UnitTestInitData {
         // given
         RegisterRequestDto registerRequestDto = initRegisterRequestDto();
 
+        UserEntity mock = mock(UserEntity.class);
+
         // when
         when(passwordEncoder.encode(any()))
                 .thenReturn(registerRequestDto.getPassword());
+        when(fileService.convertFilePathToByteArray(any()))
+                .thenReturn(null);
+        when(fileService.convertFilePathToByteArray(any()))
+                .thenReturn(null);
+
         var result = authMapper.mapFromDtoToEntity(registerRequestDto);
         System.out.println(result);
 
@@ -43,6 +54,10 @@ class AuthMapperTest extends UnitTestInitData {
                     assertEquals(registerRequestDto.getPassword(), result.getPassword());
                     assertEquals(registerRequestDto.getPhoneNumber(), result.getPhoneNumber());
                     assertEquals(false, result.getEnabled());
+                    assertEquals(0L, result.getFollowerNo());
+                    assertEquals(0L, result.getFollowingNo());
+                    assertEquals(0L, result.getTweetNo());
+                    assertEquals(null, result.getDescription());
                     // TODO: ADD THE REST FIELDS
                 }
         );

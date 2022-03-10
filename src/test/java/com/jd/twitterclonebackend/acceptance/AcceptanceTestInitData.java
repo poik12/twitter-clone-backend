@@ -1,6 +1,6 @@
 package com.jd.twitterclonebackend.acceptance;
 
-import com.jd.twitterclonebackend.dto.RegisterRequestDto;
+import com.jd.twitterclonebackend.dto.request.RegisterRequestDto;
 import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.entity.enums.UserRole;
 import com.jd.twitterclonebackend.service.FileService;
@@ -55,8 +55,8 @@ public abstract class AcceptanceTestInitData {
                 .phoneNumber(USER_PRIME_PHONE_NUMBER)
                 .enabled(false)
                 .userRole(UserRole.ROLE_USER)
-                .profilePicture(fileService.convertImagePathToByteArray(DEFAULT_PROFILE_PICTURE_PATH))
-                .backgroundPicture(fileService.convertImagePathToByteArray(DEFAULT_BACKGROUND_PICTURE_PATH))
+                .profilePicture(fileService.convertFilePathToByteArray(DEFAULT_PROFILE_PICTURE_PATH))
+                .backgroundPicture(fileService.convertFilePathToByteArray(DEFAULT_BACKGROUND_PICTURE_PATH))
                 .tweetNo(0L)
                 .followerNo(0L)
                 .followingNo(0L)

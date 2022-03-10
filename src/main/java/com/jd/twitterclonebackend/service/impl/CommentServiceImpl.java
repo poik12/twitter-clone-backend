@@ -1,18 +1,17 @@
 package com.jd.twitterclonebackend.service.impl;
 
+import com.jd.twitterclonebackend.dto.request.CommentRequestDto;
+import com.jd.twitterclonebackend.dto.response.CommentResponseDto;
 import com.jd.twitterclonebackend.entity.CommentEntity;
 import com.jd.twitterclonebackend.entity.PostEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
-import com.jd.twitterclonebackend.dto.CommentRequestDto;
-import com.jd.twitterclonebackend.dto.CommentResponseDto;
-import com.jd.twitterclonebackend.exception.enums.InvalidCommentEnum;
-import com.jd.twitterclonebackend.exception.enums.InvalidPostEnum;
-import com.jd.twitterclonebackend.exception.enums.InvalidUserEnum;
 import com.jd.twitterclonebackend.exception.CommentException;
 import com.jd.twitterclonebackend.exception.PostException;
 import com.jd.twitterclonebackend.exception.UserException;
+import com.jd.twitterclonebackend.exception.enums.InvalidCommentEnum;
+import com.jd.twitterclonebackend.exception.enums.InvalidPostEnum;
+import com.jd.twitterclonebackend.exception.enums.InvalidUserEnum;
 import com.jd.twitterclonebackend.mapper.CommentMapper;
-import com.jd.twitterclonebackend.mapper.mapstruct.NewCommentMapper;
 import com.jd.twitterclonebackend.repository.CommentRepository;
 import com.jd.twitterclonebackend.repository.PostRepository;
 import com.jd.twitterclonebackend.repository.UserRepository;
@@ -29,15 +28,17 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
 
-    private final CommentMapper commentMapper;
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+
     private final UserDetailsServiceImpl userDetailsService;
+
+    private final CommentMapper commentMapper;
 
     @Transactional
     @Override
-    public void createComment(CommentRequestDto commentRequestDto) {
+    public void addComment(CommentRequestDto commentRequestDto) {
         // Get user who created post
         UserEntity userEntity = userDetailsService.currentLoggedUserEntity();
         // Find post for comment

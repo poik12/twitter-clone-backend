@@ -1,8 +1,8 @@
 package com.jd.twitterclonebackend.mapper;
 
-import com.jd.twitterclonebackend.dto.FollowerDto;
-import com.jd.twitterclonebackend.dto.UserRequestDto;
-import com.jd.twitterclonebackend.dto.UserResponseDto;
+import com.jd.twitterclonebackend.dto.response.FollowerDto;
+import com.jd.twitterclonebackend.dto.request.UserDetailsRequestDto;
+import com.jd.twitterclonebackend.dto.response.UserResponseDto;
 import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.service.FileService;
 import com.jd.twitterclonebackend.service.PostService;
@@ -23,6 +23,7 @@ public class UserMapper {
     private final PostService postService;
     private final FileService fileService;
     private final PasswordEncoder passwordEncoder;
+    private final JsonMapper jsonMapper;
 
     public UserResponseDto mapFromEntityToUserDto(UserEntity userEntity) {
 
@@ -77,33 +78,40 @@ public class UserMapper {
 
 
     public UserEntity mapFromUserDtoToEntity(UserEntity userEntity,
-                                             UserRequestDto userRequestDto,
+                                             String userDetailsRequestJson,
                                              MultipartFile profileImageFile,
                                              MultipartFile backgroundImageFile) {
 
         // TODO: Description not added yet
         // TODO: Add username line in frontend
 
-        if (!userRequestDto.getName().isBlank()) {
-            userEntity.setName(userRequestDto.getName());
+
+        // Map User Details from Json to Dto
+        UserDetailsRequestDto userDetailsRequestDto = jsonMapper.mapFromJsonToDto(
+                userDetailsRequestJson,
+                UserDetailsRequestDto.class
+        );
+
+        if (!userDetailsRequestDto.getName().isBlank()) {
+            userEntity.setName(userDetailsRequestDto.getName());
         }
-        if (!userRequestDto.getUsername().isBlank()) {
-            userEntity.setUsername(userRequestDto.getUsername());
+        if (!userDetailsRequestDto.getUsername().isBlank()) {
+            userEntity.setUsername(userDetailsRequestDto.getUsername());
         }
-        if (!userRequestDto.getEmailAddress().isBlank()) {
-            userEntity.setEmailAddress(userRequestDto.getEmailAddress());
+        if (!userDetailsRequestDto.getEmailAddress().isBlank()) {
+            userEntity.setEmailAddress(userDetailsRequestDto.getEmailAddress());
         }
-        if (!userRequestDto.getPhoneNumber().isBlank()) {
-            userEntity.setPhoneNumber(userRequestDto.getPhoneNumber());
+        if (!userDetailsRequestDto.getPhoneNumber().isBlank()) {
+            userEntity.setPhoneNumber(userDetailsRequestDto.getPhoneNumber());
         }
-        if (!userRequestDto.getPassword().isBlank()) {
-            userEntity.setPassword(passwordEncoder.encode(userRequestDto.getPassword()));
+        if (!userDetailsRequestDto.getPassword().isBlank()) {
+            userEntity.setPassword(passwordEncoder.encode(userDetailsRequestDto.getPassword()));
         }
         if (Objects.nonNull(profileImageFile)) {
-            userEntity.setProfilePicture(fileService.convertImageFileToByteArray(profileImageFile));
+            userEntity.setProfilePicture(fileService.convertFileToByteArray(profileImageFile));
         }
         if (Objects.nonNull(backgroundImageFile)) {
-            userEntity.setBackgroundPicture(fileService.convertImageFileToByteArray(backgroundImageFile));
+            userEntity.setBackgroundPicture(fileService.convertFileToByteArray(backgroundImageFile));
         }
 
         return userEntity;

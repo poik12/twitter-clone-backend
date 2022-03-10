@@ -1,13 +1,15 @@
 package com.jd.twitterclonebackend.unit.mapper;
 
 import com.github.marlonlom.utilities.timeago.TimeAgo;
-import com.jd.twitterclonebackend.dto.PostRequestDto;
+import com.jd.twitterclonebackend.dto.request.PostRequestDto;
 import com.jd.twitterclonebackend.entity.PostEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
+import com.jd.twitterclonebackend.mapper.JsonMapper;
 import com.jd.twitterclonebackend.mapper.PostMapper;
 import com.jd.twitterclonebackend.unit.UnitTestInitData;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -15,21 +17,30 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 class PostMapperTest extends UnitTestInitData {
 
     @InjectMocks
     private PostMapper postMapper;
 
+    @Mock
+    private JsonMapper jsonMapper;
+
     @Test
     void should_mapFromPostRequestDto_toPostEntity() {
         // given
         PostRequestDto postRequestDto = initPostRequestDto();
+        String postRequestJson = "";
         UserEntity userEntity = initUserEntity();
 
         // when
+        when(jsonMapper.mapFromJsonToDto(any(), any()))
+                .thenReturn(postRequestDto);
+
         var result = postMapper.mapFromDtoToEntity(
-                postRequestDto,
+                postRequestJson,
                 userEntity
         );
         System.out.println(result);

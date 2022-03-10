@@ -1,6 +1,6 @@
 package com.jd.twitterclonebackend.integration.service;
 
-import com.jd.twitterclonebackend.dto.PostRequestDto;
+import com.jd.twitterclonebackend.dto.request.PostRequestDto;
 import com.jd.twitterclonebackend.entity.ImageFileEntity;
 import com.jd.twitterclonebackend.entity.PostEntity;
 import com.jd.twitterclonebackend.exception.PostException;

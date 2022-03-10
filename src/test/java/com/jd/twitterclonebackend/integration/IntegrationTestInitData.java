@@ -5,19 +5,22 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.jd.twitterclonebackend.dto.RegisterRequestDto;
-import com.jd.twitterclonebackend.dto.UserRequestDto;
-import com.jd.twitterclonebackend.dto.UserResponseDto;
+import com.jd.twitterclonebackend.dto.request.CommentRequestDto;
+import com.jd.twitterclonebackend.dto.request.RegisterRequestDto;
+import com.jd.twitterclonebackend.dto.request.UserDetailsRequestDto;
+import com.jd.twitterclonebackend.dto.response.CommentResponseDto;
+import com.jd.twitterclonebackend.dto.response.PostResponseDto;
+import com.jd.twitterclonebackend.dto.response.UserResponseDto;
 import com.jd.twitterclonebackend.entity.PostEntity;
 import com.jd.twitterclonebackend.entity.RefreshTokenEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
-import com.jd.twitterclonebackend.dto.PostRequestDto;
+import com.jd.twitterclonebackend.dto.request.PostRequestDto;
 import com.jd.twitterclonebackend.entity.VerificationTokenEntity;
 import com.jd.twitterclonebackend.entity.enums.UserRole;
 import com.jd.twitterclonebackend.mapper.AuthMapper;
 import com.jd.twitterclonebackend.mapper.PostMapper;
 import com.jd.twitterclonebackend.repository.*;
-import com.jd.twitterclonebackend.security.jwt.RefreshTokenProvider;
+import com.jd.twitterclonebackend.config.security.jwt.RefreshTokenProvider;
 import com.jd.twitterclonebackend.service.*;
 import com.jd.twitterclonebackend.service.impl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,9 +110,10 @@ public abstract class IntegrationTestInitData {
 
     protected static final String FAKE_REFRESH_TOKEN = UUID.randomUUID().toString();
 
-
-
     protected static final String POST_DESCRIPTION = "Post Description";
+
+    protected static final String COMMENT_TEXT = "Comment text";
+
 
     protected UserEntity initDatabaseByPrimeUserDisabled() {
         UserEntity userEntity = UserEntity.builder()
@@ -120,8 +124,8 @@ public abstract class IntegrationTestInitData {
                 .phoneNumber(USER_PRIME_PHONE_NUMBER)
                 .enabled(false)
                 .userRole(UserRole.ROLE_USER)
-                .profilePicture(fileService.convertImagePathToByteArray(DEFAULT_PROFILE_PICTURE_PATH))
-                .backgroundPicture(fileService.convertImagePathToByteArray(DEFAULT_BACKGROUND_PICTURE_PATH))
+                .profilePicture(fileService.convertFilePathToByteArray(DEFAULT_PROFILE_PICTURE_PATH))
+                .backgroundPicture(fileService.convertFilePathToByteArray(DEFAULT_BACKGROUND_PICTURE_PATH))
                 .tweetNo(0L)
                 .followerNo(0L)
                 .followingNo(0L)
@@ -158,8 +162,8 @@ public abstract class IntegrationTestInitData {
                 .phoneNumber(USER_SECOND_PHONE_NUMBER)
                 .enabled(true)
                 .userRole(UserRole.ROLE_USER)
-                .profilePicture(fileService.convertImagePathToByteArray(DEFAULT_PROFILE_PICTURE_PATH))
-                .backgroundPicture(fileService.convertImagePathToByteArray(DEFAULT_BACKGROUND_PICTURE_PATH))
+                .profilePicture(fileService.convertFilePathToByteArray(DEFAULT_PROFILE_PICTURE_PATH))
+                .backgroundPicture(fileService.convertFilePathToByteArray(DEFAULT_BACKGROUND_PICTURE_PATH))
                 .tweetNo(0L)
                 .followerNo(0L)
                 .followingNo(0L)
@@ -267,7 +271,7 @@ public abstract class IntegrationTestInitData {
     }
 
     protected MultipartFile initMultiPartFile() {
-        byte[] content = fileService.convertImagePathToByteArray(DEFAULT_BACKGROUND_PICTURE_PATH);
+        byte[] content = fileService.convertFilePathToByteArray(DEFAULT_BACKGROUND_PICTURE_PATH);
         return new MockMultipartFile(
                 "file.txt",
                 "file.txt",
@@ -282,6 +286,19 @@ public abstract class IntegrationTestInitData {
                 .build();
     }
 
+    protected PostResponseDto initPostResponseDto() {
+        return PostResponseDto.builder()
+                .id(1L)
+                .name(USER_PRIME_NAME)
+                .username(USER_PRIME_USERNAME)
+                .description(USER_PRIME_TEST_DESCRIPTION)
+                .commentNo(0L)
+                .createdAt(Date.from(Instant.now()))
+                .postTimeDuration(null)
+                .fileContent(null)
+                .userProfilePicture(null)
+                .build();
+    }
 
     protected List<PostEntity> initPostsInDatabase() {
         initCurrentLoggedUser();
@@ -294,6 +311,26 @@ public abstract class IntegrationTestInitData {
 
         return postRepository.findAll();
     }
+
+    protected CommentRequestDto initCommentRequestDto() {
+        return CommentRequestDto.builder()
+                .username(USER_PRIME_USERNAME)
+                .postId(1L)
+                .text(COMMENT_TEXT)
+                .build();
+    }
+
+    protected CommentResponseDto initCommentResponseDto() {
+        return CommentResponseDto.builder()
+                .username(USER_PRIME_USERNAME)
+                .name(USER_PRIME_NAME)
+                .profileImage(null)
+                .postId(1L)
+                .timeOfCreation(null)
+                .text(COMMENT_TEXT)
+                .build();
+    }
+
 
     protected UserResponseDto initUserResponseDto(UserEntity userEntity) {
         return UserResponseDto.builder()
@@ -309,8 +346,8 @@ public abstract class IntegrationTestInitData {
                 .build();
     }
 
-    protected UserRequestDto initUserRequestDto() {
-        return UserRequestDto.builder()
+    protected UserDetailsRequestDto initUserRequestDto() {
+        return UserDetailsRequestDto.builder()
                 .name(USER_UPDATE_NAME)
                 .username(USER_UPDATE_USERNAME)
                 .emailAddress(USER_UPDATE_EMAIL_ADDRESS)

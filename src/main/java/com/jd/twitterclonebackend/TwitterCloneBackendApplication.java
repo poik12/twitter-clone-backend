@@ -15,11 +15,11 @@ import org.springframework.stereotype.Component;
 @EntityScan(basePackages = "com.jd.twitterclonebackend")
 public class TwitterCloneBackendApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(TwitterCloneBackendApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(TwitterCloneBackendApplication.class, args);
+    }
 
-
+    /*
 	@Slf4j
 	@Component
 	static class BeanInfo implements CommandLineRunner {
@@ -39,4 +39,6 @@ public class TwitterCloneBackendApplication {
 			log.info("-------------------------------------");
 		}
 	}
+	 */
+
 }

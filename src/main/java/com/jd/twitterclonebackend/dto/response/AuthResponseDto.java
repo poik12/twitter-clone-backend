@@ -1,4 +1,4 @@
-package com.jd.twitterclonebackend.dto;
+package com.jd.twitterclonebackend.dto.response;
 
 import lombok.*;
 

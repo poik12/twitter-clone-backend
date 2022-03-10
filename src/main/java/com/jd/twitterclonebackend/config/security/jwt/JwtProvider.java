@@ -1,4 +1,4 @@
-package com.jd.twitterclonebackend.security.jwt;
+package com.jd.twitterclonebackend.config.security.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;

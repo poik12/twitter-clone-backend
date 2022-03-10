@@ -3,8 +3,8 @@ package com.jd.twitterclonebackend.integration.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jd.twitterclonebackend.controller.UserController;
 import com.jd.twitterclonebackend.controller.handler.UserControllerExceptionHandler;
-import com.jd.twitterclonebackend.dto.UserRequestDto;
-import com.jd.twitterclonebackend.dto.UserResponseDto;
+import com.jd.twitterclonebackend.dto.request.UserDetailsRequestDto;
+import com.jd.twitterclonebackend.dto.response.UserResponseDto;
 import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.exception.UserException;
 import com.jd.twitterclonebackend.exception.enums.InvalidUserEnum;
@@ -17,17 +17,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -138,10 +133,10 @@ class UserControllerTest extends IntegrationTestInitData {
     }
 
     @Test
-    void should_updateUserDetails_byUsername() throws Exception {
+    void should_updateUserDetails() throws Exception {
         // given
-        UserRequestDto userRequestDto = initUserRequestDto();
-        String userDetailsRequest = initRequestDtoAsJson(userRequestDto);
+        UserDetailsRequestDto userDetailsRequestDto = initUserRequestDto();
+        String userDetailsRequest = initRequestDtoAsJson(userDetailsRequestDto);
 
         MultipartFile profileImageFile = new MockMultipartFile("byteProfile", "byteProfile".getBytes());
         MultipartFile backgroundImageFile = new MockMultipartFile("byteBackground", "byteBackground".getBytes());
@@ -149,7 +144,7 @@ class UserControllerTest extends IntegrationTestInitData {
         // when then
         // spring mvc does not support put multipart file
         MockMultipartHttpServletRequestBuilder requestBuilder =
-                multipart("/users/{username}",userRequestDto.getUsername());
+                multipart("/users");
         requestBuilder.with(request -> {
             request.setMethod(HttpMethod.PUT.name());
             return request;
@@ -167,18 +162,53 @@ class UserControllerTest extends IntegrationTestInitData {
     }
 
     @Test
-    void updateUserDetails() {
+    void should_checkIfUserIsFollowed_byFollowingAndFollower() throws Exception {
+        // given
+        UserEntity primeUserEntity = initPrimeUser();
+        UserEntity secondUserEntity = initSecondUser();
+
+        // when then
+        when(userService.checkIfUserIsFollowed(any(), any()))
+                .thenReturn(true);
+
+        mockMvc.perform(
+                get("/users/{from}/{to}",
+                        primeUserEntity.getUsername(), secondUserEntity.getUsername())
+                        .accept(MediaType.APPLICATION_JSON_VALUE)
+                )
+                .andDo(print())
+                .andExpect(status().isOk());
+
     }
 
     @Test
-    void checkIfUserIfFollowed() {
+    void should_followUser_byUsername() throws Exception {
+        // given
+        UserEntity primeUserEntity = initPrimeUser();
+
+        // when then
+        mockMvc.perform(
+                        get("/users/follow")
+                                .param("username", primeUserEntity.getUsername())
+                                .accept(MediaType.APPLICATION_JSON_VALUE)
+                )
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 
     @Test
-    void followUser() {
+    void should_unfollowUser_byUsername() throws Exception {
+        // given
+        UserEntity primeUserEntity = initPrimeUser();
+
+        // when then
+        mockMvc.perform(
+                        get("/users/unfollow")
+                                .param("username", primeUserEntity.getUsername())
+                                .accept(MediaType.APPLICATION_JSON_VALUE)
+                )
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 
-    @Test
-    void unfollowUser() {
-    }
 }

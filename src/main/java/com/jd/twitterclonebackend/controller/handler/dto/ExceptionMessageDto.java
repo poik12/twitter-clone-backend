@@ -1,4 +1,4 @@
-package com.jd.twitterclonebackend.controller.handler.dtos;
+package com.jd.twitterclonebackend.controller.handler.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ErrorMessageDto {
+public class ExceptionMessageDto {
 
     private HttpStatus status;
     private String message;

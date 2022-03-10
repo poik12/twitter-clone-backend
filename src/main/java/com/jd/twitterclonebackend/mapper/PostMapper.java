@@ -3,9 +3,8 @@ package com.jd.twitterclonebackend.mapper;
 import com.github.marlonlom.utilities.timeago.TimeAgo;
 import com.jd.twitterclonebackend.entity.PostEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
-import com.jd.twitterclonebackend.dto.PostRequestDto;
-import com.jd.twitterclonebackend.dto.PostResponseDto;
-import com.jd.twitterclonebackend.repository.CommentRepository;
+import com.jd.twitterclonebackend.dto.request.PostRequestDto;
+import com.jd.twitterclonebackend.dto.response.PostResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -17,9 +16,16 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class PostMapper {
 
-    public PostEntity mapFromDtoToEntity(PostRequestDto postRequestDto, UserEntity userEntity) {
+    private final JsonMapper jsonMapper;
 
-        if (Objects.isNull(postRequestDto)) {
+    public PostEntity mapFromDtoToEntity(String postRequestJson, UserEntity userEntity) {
+        // Map Post request from Json to Dto
+        PostRequestDto postRequestDto = jsonMapper.mapFromJsonToDto(
+                postRequestJson,
+                PostRequestDto.class
+        );
+
+        if (Objects.isNull(postRequestJson)) {
             return null;
         }
 
@@ -31,24 +37,6 @@ public class PostMapper {
                 .build();
     }
 
-//    public PostResponseDto mapFromEntityToDto(PostEntity postEntity) {
-//
-//        if (Objects.isNull(postEntity)) {
-//            return null;
-//        }
-//
-//        return PostResponseDto.builder()
-//                .id(postEntity.getId())
-//                .description(postEntity.getDescription())
-//                .createdAt(postEntity.getCreatedAt())
-//                .commentNo(getCommentCount(postEntity))
-//                .postTimeDuration(getPostTimeDuration(postEntity))
-//                .username(postEntity.getUser().getUsername())
-//                .name(postEntity.getUser().getName())
-//                .build();
-//    }
-
-    // TODO: OVERLOADED METHOD
     public PostResponseDto mapFromEntityToDto(PostEntity postEntity, Map<Long, byte[]> imageFileMap) {
 
         if (Objects.isNull(postEntity)) {
@@ -66,7 +54,7 @@ public class PostMapper {
                 .fileContent(getImageFileByPostId(postEntity.getId(), imageFileMap))
                 .userProfilePicture(postEntity.getUser().getProfilePicture())
                 .build();
-        
+
     }
 
     // Get image file content in byte[] by post id
@@ -76,8 +64,7 @@ public class PostMapper {
 
     // Number of comments
     private Long getCommentCount(PostEntity postEntity) {
-//        return commentRepository.findAllByPost(postEntity).size();
-        return (long) postEntity.getComments().size();
+        return Long.parseLong(String.valueOf(postEntity.getComments().size()));
     }
 
     // Creation time of post
