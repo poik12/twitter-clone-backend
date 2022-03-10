@@ -1,8 +1,8 @@
-package com.jd.twitterclonebackend.security.filter;
+package com.jd.twitterclonebackend.config.security.filter;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.jd.twitterclonebackend.security.SecurityResponse;
-import com.jd.twitterclonebackend.security.jwt.AccessTokenProvider;
+import com.jd.twitterclonebackend.config.security.SecurityResponse;
+import com.jd.twitterclonebackend.config.security.jwt.AccessTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -20,7 +20,7 @@ import java.util.*;
 
 @Slf4j
 @RequiredArgsConstructor
-public class CustomAuthorizationFilter extends OncePerRequestFilter {
+public class AuthorizationFilter extends OncePerRequestFilter {
 
     private final AccessTokenProvider accessTokenProvider;
 

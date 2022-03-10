@@ -4,12 +4,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jd.twitterclonebackend.entity.PostEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
-import com.jd.twitterclonebackend.dto.PostRequestDto;
-import com.jd.twitterclonebackend.dto.PostResponseDto;
+import com.jd.twitterclonebackend.dto.request.PostRequestDto;
+import com.jd.twitterclonebackend.dto.response.PostResponseDto;
 import com.jd.twitterclonebackend.exception.enums.InvalidPostEnum;
 import com.jd.twitterclonebackend.exception.enums.InvalidUserEnum;
 import com.jd.twitterclonebackend.exception.PostException;
 import com.jd.twitterclonebackend.exception.UserException;
+import com.jd.twitterclonebackend.mapper.JsonMapper;
 import com.jd.twitterclonebackend.mapper.PostMapper;
 import com.jd.twitterclonebackend.repository.PostRepository;
 import com.jd.twitterclonebackend.repository.UserRepository;
@@ -54,21 +55,27 @@ public class PostServiceImpl implements PostService {
 //    }
 
     @Override
-    public void addPost(MultipartFile file, String postRequest) {
-        // Map Post from string to postDTO
-        PostRequestDto postRequestDto = null;
-        try {
-            postRequestDto = new ObjectMapper().readValue(
-                    postRequest,
-                    PostRequestDto.class
-            );
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
+    public void addPost(MultipartFile file, String postRequestJson) {
+        // Map Post from Json to postDTO
+
+        // todo: don't need it
+//        PostRequestDto postRequestDto = new PostRequestDto();
+//        try {
+//            postRequestDto = new ObjectMapper().readValue(
+//                    postRequest,
+//                    PostRequestDto.class
+//            );
+//        } catch (JsonProcessingException e) {
+//            e.printStackTrace();
+//        }
+
         // Get User who created post
         UserEntity userEntity = userDetailsService.currentLoggedUserEntity();
         // Map Post from request to post entity
-        PostEntity postEntity = postMapper.mapFromDtoToEntity(postRequestDto, userEntity);
+        PostEntity postEntity = postMapper.mapFromDtoToEntity(
+                postRequestJson,
+                userEntity
+        );
         // Save mapped post in repository
         postRepository.save(postEntity);
         // If file is not empty - upload into db

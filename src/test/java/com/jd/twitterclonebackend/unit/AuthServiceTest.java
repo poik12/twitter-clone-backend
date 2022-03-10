@@ -1,10 +1,10 @@
 package com.jd.twitterclonebackend.unit;
 
-import com.jd.twitterclonebackend.dto.RegisterRequestDto;
+import com.jd.twitterclonebackend.dto.request.RegisterRequestDto;
 import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.mapper.AuthMapper;
 import com.jd.twitterclonebackend.repository.UserRepository;
-import com.jd.twitterclonebackend.security.jwt.RefreshTokenProvider;
+import com.jd.twitterclonebackend.config.security.jwt.RefreshTokenProvider;
 import com.jd.twitterclonebackend.service.AuthService;
 import com.jd.twitterclonebackend.service.MailService;
 import com.jd.twitterclonebackend.service.VerificationTokenService;

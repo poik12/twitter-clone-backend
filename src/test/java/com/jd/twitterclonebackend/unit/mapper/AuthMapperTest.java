@@ -1,6 +1,6 @@
 package com.jd.twitterclonebackend.unit.mapper;
 
-import com.jd.twitterclonebackend.dto.RegisterRequestDto;
+import com.jd.twitterclonebackend.dto.request.RegisterRequestDto;
 import com.jd.twitterclonebackend.mapper.AuthMapper;
 import com.jd.twitterclonebackend.service.FileService;
 import com.jd.twitterclonebackend.unit.UnitTestInitData;

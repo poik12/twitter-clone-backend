@@ -4,8 +4,8 @@ import com.github.marlonlom.utilities.timeago.TimeAgo;
 import com.jd.twitterclonebackend.entity.CommentEntity;
 import com.jd.twitterclonebackend.entity.PostEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
-import com.jd.twitterclonebackend.dto.CommentRequestDto;
-import com.jd.twitterclonebackend.dto.CommentResponseDto;
+import com.jd.twitterclonebackend.dto.request.CommentRequestDto;
+import com.jd.twitterclonebackend.dto.response.CommentResponseDto;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;

@@ -3,9 +3,8 @@ package com.jd.twitterclonebackend.mapper;
 import com.github.marlonlom.utilities.timeago.TimeAgo;
 import com.jd.twitterclonebackend.entity.PostEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
-import com.jd.twitterclonebackend.dto.PostRequestDto;
-import com.jd.twitterclonebackend.dto.PostResponseDto;
-import com.jd.twitterclonebackend.repository.CommentRepository;
+import com.jd.twitterclonebackend.dto.request.PostRequestDto;
+import com.jd.twitterclonebackend.dto.response.PostResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -17,9 +16,16 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class PostMapper {
 
-    public PostEntity mapFromDtoToEntity(PostRequestDto postRequestDto, UserEntity userEntity) {
+    private final JsonMapper jsonMapper;
 
-        if (Objects.isNull(postRequestDto)) {
+    public PostEntity mapFromDtoToEntity(String postRequestJson, UserEntity userEntity) {
+        // Map Post request from Json to Dto
+        PostRequestDto postRequestDto = jsonMapper.mapFromJsonToDto(
+                postRequestJson,
+                PostRequestDto.class
+        );
+
+        if (Objects.isNull(postRequestJson)) {
             return null;
         }
 

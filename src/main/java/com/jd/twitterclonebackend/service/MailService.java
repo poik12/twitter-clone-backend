@@ -1,6 +1,6 @@
 package com.jd.twitterclonebackend.service;
 
-import com.jd.twitterclonebackend.dto.EmailNotificationDto;
+import com.jd.twitterclonebackend.dto.response.EmailNotificationDto;
 import com.jd.twitterclonebackend.entity.UserEntity;
 
 public interface MailService {

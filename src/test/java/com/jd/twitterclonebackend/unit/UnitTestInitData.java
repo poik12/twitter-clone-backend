@@ -1,9 +1,9 @@
 package com.jd.twitterclonebackend.unit;
 
-import com.jd.twitterclonebackend.dto.CommentRequestDto;
-import com.jd.twitterclonebackend.dto.PostRequestDto;
-import com.jd.twitterclonebackend.dto.RegisterRequestDto;
-import com.jd.twitterclonebackend.dto.UserRequestDto;
+import com.jd.twitterclonebackend.dto.request.CommentRequestDto;
+import com.jd.twitterclonebackend.dto.request.PostRequestDto;
+import com.jd.twitterclonebackend.dto.request.RegisterRequestDto;
+import com.jd.twitterclonebackend.dto.request.UserDetailsRequestDto;
 import com.jd.twitterclonebackend.entity.CommentEntity;
 import com.jd.twitterclonebackend.entity.PostEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
@@ -104,8 +104,8 @@ public abstract class UnitTestInitData {
                 .build();
     }
 
-    protected UserRequestDto initUserRequestDto() {
-        return UserRequestDto.builder()
+    protected UserDetailsRequestDto initUserRequestDto() {
+        return UserDetailsRequestDto.builder()
                 .name(USER_UPDATE_NAME)
                 .username(USER_UPDATE_USERNAME)
                 .emailAddress(USER_UPDATE_EMAIL_ADDRESS)

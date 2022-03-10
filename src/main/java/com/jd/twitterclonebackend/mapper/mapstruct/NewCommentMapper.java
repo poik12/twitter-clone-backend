@@ -1,15 +1,13 @@
 package com.jd.twitterclonebackend.mapper.mapstruct;
 
 import com.github.marlonlom.utilities.timeago.TimeAgo;
-import com.jd.twitterclonebackend.dto.CommentRequestDto;
-import com.jd.twitterclonebackend.dto.CommentResponseDto;
+import com.jd.twitterclonebackend.dto.request.CommentRequestDto;
+import com.jd.twitterclonebackend.dto.response.CommentResponseDto;
 import com.jd.twitterclonebackend.entity.CommentEntity;
 import com.jd.twitterclonebackend.entity.PostEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-
-import java.util.Objects;
 
 @Mapper(componentModel = "spring")
 public interface NewCommentMapper {

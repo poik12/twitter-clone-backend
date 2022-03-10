@@ -1,4 +1,4 @@
-package com.jd.twitterclonebackend.dto;
+package com.jd.twitterclonebackend.dto.response;
 
 import lombok.*;
 
@@ -6,7 +6,8 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class EmailConfirmationDto {
+public class UnauthorizedPathDto {
 
     private String message;
+
 }

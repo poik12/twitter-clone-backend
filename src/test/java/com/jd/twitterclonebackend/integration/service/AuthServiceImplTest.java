@@ -1,9 +1,9 @@
 package com.jd.twitterclonebackend.integration.service;
 
-import com.jd.twitterclonebackend.dto.AuthResponseDto;
-import com.jd.twitterclonebackend.dto.EmailConfirmationDto;
-import com.jd.twitterclonebackend.dto.RefreshTokenRequestDto;
-import com.jd.twitterclonebackend.dto.RegisterRequestDto;
+import com.jd.twitterclonebackend.dto.response.AuthResponseDto;
+import com.jd.twitterclonebackend.dto.response.EmailConfirmationDto;
+import com.jd.twitterclonebackend.dto.request.RefreshTokenRequestDto;
+import com.jd.twitterclonebackend.dto.request.RegisterRequestDto;
 import com.jd.twitterclonebackend.entity.RefreshTokenEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.entity.VerificationTokenEntity;

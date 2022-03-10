@@ -1,21 +1,22 @@
 package com.jd.twitterclonebackend.service.impl;
 
-import com.jd.twitterclonebackend.dto.FollowerDto;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jd.twitterclonebackend.dto.response.FollowerDto;
 import com.jd.twitterclonebackend.entity.FollowerEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
-import com.jd.twitterclonebackend.dto.UserRequestDto;
-import com.jd.twitterclonebackend.dto.UserResponseDto;
+import com.jd.twitterclonebackend.dto.request.UserDetailsRequestDto;
+import com.jd.twitterclonebackend.dto.response.UserResponseDto;
 import com.jd.twitterclonebackend.exception.UserException;
 import com.jd.twitterclonebackend.exception.enums.InvalidUserEnum;
+import com.jd.twitterclonebackend.mapper.JsonMapper;
 import com.jd.twitterclonebackend.mapper.UserMapper;
-import com.jd.twitterclonebackend.mapper.mapstruct.NewUserMapper;
 import com.jd.twitterclonebackend.repository.FollowerRepository;
 import com.jd.twitterclonebackend.repository.UserRepository;
 import com.jd.twitterclonebackend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,9 +30,11 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final UserMapper userMapper;
-    private final UserDetailsServiceImpl userDetailsService;
     private final FollowerRepository followerRepository;
+
+    private final UserDetailsServiceImpl userDetailsService;
+
+    private final UserMapper userMapper;
 
     @Override
     public UserResponseDto getUserByUsername(String username) {
@@ -56,22 +59,52 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
+//    @Override
+//    public void updateUserByUsername(String username,
+//                                     UserRequestDto userRequestDto,
+//                                     MultipartFile profileImageFile,
+//                                     MultipartFile backgroundImageFile) {
+//        // Find user in repository by its username
+//        UserEntity userEntity = userRepository
+//                .findByUsername(username)
+//                .orElseThrow(() -> new UserException(
+//                        InvalidUserEnum.USER_NOT_FOUND_WITH_USERNAME.getMessage(),
+//                        HttpStatus.NOT_FOUND
+//                ));
+//
+//        //        UserDetailsRequestDto userDetailsRequestDto = new UserDetailsRequestDto();
+////        try {
+////            userDetailsRequestDto = new ObjectMapper().readValue(
+////                    userDetailsRequestJson,
+////                    UserDetailsRequestDto.class
+////            );
+////        } catch (JsonProcessingException e) {
+////            e.printStackTrace();
+////        }
+//
+//
+//
+//        // Map user response to user entity
+//        UserEntity updatedUserEntity = userMapper.mapFromUserDtoToEntity(
+//                userEntity,
+//                userRequestDto,
+//                profileImageFile,
+//                backgroundImageFile
+//        );
+//        // Save updated user entity in db
+//        userRepository.save(updatedUserEntity);
+//    }
+
     @Override
-    public void updateUserByUsername(String username,
-                                     UserRequestDto userRequestDto,
-                                     MultipartFile profileImageFile,
-                                     MultipartFile backgroundImageFile) {
-        // Find user in repository by its username
-        UserEntity userEntity = userRepository
-                .findByUsername(username)
-                .orElseThrow(() -> new UserException(
-                        InvalidUserEnum.USER_NOT_FOUND_WITH_USERNAME.getMessage(),
-                        HttpStatus.NOT_FOUND
-                ));
-        // Map user response to user entity
+    public void updateUserDetails(String userDetailsRequestJson,
+                                  MultipartFile profileImageFile,
+                                  MultipartFile backgroundImageFile) {
+        // Get user who updates details
+        UserEntity userEntity = userDetailsService.currentLoggedUserEntity();
+        // Map user request to user entity
         UserEntity updatedUserEntity = userMapper.mapFromUserDtoToEntity(
                 userEntity,
-                userRequestDto,
+                userDetailsRequestJson,
                 profileImageFile,
                 backgroundImageFile
         );
@@ -105,8 +138,8 @@ public class UserServiceImpl implements UserService {
         userRepository.save(userToFollow);
     }
 
-    @Transactional
     @Override
+    @Transactional
     public void unfollowUser(String username) {
         // Find logged user
         UserEntity loggedUserEntity = userDetailsService.currentLoggedUserEntity();
@@ -127,7 +160,6 @@ public class UserServiceImpl implements UserService {
                     HttpStatus.NOT_FOUND
             );
         });
-
         followerRepository.delete(followerEntity);
         // Update no of following in logged user entity
         loggedUserEntity.setFollowingNo(loggedUserEntity.getFollowingNo() - 1);

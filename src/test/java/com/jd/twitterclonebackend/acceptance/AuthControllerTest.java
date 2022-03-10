@@ -3,7 +3,7 @@ package com.jd.twitterclonebackend.acceptance;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jd.twitterclonebackend.controller.AuthController;
 import com.jd.twitterclonebackend.controller.handler.AuthControllerExceptionHandler;
-import com.jd.twitterclonebackend.dto.RegisterRequestDto;
+import com.jd.twitterclonebackend.dto.request.RegisterRequestDto;
 import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.service.AuthService;
 import org.junit.jupiter.api.BeforeEach;

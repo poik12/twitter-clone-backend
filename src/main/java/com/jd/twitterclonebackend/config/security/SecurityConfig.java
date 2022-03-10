@@ -1,10 +1,10 @@
-package com.jd.twitterclonebackend.config;
+package com.jd.twitterclonebackend.config.security;
 
-import com.jd.twitterclonebackend.security.UserAuthenticationEntryPoint;
-import com.jd.twitterclonebackend.security.filter.CustomAuthenticationFilter;
-import com.jd.twitterclonebackend.security.filter.CustomAuthorizationFilter;
-import com.jd.twitterclonebackend.security.jwt.AccessTokenProvider;
-import com.jd.twitterclonebackend.security.jwt.RefreshTokenProvider;
+import com.jd.twitterclonebackend.config.security.filter.AuthenticationEntryPointImpl;
+import com.jd.twitterclonebackend.config.security.filter.AuthenticationFilter;
+import com.jd.twitterclonebackend.config.security.filter.AuthorizationFilter;
+import com.jd.twitterclonebackend.config.security.jwt.AccessTokenProvider;
+import com.jd.twitterclonebackend.config.security.jwt.RefreshTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,12 +25,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
     private final AccessTokenProvider accessTokenProvider;
     private final RefreshTokenProvider refreshTokenProvider;
-    private final UserAuthenticationEntryPoint userAuthenticationEntryPoint;
+    private final AuthenticationEntryPointImpl authenticationEntryPoint;
 
     // Authentication
     @Override
@@ -42,17 +42,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
 
-        CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(
+        AuthenticationFilter authenticationFilter = new AuthenticationFilter(
                 authenticationManagerBean(),
                 accessTokenProvider,
                 refreshTokenProvider
         );
-        customAuthenticationFilter.setFilterProcessesUrl("/auth/login");
+        authenticationFilter.setFilterProcessesUrl("/auth/login");
 
-        CustomAuthorizationFilter customAuthorizationFilter = new CustomAuthorizationFilter(accessTokenProvider);
+        AuthorizationFilter authorizationFilter = new AuthorizationFilter(accessTokenProvider);
 
         // Catch exceptions and return JSON instead of stacktrace
-        httpSecurity.exceptionHandling().authenticationEntryPoint(userAuthenticationEntryPoint);
+        httpSecurity.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
         // Disable Cross-Site Request Forgery
         httpSecurity.csrf().disable();
         // Config Cross-Origin Resource Sharing in WebConfig Class
@@ -79,8 +79,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //        httpSecurity.authorizeRequests().antMatchers(HttpMethod.GET, "/api/user/**").hasAnyAuthority("ROLE_USER");
 //        httpSecurity.authorizeRequests().antMatchers(HttpMethod.POST, "/api/user/save/**").hasAnyAuthority("ROLE_ADMIN");
         httpSecurity.authorizeRequests().anyRequest().authenticated();
-        httpSecurity.addFilter(customAuthenticationFilter);
-        httpSecurity.addFilterBefore(customAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
+        httpSecurity.addFilter(authenticationFilter);
+        httpSecurity.addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean
@@ -102,6 +102,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+    // TODO: needed for testing purpose - test doesn't work without it
+    // TODO: comment when spring boot doesn't want to start
     @Bean
     public JavaMailSender javaMailSender() {
         return new JavaMailSenderImpl();

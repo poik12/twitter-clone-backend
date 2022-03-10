@@ -1,7 +1,7 @@
-package com.jd.twitterclonebackend.security;
+package com.jd.twitterclonebackend.config.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jd.twitterclonebackend.dto.UnauthorizedPathDto;
+import com.jd.twitterclonebackend.dto.response.UnauthorizedPathDto;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
-public class UserAuthenticationEntryPoint implements AuthenticationEntryPoint {
+public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
 

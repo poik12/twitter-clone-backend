@@ -1,12 +1,10 @@
 package com.jd.twitterclonebackend.mapper.mapstruct;
 
-import com.jd.twitterclonebackend.dto.FollowerDto;
-import com.jd.twitterclonebackend.dto.UserRequestDto;
-import com.jd.twitterclonebackend.dto.UserResponseDto;
+import com.jd.twitterclonebackend.dto.response.FollowerDto;
+import com.jd.twitterclonebackend.dto.request.UserDetailsRequestDto;
+import com.jd.twitterclonebackend.dto.response.UserResponseDto;
 import com.jd.twitterclonebackend.entity.UserEntity;
-import com.jd.twitterclonebackend.repository.FollowerRepository;
 import com.jd.twitterclonebackend.service.FileService;
-import com.jd.twitterclonebackend.service.impl.PostServiceImpl;
 import org.jetbrains.annotations.NotNull;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -63,27 +61,27 @@ public abstract class NewUserMapper {
 
     // todo: check this method
     public UserEntity mapFromUserDtoToEntity(UserEntity userEntity,
-                                             UserRequestDto userRequestDto,
+                                             UserDetailsRequestDto userDetailsRequestDto,
                                              MultipartFile profileImageFile,
                                              MultipartFile backgroundImageFile) {
 
         // TODO: Description not added yet
         // TODO: Add username line in frontend
 
-        if (!userRequestDto.getName().isBlank()) {
-            userEntity.setName(userRequestDto.getName());
+        if (!userDetailsRequestDto.getName().isBlank()) {
+            userEntity.setName(userDetailsRequestDto.getName());
         }
-        if (!userRequestDto.getUsername().isBlank()) {
-            userEntity.setUsername(userRequestDto.getUsername());
+        if (!userDetailsRequestDto.getUsername().isBlank()) {
+            userEntity.setUsername(userDetailsRequestDto.getUsername());
         }
-        if (!userRequestDto.getEmailAddress().isBlank()) {
-            userEntity.setEmailAddress(userRequestDto.getUsername());
+        if (!userDetailsRequestDto.getEmailAddress().isBlank()) {
+            userEntity.setEmailAddress(userDetailsRequestDto.getUsername());
         }
-        if (!userRequestDto.getPhoneNumber().isBlank()) {
-            userEntity.setPhoneNumber(userRequestDto.getPhoneNumber());
+        if (!userDetailsRequestDto.getPhoneNumber().isBlank()) {
+            userEntity.setPhoneNumber(userDetailsRequestDto.getPhoneNumber());
         }
-        if (!userRequestDto.getPassword().isBlank()) {
-            userEntity.setPassword(passwordEncoder.encode(userRequestDto.getPassword()));
+        if (!userDetailsRequestDto.getPassword().isBlank()) {
+            userEntity.setPassword(passwordEncoder.encode(userDetailsRequestDto.getPassword()));
         }
         if (Objects.nonNull(profileImageFile)) {
             userEntity.setProfilePicture(fileService.convertImageFileToByteArray(profileImageFile));

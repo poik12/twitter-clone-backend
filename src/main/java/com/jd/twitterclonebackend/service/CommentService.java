@@ -1,7 +1,7 @@
 package com.jd.twitterclonebackend.service;
 
-import com.jd.twitterclonebackend.dto.CommentRequestDto;
-import com.jd.twitterclonebackend.dto.CommentResponseDto;
+import com.jd.twitterclonebackend.dto.request.CommentRequestDto;
+import com.jd.twitterclonebackend.dto.response.CommentResponseDto;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
-package com.jd.twitterclonebackend.security;
+package com.jd.twitterclonebackend.config.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jd.twitterclonebackend.dto.AuthResponseDto;
+import com.jd.twitterclonebackend.dto.response.AuthResponseDto;
 import com.jd.twitterclonebackend.exception.enums.InvalidUserEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

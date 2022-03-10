@@ -5,19 +5,19 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.jd.twitterclonebackend.dto.RegisterRequestDto;
-import com.jd.twitterclonebackend.dto.UserRequestDto;
-import com.jd.twitterclonebackend.dto.UserResponseDto;
+import com.jd.twitterclonebackend.dto.request.RegisterRequestDto;
+import com.jd.twitterclonebackend.dto.request.UserDetailsRequestDto;
+import com.jd.twitterclonebackend.dto.response.UserResponseDto;
 import com.jd.twitterclonebackend.entity.PostEntity;
 import com.jd.twitterclonebackend.entity.RefreshTokenEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
-import com.jd.twitterclonebackend.dto.PostRequestDto;
+import com.jd.twitterclonebackend.dto.request.PostRequestDto;
 import com.jd.twitterclonebackend.entity.VerificationTokenEntity;
 import com.jd.twitterclonebackend.entity.enums.UserRole;
 import com.jd.twitterclonebackend.mapper.AuthMapper;
 import com.jd.twitterclonebackend.mapper.PostMapper;
 import com.jd.twitterclonebackend.repository.*;
-import com.jd.twitterclonebackend.security.jwt.RefreshTokenProvider;
+import com.jd.twitterclonebackend.config.security.jwt.RefreshTokenProvider;
 import com.jd.twitterclonebackend.service.*;
 import com.jd.twitterclonebackend.service.impl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -309,8 +309,8 @@ public abstract class IntegrationTestInitData {
                 .build();
     }
 
-    protected UserRequestDto initUserRequestDto() {
-        return UserRequestDto.builder()
+    protected UserDetailsRequestDto initUserRequestDto() {
+        return UserDetailsRequestDto.builder()
                 .name(USER_UPDATE_NAME)
                 .username(USER_UPDATE_USERNAME)
                 .emailAddress(USER_UPDATE_EMAIL_ADDRESS)

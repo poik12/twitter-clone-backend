@@ -1,6 +1,10 @@
 package com.jd.twitterclonebackend.service.impl;
 
-import com.jd.twitterclonebackend.dto.*;
+import com.jd.twitterclonebackend.dto.request.RefreshTokenRequestDto;
+import com.jd.twitterclonebackend.dto.request.RegisterRequestDto;
+import com.jd.twitterclonebackend.dto.response.AuthResponseDto;
+import com.jd.twitterclonebackend.dto.response.EmailConfirmationDto;
+import com.jd.twitterclonebackend.dto.response.EmailNotificationDto;
 import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.entity.VerificationTokenEntity;
 import com.jd.twitterclonebackend.exception.UserException;
@@ -9,7 +13,7 @@ import com.jd.twitterclonebackend.mapper.AuthMapper;
 import com.jd.twitterclonebackend.repository.RefreshTokenRepository;
 import com.jd.twitterclonebackend.repository.UserRepository;
 import com.jd.twitterclonebackend.repository.VerificationTokenRepository;
-import com.jd.twitterclonebackend.security.jwt.RefreshTokenProvider;
+import com.jd.twitterclonebackend.config.security.jwt.RefreshTokenProvider;
 import com.jd.twitterclonebackend.service.AuthService;
 import com.jd.twitterclonebackend.service.MailService;
 import com.jd.twitterclonebackend.service.VerificationTokenService;
@@ -17,8 +21,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.Instant;
 
 @Service
 @RequiredArgsConstructor

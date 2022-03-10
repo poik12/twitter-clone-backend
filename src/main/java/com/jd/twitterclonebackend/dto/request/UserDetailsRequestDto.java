@@ -1,4 +1,4 @@
-package com.jd.twitterclonebackend.dto;
+package com.jd.twitterclonebackend.dto.request;
 
 import lombok.*;
 
@@ -6,7 +6,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserRequestDto {
+public class UserDetailsRequestDto {
 
     private String name;
     private String username;
