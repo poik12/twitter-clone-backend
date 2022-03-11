@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(name = "/messages")
+@RequestMapping(value = "/messages")
 @RequiredArgsConstructor
 @ApiRestController
 public class ConversationController {
@@ -40,7 +40,7 @@ public class ConversationController {
     // todo: conversation controller handler
 
     @PostMapping("/{username}")
-    public ResponseEntity<Void> sendMessage(@PathVariable("username")
+    public ResponseEntity<Void> sendMessage(@PathVariable("username") String username,
                                             @RequestBody MessageRequestDto messageRequestDto) {
         conversationService.sendMessage(messageRequestDto);
         return ResponseEntity

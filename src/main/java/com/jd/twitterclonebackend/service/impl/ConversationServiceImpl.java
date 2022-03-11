@@ -64,6 +64,8 @@ public class ConversationServiceImpl implements ConversationService {
 
         UserEntity loggedUserEntity = userDetailsService.currentLoggedUserEntity();
 
+        // todo: sort by time created at
+
         return conversationRepository
                 .findAllByCreator(loggedUserEntity)
                 .stream()
@@ -74,8 +76,6 @@ public class ConversationServiceImpl implements ConversationService {
     @Override
     public void sendMessage(MessageRequestDto messageRequestDto) {
 
-        UserEntity MessageSenderEntity = userDetailsService.currentLoggedUserEntity();
-
         ConversationEntity conversationEntity = conversationRepository
                 .findById(messageRequestDto.getConversationId())
                 .orElseThrow(() -> new ConversationException(
@@ -83,6 +83,14 @@ public class ConversationServiceImpl implements ConversationService {
                                 + messageRequestDto.getConversationId(),
                         HttpStatus.NOT_FOUND
                 ));
+        // todo: update latest massage in conversation
+        // todo: ADD user picture in conversation response
+        // todo: empty string in conversation as last message
+        // todo: sending massages check
+        // todo: add to conversation in user profile?
+        // todo: update like post for post entity
+        // todo: in userprofile add retweets (comment list) and likes
+        // todo: add delete comment
 
         MessageEntity messageEntity = messageMapper.mapFromDtoToEntity(
                 messageRequestDto,

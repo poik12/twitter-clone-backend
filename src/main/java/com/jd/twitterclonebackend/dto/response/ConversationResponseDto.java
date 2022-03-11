@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class ConversationResponseDto {
 
-    private String id;
+    private Long id;
     private String participantName;
     private String participantUsername;
     private String creatorName;

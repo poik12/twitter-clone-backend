@@ -16,5 +16,4 @@ public class MessageResponseDto {
     private Long recipientId;
     private String createdAt;
 
-
 }

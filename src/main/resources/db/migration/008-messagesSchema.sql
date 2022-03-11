@@ -1,9 +1,12 @@
 create table if not exists messages (
-        id           bigint       not null primary key,
-        content      varchar(255) null,
-        from_user_fk bigint       null,
-        to_user_fk   bigint       null,
-        constraint FK651q3hnn6kdn6osav4phju8j7 foreign key (to_user_fk) references users (id),
-        constraint FK91161gmoi2m34j0w4fdxc8ws3 foreign key (from_user_fk) references users (id)
+        id              bigint       not null primary key,
+        content         varchar(255) null,
+        created_at      datetime(6)  null,
+        conversation_id bigint       null,
+        recipient_id    bigint       null,
+        sender_id       bigint       null,
+        constraint FK4ui4nnwntodh6wjvck53dbk9m foreign key (sender_id) references users (id),
+        constraint FKhdkwfnspwb3s60j27vpg0rpg6 foreign key (recipient_id) references users (id),
+        constraint FKt492th6wsovh1nush5yl5jj8e foreign key (conversation_id) references conversations (id)
 );
 

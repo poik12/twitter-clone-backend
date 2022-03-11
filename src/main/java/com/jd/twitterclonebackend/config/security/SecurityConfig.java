@@ -76,6 +76,7 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.authorizeRequests().antMatchers("/users/**").permitAll();
         httpSecurity.authorizeRequests().antMatchers("/posts/**").permitAll();
         httpSecurity.authorizeRequests().antMatchers("/comments/**").permitAll();
+        httpSecurity.authorizeRequests().antMatchers("/messages/**").permitAll();
 //        httpSecurity.authorizeRequests().antMatchers(HttpMethod.GET, "/api/user/**").hasAnyAuthority("ROLE_USER");
 //        httpSecurity.authorizeRequests().antMatchers(HttpMethod.POST, "/api/user/save/**").hasAnyAuthority("ROLE_ADMIN");
         httpSecurity.authorizeRequests().anyRequest().authenticated();

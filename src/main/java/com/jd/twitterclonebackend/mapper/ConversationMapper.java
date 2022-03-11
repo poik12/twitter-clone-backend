@@ -49,6 +49,7 @@ public class ConversationMapper {
         }
 
         return ConversationResponseDto.builder()
+                .id(conversationEntity.getId())
                 .participantName(conversationEntity.getParticipant().getName())
                 .participantUsername(conversationEntity.getParticipant().getUsername())
                 .creatorName(conversationEntity.getCreator().getName())
