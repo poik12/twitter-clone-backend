@@ -8,7 +8,7 @@ import javax.persistence.Lob;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class FollowerDto {
+public class FollowerResponseDto {
 
 
     private Long id;

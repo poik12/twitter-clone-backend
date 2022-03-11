@@ -1,6 +1,6 @@
 package com.jd.twitterclonebackend.mapper.mapstruct;
 
-import com.jd.twitterclonebackend.dto.response.FollowerDto;
+import com.jd.twitterclonebackend.dto.response.FollowerResponseDto;
 import com.jd.twitterclonebackend.dto.request.UserDetailsRequestDto;
 import com.jd.twitterclonebackend.dto.response.UserResponseDto;
 import com.jd.twitterclonebackend.entity.UserEntity;
@@ -36,7 +36,7 @@ public abstract class NewUserMapper {
     public abstract UserResponseDto mapFromEntityToUserDto(UserEntity userEntity);
 
     @NotNull
-    protected List<FollowerDto> getFollowingDtoList(UserEntity userEntity) {
+    protected List<FollowerResponseDto> getFollowingDtoList(UserEntity userEntity) {
         return userEntity.getFollowing()
                 .stream()
                 .map(followingEntity -> mapFromEntityToFollowerDto(followingEntity.getTo()))
@@ -44,7 +44,7 @@ public abstract class NewUserMapper {
     }
 
     @NotNull
-    protected List<FollowerDto> getFollowerDtoList(UserEntity userEntity) {
+    protected List<FollowerResponseDto> getFollowerDtoList(UserEntity userEntity) {
         return userEntity.getFollowers()
                 .stream()
                 .map(followerEntity -> mapFromEntityToFollowerDto(followerEntity.getFrom()))
@@ -96,6 +96,6 @@ public abstract class NewUserMapper {
     @Mapping(target = "tweetNo", expression = "java(userEntity.getPosts().size())")
     @Mapping(target = "followingNo", expression = "java(userEntity.getFollowing().size())")
     @Mapping(target = "followerNo", expression = "java(userEntity.getFollowers().size())")
-    public abstract FollowerDto mapFromEntityToFollowerDto(UserEntity userEntity);
+    public abstract FollowerResponseDto mapFromEntityToFollowerDto(UserEntity userEntity);
 
 }

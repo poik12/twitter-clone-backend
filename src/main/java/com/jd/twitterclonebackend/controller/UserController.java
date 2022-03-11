@@ -62,14 +62,14 @@ public class UserController {
 
     // FOLLOW USER BY ITS USERNAME
     @PostMapping(path = "/follow")
-    public ResponseEntity<Void> followUser(@RequestParam(value = "username") String username) {
+    public ResponseEntity<Void> followUser(@RequestBody String username) {
         userService.followUser(username);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     // UNFOLLOW USER BY ITS USERNAME
     @PostMapping(path = "/unfollow")
-    public ResponseEntity<Void> unfollowUser(@RequestParam(value = "username") String username) {
+    public ResponseEntity<Void> unfollowUser(@RequestBody String username) {
         userService.unfollowUser(username);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
