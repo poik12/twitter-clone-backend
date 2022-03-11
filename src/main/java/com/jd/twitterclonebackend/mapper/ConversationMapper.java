@@ -6,6 +6,7 @@ import com.jd.twitterclonebackend.dto.response.MessageResponseDto;
 import com.jd.twitterclonebackend.entity.ConversationEntity;
 import com.jd.twitterclonebackend.entity.MessageEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.sql.Date;
@@ -15,7 +16,10 @@ import java.util.List;
 import java.util.Objects;
 
 @Component
+@RequiredArgsConstructor
 public class ConversationMapper {
+
+    public final MessageMapper messageMapper;
 
     public ConversationEntity mapFromDtoToEntity(ConversationRequestDto conversationRequestDto,
                                                  UserEntity creatorEntity,
@@ -38,8 +42,6 @@ public class ConversationMapper {
         // TODO: do something with latestMessageRead and message content?
     }
 
-
-
     public ConversationResponseDto mapFromEntityToDto(ConversationEntity conversationEntity) {
 
         if (Objects.isNull(conversationEntity)) {
@@ -54,7 +56,7 @@ public class ConversationMapper {
                 .messages(
                         conversationEntity.getMessages()
                         .stream()
-                        .map(this::mapFromEntityToMessageDto)
+                        .map(messageMapper::mapFromEntityToDto)
                         .toList()
                 )
                 .latestMessageContent(conversationEntity.getLatestMessageContent())
@@ -64,18 +66,5 @@ public class ConversationMapper {
         // TODO: relative time in messages and latest message
     }
 
-    public MessageResponseDto mapFromEntityToMessageDto(MessageEntity messageEntity) {
-
-        if (Objects.isNull(messageEntity)) {
-            return null;
-        }
-
-        return MessageResponseDto.builder()
-                .content(messageEntity.getContent())
-                .senderId(messageEntity.getSender().getId())
-                .recipientId(messageEntity.getRecipient().getId())
-                .createdAt(messageEntity.getCreatedAt().toString())
-                .build();
-    }
 
 }

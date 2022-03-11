@@ -1,6 +1,5 @@
 package com.jd.twitterclonebackend.dto.response;
 
-import com.jd.twitterclonebackend.entity.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

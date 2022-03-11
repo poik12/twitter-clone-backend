@@ -9,8 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ConversationRequestDto {
+public class MessageRequestDto {
 
-    private String participantUsername;
+    private Long conversationId;
+    private String content;
 
 }

@@ -107,7 +107,7 @@ public class UserServiceImpl implements UserService {
         UserEntity userToUnfollow = userRepository
                 .findByUsername(username)
                 .orElseThrow(() -> new UserException(
-                        InvalidUserEnum.USER_NOT_FOUND_WITH_USERNAME + username,
+                        InvalidUserEnum.USER_NOT_FOUND_WITH_USERNAME.getMessage() + username,
                         HttpStatus.NOT_FOUND
                 ));
         // Find follower entity in db and delete
