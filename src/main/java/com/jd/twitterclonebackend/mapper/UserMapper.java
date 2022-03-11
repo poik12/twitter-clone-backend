@@ -1,6 +1,6 @@
 package com.jd.twitterclonebackend.mapper;
 
-import com.jd.twitterclonebackend.dto.response.FollowerDto;
+import com.jd.twitterclonebackend.dto.response.FollowerResponseDto;
 import com.jd.twitterclonebackend.dto.request.UserDetailsRequestDto;
 import com.jd.twitterclonebackend.dto.response.UserResponseDto;
 import com.jd.twitterclonebackend.entity.UserEntity;
@@ -118,12 +118,12 @@ public class UserMapper {
     }
 
 
-    private FollowerDto mapFromEntityToFollowerDto(UserEntity userEntity) {
+    private FollowerResponseDto mapFromEntityToFollowerDto(UserEntity userEntity) {
         if (Objects.isNull(userEntity)) {
             return null;
         }
 
-        return FollowerDto.builder()
+        return FollowerResponseDto.builder()
                 .id(userEntity.getId())
                 .name(userEntity.getName())
                 .username(userEntity.getUsername())

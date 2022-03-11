@@ -1,17 +1,20 @@
 package com.jd.twitterclonebackend.message;
 
+import com.jd.twitterclonebackend.entity.UserEntity;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ChatMessage {
+@Builder
+public class MessageDto {
 
-//    private String name;
-    private String message;
+    private UserEntity to;
+    private UserEntity from;
+    private String content;
 //    private Instant createdAt;
-//
 
 }

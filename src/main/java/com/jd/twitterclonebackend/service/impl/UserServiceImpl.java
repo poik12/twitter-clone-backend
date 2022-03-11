@@ -1,15 +1,11 @@
 package com.jd.twitterclonebackend.service.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jd.twitterclonebackend.dto.response.FollowerDto;
+import com.jd.twitterclonebackend.dto.response.FollowerResponseDto;
 import com.jd.twitterclonebackend.entity.FollowerEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
-import com.jd.twitterclonebackend.dto.request.UserDetailsRequestDto;
 import com.jd.twitterclonebackend.dto.response.UserResponseDto;
 import com.jd.twitterclonebackend.exception.UserException;
 import com.jd.twitterclonebackend.exception.enums.InvalidUserEnum;
-import com.jd.twitterclonebackend.mapper.JsonMapper;
 import com.jd.twitterclonebackend.mapper.UserMapper;
 import com.jd.twitterclonebackend.repository.FollowerRepository;
 import com.jd.twitterclonebackend.repository.UserRepository;
@@ -138,7 +134,7 @@ public class UserServiceImpl implements UserService {
         return getUserByUsername(followingUser)
                 .getFollowing()
                 .stream()
-                .map(FollowerDto::getUsername)
+                .map(FollowerResponseDto::getUsername)
                 .anyMatch(followingUsername -> followingUsername.equals(followedUser));
     }
 }

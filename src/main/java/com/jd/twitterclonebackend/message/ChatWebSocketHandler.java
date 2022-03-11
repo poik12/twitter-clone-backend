@@ -10,22 +10,22 @@ import java.util.List;
 
 public class ChatWebSocketHandler extends TextWebSocketHandler {
 
-    private final List<WebSocketSession> webSocketSessions = new ArrayList<>();
-
-    @Override
-    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        webSocketSessions.add(session);
-    }
-
-    @Override
-    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        for (WebSocketSession webSocketSession : webSocketSessions) {
-            webSocketSession.sendMessage(message);
-        }
-    }
-
-    @Override
-    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        webSocketSessions.remove(session);
-    }
+//    private final List<WebSocketSession> webSocketSessions = new ArrayList<>();
+//
+//    @Override
+//    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+//        webSocketSessions.add(session);
+//    }
+//
+//    @Override
+//    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+//        for (WebSocketSession webSocketSession : webSocketSessions) {
+//            webSocketSession.sendMessage(message);
+//        }
+//    }
+//
+//    @Override
+//    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+//        webSocketSessions.remove(session);
+//    }
 }

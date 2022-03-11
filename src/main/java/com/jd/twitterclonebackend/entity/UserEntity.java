@@ -103,6 +103,30 @@ public class UserEntity implements Serializable {
     ) // user has many comments
     private List<CommentEntity> comments;
 
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            mappedBy="creator"
+    ) // user created conversations with other users
+    private List<ConversationEntity> conversationCreator;
+
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            mappedBy="participant"
+    ) // user was added to conversation by other user
+    private List<ConversationEntity> conversationParticipant;
+
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            mappedBy="sender"
+    ) // user sent many messages to other users
+    private List<MessageEntity> messagesSent;
+
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            mappedBy="recipient"
+    ) // user received many massages from other users
+    private List<MessageEntity> messagesReceived;
+
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 

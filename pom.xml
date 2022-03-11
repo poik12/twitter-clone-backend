@@ -104,11 +104,10 @@
             <artifactId>timeago</artifactId>
             <version>4.0.3</version>
         </dependency>
-        <!-- Web Socket -->
+        <!-- WebSocket -->
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-websocket</artifactId>
-            <version>5.3.10</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib-jdk8 -->

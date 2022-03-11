@@ -20,7 +20,7 @@ public class UserResponseDto {
     private byte[] userProfilePicture;
     private byte[] userBackgroundPicture;
     private String description;
-    private List<FollowerDto> followers;
-    private List<FollowerDto> following;
+    private List<FollowerResponseDto> followers;
+    private List<FollowerResponseDto> following;
 
 }

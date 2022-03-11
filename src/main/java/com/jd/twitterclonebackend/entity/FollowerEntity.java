@@ -9,6 +9,8 @@ import java.io.Serializable;
 @Table(name = "followers")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class FollowerEntity implements Serializable {
 
     @Id
