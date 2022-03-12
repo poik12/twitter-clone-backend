@@ -39,12 +39,20 @@ public class ConversationController {
     // TODO: delete conversation
     // todo: conversation controller handler
 
-    @PostMapping("/{username}")
-    public ResponseEntity<Void> sendMessage(@PathVariable("username") String username,
-                                            @RequestBody MessageRequestDto messageRequestDto) {
+    @PostMapping(path = "/send")
+    public ResponseEntity<Void> sendMessage(@RequestBody MessageRequestDto messageRequestDto) {
         conversationService.sendMessage(messageRequestDto);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .build();
+    }
+
+    @GetMapping(path = "/{conversationId}")
+    public ResponseEntity<ConversationResponseDto> getConversationById(
+            @PathVariable("conversationId") Long conversationId
+    ) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(conversationService.getConversationById(conversationId));
     }
 }

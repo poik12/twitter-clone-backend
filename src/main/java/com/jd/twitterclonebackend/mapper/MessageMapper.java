@@ -4,6 +4,7 @@ import com.jd.twitterclonebackend.dto.request.MessageRequestDto;
 import com.jd.twitterclonebackend.dto.response.MessageResponseDto;
 import com.jd.twitterclonebackend.entity.ConversationEntity;
 import com.jd.twitterclonebackend.entity.MessageEntity;
+import com.jd.twitterclonebackend.entity.UserEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
@@ -11,19 +12,24 @@ import java.util.Objects;
 @Component
 public class MessageMapper {
 
-    public MessageEntity mapFromDtoToEntity(MessageRequestDto messageRequestDto, ConversationEntity conversationEntity) {
+    public MessageEntity mapFromDtoToEntity(UserEntity senderEntity,
+                                            UserEntity recipientEntity,
+                                            String messageContent,
+                                            ConversationEntity conversationEntity) {
 
-        if (Objects.isNull(messageRequestDto) ||
+        if (Objects.isNull(senderEntity) ||
+                Objects.isNull(recipientEntity) ||
+                Objects.isNull(messageContent) ||
                 Objects.isNull(conversationEntity)
         ) {
             return null;
         }
 
         return MessageEntity.builder()
-                .content(messageRequestDto.getContent())
+                .content(messageContent)
                 .conversation(conversationEntity)
-                .sender(conversationEntity.getCreator())
-                .recipient(conversationEntity.getParticipant())
+                .sender(senderEntity)
+                .recipient(recipientEntity)
                 .build();
     }
 
@@ -35,8 +41,8 @@ public class MessageMapper {
 
         return MessageResponseDto.builder()
                 .content(messageEntity.getContent())
-                .senderId(messageEntity.getSender().getId())
-                .recipientId(messageEntity.getRecipient().getId())
+                .senderUsername(messageEntity.getSender().getUsername())
+                .recipientUsername(messageEntity.getRecipient().getUsername())
                 .createdAt(messageEntity.getCreatedAt().toString())
                 .build();
     }

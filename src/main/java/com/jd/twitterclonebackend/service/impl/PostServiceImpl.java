@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -122,5 +122,43 @@ public class PostServiceImpl implements PostService {
 //        imageFileRepository.deleteByPostId(postId);
 //        commentRepository.deleteByPostId(postId);
         postRepository.deleteById(postId);
+    }
+
+    @Override
+    @Transactional
+    public void likePostById(Long postId) {
+        UserEntity userEntity = userDetailsService.currentLoggedUserEntity();
+
+        PostEntity postEntity = postRepository
+                .findById(postId)
+                .orElseThrow(() -> new PostException(
+                        InvalidPostEnum.POST_NOT_FOUND_WITH_ID.getMessage() + postId,
+                        HttpStatus.NOT_FOUND
+                ));
+
+        // If user like post then dislike it -> remove from postLies
+        boolean doesUserLikeCurrentPost = postEntity.getUserLikes().contains(userEntity);
+        if (doesUserLikeCurrentPost) {
+            userEntity.getLikedPosts().remove(postEntity);
+        } else {
+            userEntity.getLikedPosts().add(postEntity);
+        }
+        userRepository.save(userEntity);
+
+        // todo: send notification to post.getUserId() that logged user likes his post
+    }
+
+    @Override
+    public List<PostResponseDto> getLikedPosts() {
+        UserEntity loggedUser = userDetailsService.currentLoggedUserEntity();
+
+        return loggedUser.getLikedPosts()
+                .stream()
+                .map(postEntity -> postMapper.mapFromEntityToDto(
+                        postEntity,
+                        fileService.getImageFilesByPostList(List.of(postEntity))
+                ))
+                .sorted(Comparator.comparing(PostResponseDto::getCreatedAt).reversed())
+                .toList();
     }
 }

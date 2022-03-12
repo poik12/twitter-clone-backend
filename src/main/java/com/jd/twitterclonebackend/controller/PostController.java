@@ -56,7 +56,6 @@ public class PostController {
                 .body(postService.getPostsByUsername(username));
     }
 
-
     // DELETE POST BY ID
     @DeleteMapping(path = "/{postId}")
     public ResponseEntity<Void> deletePostById(@PathVariable Long postId) {
@@ -64,6 +63,23 @@ public class PostController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .build();
+    }
+
+    // LIKE POST
+    @GetMapping(path = "/like/{postId}")
+    public ResponseEntity<Void> likePost(@PathVariable Long postId) {
+        postService.likePostById(postId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .build();
+    }
+
+    // GET LIKED POSTS
+    @GetMapping(path = "/like")
+    public ResponseEntity<List<PostResponseDto>> likePost() {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(postService.getLikedPosts());
     }
 
 }

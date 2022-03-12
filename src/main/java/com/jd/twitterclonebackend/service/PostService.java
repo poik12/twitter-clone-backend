@@ -16,4 +16,8 @@ public interface PostService {
     List<PostResponseDto> getPostsByUsername(String username);
     // Delete post by id
     void deletePostById(Long postId);
+    // Like post by id
+    void likePostById(Long postId);
+
+    List<PostResponseDto> getLikedPosts();
 }

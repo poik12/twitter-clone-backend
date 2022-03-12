@@ -22,5 +22,6 @@ public class UserResponseDto {
     private String description;
     private List<FollowerResponseDto> followers;
     private List<FollowerResponseDto> following;
+    private List<PostResponseDto> likedPosts;
 
 }

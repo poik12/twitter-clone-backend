@@ -105,9 +105,9 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     // TODO: needed for testing purpose - test doesn't work without it
     // TODO: comment when spring boot doesn't want to start
-    @Bean
-    public JavaMailSender javaMailSender() {
-        return new JavaMailSenderImpl();
-    }
+//    @Bean
+//    public JavaMailSender javaMailSender() {
+//        return new JavaMailSenderImpl();
+//    }
 
 }

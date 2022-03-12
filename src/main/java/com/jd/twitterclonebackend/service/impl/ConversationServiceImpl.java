@@ -21,6 +21,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -64,17 +67,21 @@ public class ConversationServiceImpl implements ConversationService {
 
         UserEntity loggedUserEntity = userDetailsService.currentLoggedUserEntity();
 
-        // todo: sort by time created at
-
         return conversationRepository
-                .findAllByCreator(loggedUserEntity)
+                .findAllByCreatorOrParticipant(
+                        loggedUserEntity,
+                        loggedUserEntity
+                )
                 .stream()
                 .map(conversationMapper::mapFromEntityToDto)
                 .toList();
     }
 
     @Override
+    @Transactional
     public void sendMessage(MessageRequestDto messageRequestDto) {
+
+        UserEntity senderEntity = userDetailsService.currentLoggedUserEntity();
 
         ConversationEntity conversationEntity = conversationRepository
                 .findById(messageRequestDto.getConversationId())
@@ -83,8 +90,22 @@ public class ConversationServiceImpl implements ConversationService {
                                 + messageRequestDto.getConversationId(),
                         HttpStatus.NOT_FOUND
                 ));
-        // todo: update latest massage in conversation
-        // todo: ADD user picture in conversation response
+
+        String recipientUsername;
+        if (!senderEntity.getUsername().equals(conversationEntity.getParticipant().getUsername())) {
+            recipientUsername = conversationEntity.getParticipant().getUsername();
+        } else {
+            recipientUsername = conversationEntity.getCreator().getUsername();
+        }
+        String finalRecipientUsername = recipientUsername;
+
+        UserEntity recipientEntity = userRepository
+                .findByUsername(finalRecipientUsername)
+                .orElseThrow(() -> new UserException(
+                        InvalidUserEnum.USER_NOT_FOUND_WITH_USERNAME.getMessage() + finalRecipientUsername,
+                        HttpStatus.NOT_FOUND
+                ));
+
         // todo: empty string in conversation as last message
         // todo: sending massages check
         // todo: add to conversation in user profile?
@@ -93,11 +114,36 @@ public class ConversationServiceImpl implements ConversationService {
         // todo: add delete comment
 
         MessageEntity messageEntity = messageMapper.mapFromDtoToEntity(
-                messageRequestDto,
+                senderEntity,
+                recipientEntity,
+                messageRequestDto.getContent(),
                 conversationEntity
         );
+        MessageEntity savedMessageEntity = messageRepository.save(messageEntity);
 
-        messageRepository.save(messageEntity);
+        // todo: try to write it better
+        // update conversation params, last massage has only 25 characters
+        String latestMessageContent = savedMessageEntity.getContent();
+        if (latestMessageContent.length() > 25) {
+            latestMessageContent = savedMessageEntity.getContent().substring(0, 25) + "...";
+        }
 
+        conversationRepository.updateLatestMessageContentAndTime(
+                conversationEntity.getId(),
+                latestMessageContent,
+                Date.from(Instant.now())
+        );
+
+    }
+
+    @Override
+    public ConversationResponseDto getConversationById(Long conversationId) {
+        ConversationEntity conversationEntity = conversationRepository
+                .findById(conversationId)
+                .orElseThrow(() -> new ConversationException(
+                        InvalidConversationEnum.CONVERSATION_NOT_FOUND_WITH_ID.getMessage() + conversationId,
+                        HttpStatus.NOT_FOUND
+                ));
+        return conversationMapper.mapFromEntityToDto(conversationEntity);
     }
 }

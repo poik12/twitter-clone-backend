@@ -42,6 +42,8 @@ public class PostEntity implements Serializable {
     ) // many comments belong to post
     private List<CommentEntity> comments;
 
+    private Long commentNo;
+
     @OneToMany(
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,
@@ -49,7 +51,11 @@ public class PostEntity implements Serializable {
     )
     private List<ImageFileEntity> images;
 
-    private Long commentNo;
+    @ManyToMany(
+            mappedBy = "likedPosts",
+            cascade = CascadeType.ALL
+    )
+    private List<UserEntity> userLikes = new ArrayList<>();
 
     @CreationTimestamp
     private Date createdAt;

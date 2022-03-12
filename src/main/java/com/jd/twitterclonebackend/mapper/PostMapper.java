@@ -48,6 +48,7 @@ public class PostMapper {
                 .description(postEntity.getDescription())
                 .createdAt(postEntity.getCreatedAt())
                 .commentNo(getCommentCount(postEntity))
+                .likeNo(getPostCount(postEntity))
                 .postTimeDuration(getPostTimeDuration(postEntity))
                 .username(postEntity.getUser().getUsername())
                 .name(postEntity.getUser().getName())
@@ -57,6 +58,7 @@ public class PostMapper {
 
     }
 
+
     // Get image file content in byte[] by post id
     private byte[] getImageFileByPostId(Long postId, Map<Long, byte[]> imageFileMap) {
         return imageFileMap.getOrDefault(postId, null);
@@ -65,6 +67,11 @@ public class PostMapper {
     // Number of comments
     private Long getCommentCount(PostEntity postEntity) {
         return Long.parseLong(String.valueOf(postEntity.getComments().size()));
+    }
+
+    // Number of likes
+    private Long getPostCount(PostEntity postEntity) {
+        return Long.parseLong(String.valueOf(postEntity.getUserLikes().size()));
     }
 
     // Creation time of post
