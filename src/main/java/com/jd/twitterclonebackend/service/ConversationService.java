@@ -13,4 +13,6 @@ public interface ConversationService {
     List<ConversationResponseDto> getAllConversations();
 
     void sendMessage(MessageRequestDto messageRequestDto);
+
+    ConversationResponseDto getConversationById(Long conversationId);
 }

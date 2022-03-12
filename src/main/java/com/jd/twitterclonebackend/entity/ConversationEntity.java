@@ -1,11 +1,11 @@
 package com.jd.twitterclonebackend.entity;
 
-import com.jd.twitterclonebackend.dto.response.MessageResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -53,4 +53,7 @@ public class ConversationEntity {
 
     @CreationTimestamp
     private Date createdAt;
+
+    @UpdateTimestamp
+    private Date updatedAt;
 }

@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 public class MessageResponseDto {
 
     private String content;
-    private Long senderId;
-    private Long recipientId;
+    private String senderUsername;
+    private String recipientUsername;
     private String createdAt;
 
 }

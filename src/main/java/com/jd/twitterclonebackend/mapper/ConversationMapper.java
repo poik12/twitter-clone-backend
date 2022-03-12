@@ -2,17 +2,16 @@ package com.jd.twitterclonebackend.mapper;
 
 import com.jd.twitterclonebackend.dto.request.ConversationRequestDto;
 import com.jd.twitterclonebackend.dto.response.ConversationResponseDto;
-import com.jd.twitterclonebackend.dto.response.MessageResponseDto;
 import com.jd.twitterclonebackend.entity.ConversationEntity;
-import com.jd.twitterclonebackend.entity.MessageEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.sql.Date;
+import java.util.Date;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
 
 @Component
@@ -52,8 +51,10 @@ public class ConversationMapper {
                 .id(conversationEntity.getId())
                 .participantName(conversationEntity.getParticipant().getName())
                 .participantUsername(conversationEntity.getParticipant().getUsername())
+                .participantProfilePicture(conversationEntity.getParticipant().getProfilePicture())
                 .creatorName(conversationEntity.getCreator().getName())
                 .creatorUsername(conversationEntity.getCreator().getUsername())
+                .creatorProfilePicture(conversationEntity.getCreator().getProfilePicture())
                 .messages(
                         conversationEntity.getMessages()
                         .stream()
@@ -62,9 +63,20 @@ public class ConversationMapper {
                 )
                 .latestMessageContent(conversationEntity.getLatestMessageContent())
                 .latestMessageRead(conversationEntity.getLatestMessageRead())
-                .latestMessageTime(conversationEntity.getLatestMessageContent())
+                .latestMessageTime(getLocalDateTime(conversationEntity.getLatestMessageTime()))
                 .build();
-        // TODO: relative time in messages and latest message
+    }
+
+    private String getLocalDateTime(Date messageDate) {
+        LocalDateTime messageLocalDateTime = messageDate.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
+        int minutes = messageLocalDateTime.getMinute();
+        int hour = messageLocalDateTime.getHour();
+        if (minutes < 10) {
+           return hour + ":0" + minutes;
+        }
+        return hour + ":" + minutes;
     }
 
 
