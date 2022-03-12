@@ -1,7 +1,8 @@
 package com.jd.twitterclonebackend.mapper;
 
-import com.jd.twitterclonebackend.dto.response.FollowerResponseDto;
 import com.jd.twitterclonebackend.dto.request.UserDetailsRequestDto;
+import com.jd.twitterclonebackend.dto.response.FollowerResponseDto;
+import com.jd.twitterclonebackend.dto.response.PostResponseDto;
 import com.jd.twitterclonebackend.dto.response.UserResponseDto;
 import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.service.FileService;
@@ -12,9 +13,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.ZoneOffset;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
+
 
 @Component
 @RequiredArgsConstructor
@@ -22,8 +25,11 @@ public class UserMapper {
 
     private final PostService postService;
     private final FileService fileService;
+
     private final PasswordEncoder passwordEncoder;
+
     private final JsonMapper jsonMapper;
+    private final PostMapper postMapper;
 
     public UserResponseDto mapFromEntityToUserDto(UserEntity userEntity) {
 
@@ -45,12 +51,21 @@ public class UserMapper {
                 .followers(userEntity.getFollowers()
                         .stream()
                         .map(followerEntity -> mapFromEntityToFollowerDto(followerEntity.getFrom()))
-                        .collect(Collectors.toList())
+                        .toList()
                 )
                 .following(userEntity.getFollowing()
                         .stream()
                         .map(followingEntity -> mapFromEntityToFollowerDto(followingEntity.getTo()))
-                        .collect(Collectors.toList())
+                        .toList()
+                )
+                .likedPosts(userEntity.getLikedPosts()
+                        .stream()
+                        .map(postEntity -> postMapper.mapFromEntityToDto(
+                                postEntity,
+                                fileService.getImageFilesByPostList(List.of(postEntity))
+                        ))
+                        .sorted(Comparator.comparing(PostResponseDto::getCreatedAt).reversed())
+                        .toList()
                 )
                 .build();
     }
@@ -75,7 +90,6 @@ public class UserMapper {
     private long getUserFollowings(UserEntity userEntity) {
         return userEntity.getFollowing().size();
     }
-
 
     public UserEntity mapFromUserDtoToEntity(UserEntity userEntity,
                                              String userDetailsRequestJson,

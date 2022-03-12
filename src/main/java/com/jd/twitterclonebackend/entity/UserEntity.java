@@ -11,6 +11,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -126,6 +127,20 @@ public class UserEntity implements Serializable {
             mappedBy="recipient"
     ) // user received many massages from other users
     private List<MessageEntity> messagesReceived;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "user_post_likes",
+            joinColumns = @JoinColumn(
+                    name = "user_id",
+                    referencedColumnName = "id"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "post_id",
+                    referencedColumnName = "id"
+            )
+    ) // many users like many posts
+    private List<PostEntity> likedPosts = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
