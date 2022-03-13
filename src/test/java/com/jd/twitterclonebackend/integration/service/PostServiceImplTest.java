@@ -7,6 +7,9 @@ import com.jd.twitterclonebackend.exception.PostException;
 import com.jd.twitterclonebackend.exception.enums.InvalidPostEnum;
 import com.jd.twitterclonebackend.integration.IntegrationTestInitData;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -59,11 +62,19 @@ class PostServiceImplTest extends IntegrationTestInitData {
     @Test
     void should_getAllPosts_sortedByTimeStamp() {
         // given
+        Pageable pageable = PageRequest.of(
+                0,
+                10,
+                Sort.Direction.DESC,
+                "createdAt"
+        );
+
+
         List<PostEntity> postEntityList = initPostsInDatabase();
         assertThat(postEntityList).hasSize(3);
 
         // when
-        var result = postService.getAllPosts();
+        var result = postService.getAllPosts(pageable);
 
         // todo: doesn't work
         // then

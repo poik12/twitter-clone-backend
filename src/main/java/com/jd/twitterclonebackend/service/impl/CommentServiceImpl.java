@@ -17,6 +17,7 @@ import com.jd.twitterclonebackend.repository.PostRepository;
 import com.jd.twitterclonebackend.repository.UserRepository;
 import com.jd.twitterclonebackend.service.CommentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -64,7 +65,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<CommentResponseDto> getAllCommentsForPost(Long postId) {
+    public List<CommentResponseDto> getAllCommentsForPost(Long postId, Pageable pageable) {
         // Find post with comments in post repository
         PostEntity postEntity = postRepository
                 .findById(postId)
@@ -74,14 +75,14 @@ public class CommentServiceImpl implements CommentService {
                 ));
         // Get all comments for found post, map them to DTO and collect to list
         return commentRepository
-                .findAllByPostAndOrderByCreatedAtDesc(postEntity)
+                .findAllByPostAndOrderByCreatedAtDesc(postEntity, pageable)
                 .stream()
                 .map(commentMapper::mapFromEntityToDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<CommentResponseDto> getAllCommentsForUser(String username) {
+    public List<CommentResponseDto> getAllCommentsForUser(String username, Pageable pageable) {
         // Find user who created comments in user repository by username
         UserEntity userEntity = userRepository
                 .findByUsername(username)
@@ -91,7 +92,7 @@ public class CommentServiceImpl implements CommentService {
                 ));
         // Get all comments created by user, map them to dto, collect to list and return
         return commentRepository
-                .findAllByUserAndOrderByCreatedAtDesc(userEntity)
+                .findAllByUserAndOrderByCreatedAtDesc(userEntity, pageable)
                 .stream()
                 .map(commentMapper::mapFromEntityToDto)
                 .collect(Collectors.toList());

@@ -21,4 +21,6 @@ public class PostResponseDto {
     private String postTimeDuration;
     private byte[] fileContent;
     private byte[] userProfilePicture;
+    private boolean likedByLoggedUser;
+
 }

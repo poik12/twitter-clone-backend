@@ -4,7 +4,6 @@ import com.jd.twitterclonebackend.config.swagger.ApiRestController;
 import com.jd.twitterclonebackend.dto.request.ConversationRequestDto;
 import com.jd.twitterclonebackend.dto.request.MessageRequestDto;
 import com.jd.twitterclonebackend.dto.response.ConversationResponseDto;
-import com.jd.twitterclonebackend.dto.response.MessageResponseDto;
 import com.jd.twitterclonebackend.service.ConversationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

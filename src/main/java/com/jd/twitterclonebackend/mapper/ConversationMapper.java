@@ -7,11 +7,9 @@ import com.jd.twitterclonebackend.entity.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Objects;
 
 @Component
@@ -38,7 +36,6 @@ public class ConversationMapper {
                 .latestMessageRead(false)
                 .latestMessageTime(Date.from(Instant.now()))
                 .build();
-        // TODO: do something with latestMessageRead and message content?
     }
 
     public ConversationResponseDto mapFromEntityToDto(ConversationEntity conversationEntity) {
@@ -63,21 +60,8 @@ public class ConversationMapper {
                 )
                 .latestMessageContent(conversationEntity.getLatestMessageContent())
                 .latestMessageRead(conversationEntity.getLatestMessageRead())
-                .latestMessageTime(getLocalDateTime(conversationEntity.getLatestMessageTime()))
+                .latestMessageTime(messageMapper.getRelativeDate(conversationEntity.getLatestMessageTime()))
                 .build();
     }
-
-    private String getLocalDateTime(Date messageDate) {
-        LocalDateTime messageLocalDateTime = messageDate.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDateTime();
-        int minutes = messageLocalDateTime.getMinute();
-        int hour = messageLocalDateTime.getHour();
-        if (minutes < 10) {
-           return hour + ":0" + minutes;
-        }
-        return hour + ":" + minutes;
-    }
-
 
 }

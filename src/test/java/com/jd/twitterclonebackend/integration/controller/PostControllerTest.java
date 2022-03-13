@@ -1,32 +1,28 @@
 package com.jd.twitterclonebackend.integration.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jd.twitterclonebackend.controller.AuthController;
 import com.jd.twitterclonebackend.controller.PostController;
-import com.jd.twitterclonebackend.controller.handler.AuthControllerExceptionHandler;
 import com.jd.twitterclonebackend.controller.handler.PostControllerExceptionHandler;
 import com.jd.twitterclonebackend.dto.request.PostRequestDto;
 import com.jd.twitterclonebackend.dto.response.PostResponseDto;
-import com.jd.twitterclonebackend.entity.PostEntity;
 import com.jd.twitterclonebackend.integration.IntegrationTestInitData;
-import com.jd.twitterclonebackend.service.AuthService;
 import com.jd.twitterclonebackend.service.PostService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpMethod;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
@@ -77,8 +73,15 @@ class PostControllerTest extends IntegrationTestInitData {
     @Test
     void should_getPostResponseDtoList() throws Exception {
         // given
-        PostResponseDto postResponseDto = initPostResponseDto();
+        Pageable pageable = PageRequest.of(
+                0,
+                10,
+                Sort.Direction.DESC,
+                "createdAt"
+        );
 
+
+        PostResponseDto postResponseDto = initPostResponseDto();
         List<PostResponseDto> postResponseDtoList = List.of(
                 postResponseDto,
                 postResponseDto,
@@ -86,7 +89,7 @@ class PostControllerTest extends IntegrationTestInitData {
         );
 
         // when then
-        when(postService.getAllPosts()).thenReturn(postResponseDtoList);
+        when(postService.getAllPosts(pageable)).thenReturn(postResponseDtoList);
 
         mockMvc.perform(
                         get("/posts")
@@ -121,6 +124,13 @@ class PostControllerTest extends IntegrationTestInitData {
     @Test
     void should_getPostResponseDtoList_byUsername() throws Exception {
         // given
+        Pageable pageable = PageRequest.of(
+                0,
+                10,
+                Sort.Direction.DESC,
+                "createdAt"
+        );
+
         PostResponseDto postResponseDto = initPostResponseDto();
 
         List<PostResponseDto> postResponseDtoList = List.of(
@@ -130,7 +140,7 @@ class PostControllerTest extends IntegrationTestInitData {
         );
 
         // when then
-        when(postService.getPostsByUsername(any())).thenReturn(postResponseDtoList);
+        when(postService.getPostsByUsername(any(), pageable)).thenReturn(postResponseDtoList);
 
         mockMvc.perform(
                         get("/posts/by-user/{username}", postResponseDto.getUsername())

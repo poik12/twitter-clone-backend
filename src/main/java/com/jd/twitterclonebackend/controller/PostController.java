@@ -3,8 +3,10 @@ package com.jd.twitterclonebackend.controller;
 import com.jd.twitterclonebackend.config.swagger.ApiRestController;
 import com.jd.twitterclonebackend.dto.response.PostResponseDto;
 import com.jd.twitterclonebackend.service.PostService;
-import com.jd.twitterclonebackend.service.impl.PostServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,12 +34,21 @@ public class PostController {
                 .build();
     }
 
-    // GET ALL POSTS SORTED BY TIMESTAMP DESC
-    @GetMapping
-    public ResponseEntity<List<PostResponseDto>> getAllPosts() {
+    // GET ALL POSTS IN PAGES SORTED BY TIMESTAMP DESC
+    @GetMapping()
+    public ResponseEntity<List<PostResponseDto>> getAllPostsPageable(@RequestParam("pageNumber") int pageNumber,
+                                                                     @RequestParam("pageSize") int pageSize) {
+        Pageable pageable = PageRequest.of(
+                pageNumber,
+                pageSize,
+                Sort.Direction.DESC,
+                "createdAt"
+        );
+
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(postService.getAllPosts());
+                .body(postService.getAllPosts(pageable));
+
     }
 
     // GET SINGLE POST BY ID
@@ -50,10 +61,19 @@ public class PostController {
 
     // GET POSTS BY USERNAME
     @GetMapping(path = "/by-user/{username}")
-    public ResponseEntity<List<PostResponseDto>> getPostsByUsername(@PathVariable String username) {
+    public ResponseEntity<List<PostResponseDto>> getPostsByUsername(@PathVariable String username,
+                                                                    @RequestParam("pageNumber") int pageNumber,
+                                                                    @RequestParam("pageSize") int pageSize) {
+        Pageable pageable = PageRequest.of(
+                pageNumber,
+                pageSize,
+                Sort.Direction.DESC,
+                "createdAt"
+        );
+
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(postService.getPostsByUsername(username));
+                .body(postService.getPostsByUsername(username, pageable));
     }
 
     // DELETE POST BY ID
@@ -72,14 +92,25 @@ public class PostController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .build();
+
+        // todo: send notification to post creator
     }
 
     // GET LIKED POSTS
-    @GetMapping(path = "/like")
-    public ResponseEntity<List<PostResponseDto>> likePost() {
+    @GetMapping(path = "/like/by-user/{username}")
+    public ResponseEntity<List<PostResponseDto>> getLikedPostsByUsername(@PathVariable String username,
+                                                                         @RequestParam("pageNumber") int pageNumber,
+                                                                         @RequestParam("pageSize") int pageSize) {
+        // todo: add column creatAt to user_post_list and and search by it
+        Pageable pageable = PageRequest.of(
+                pageNumber,
+                pageSize,
+                Sort.Direction.DESC,
+                "createdAt"
+        );
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(postService.getLikedPosts());
+                .body(postService.getLikedPostsByUsername(username, pageable));
     }
 
 }
