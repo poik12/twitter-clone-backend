@@ -2,20 +2,16 @@ package com.jd.twitterclonebackend.mapper;
 
 import com.jd.twitterclonebackend.dto.request.UserDetailsRequestDto;
 import com.jd.twitterclonebackend.dto.response.FollowerResponseDto;
-import com.jd.twitterclonebackend.dto.response.PostResponseDto;
 import com.jd.twitterclonebackend.dto.response.UserResponseDto;
 import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.service.FileService;
-import com.jd.twitterclonebackend.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.ZoneOffset;
-import java.util.Comparator;
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 
 
@@ -23,13 +19,11 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class UserMapper {
 
-    private final PostService postService;
     private final FileService fileService;
 
     private final PasswordEncoder passwordEncoder;
 
     private final JsonMapper jsonMapper;
-    private final PostMapper postMapper;
 
     public UserResponseDto mapFromEntityToUserDto(UserEntity userEntity) {
 
@@ -42,7 +36,7 @@ public class UserMapper {
                 .name(userEntity.getName())
                 .username(userEntity.getUsername())
                 .createdAt(getDateOfCreation(userEntity.getCreatedAt()))
-                .tweetNo(getUserPostsSize(userEntity.getUsername()))
+                .tweetNo(userEntity.getPosts().size())
                 .followingNo(getUserFollowings(userEntity))
                 .followerNo(getUserFollowers(userEntity))
                 .userProfilePicture(userEntity.getProfilePicture())
@@ -58,15 +52,6 @@ public class UserMapper {
                         .map(followingEntity -> mapFromEntityToFollowerDto(followingEntity.getTo()))
                         .toList()
                 )
-                .likedPosts(userEntity.getLikedPosts()
-                        .stream()
-                        .map(postEntity -> postMapper.mapFromEntityToDto(
-                                postEntity,
-                                fileService.getImageFilesByPostList(List.of(postEntity))
-                        ))
-                        .sorted(Comparator.comparing(PostResponseDto::getCreatedAt).reversed())
-                        .toList()
-                )
                 .build();
     }
 
@@ -76,11 +61,6 @@ public class UserMapper {
         int year = createdAt.toInstant().atZone(ZoneOffset.UTC).getYear();
         // Return string eg. "August 2014"
         return month + " " + year;
-    }
-
-    private long getUserPostsSize(String username) {
-        // Get posts for user and return length of post list
-        return postService.getPostsByUsername(username).size();
     }
 
     private long getUserFollowers(UserEntity userEntity) {
@@ -133,6 +113,7 @@ public class UserMapper {
 
 
     private FollowerResponseDto mapFromEntityToFollowerDto(UserEntity userEntity) {
+
         if (Objects.isNull(userEntity)) {
             return null;
         }
@@ -144,7 +125,7 @@ public class UserMapper {
                 .emailAddress(userEntity.getEmailAddress())
                 .userProfilePicture(userEntity.getProfilePicture())
                 .userBackgroundPicture(userEntity.getBackgroundPicture())
-                .tweetNo(getUserPostsSize(userEntity.getUsername()))
+                .tweetNo(userEntity.getPosts().size())
                 .followingNo(getUserFollowings(userEntity))
                 .followerNo(getUserFollowers(userEntity))
                 .build();

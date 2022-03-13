@@ -54,6 +54,7 @@ public class PostMapper {
                 .name(postEntity.getUser().getName())
                 .fileContent(getImageFileByPostId(postEntity.getId(), imageFileMap))
                 .userProfilePicture(postEntity.getUser().getProfilePicture())
+                .likedByLoggedUser(false)
                 .build();
 
     }

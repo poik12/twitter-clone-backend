@@ -5,13 +5,15 @@ import com.jd.twitterclonebackend.controller.CommentController;
 import com.jd.twitterclonebackend.controller.handler.CommentControllerExceptionHandler;
 import com.jd.twitterclonebackend.dto.request.CommentRequestDto;
 import com.jd.twitterclonebackend.dto.response.CommentResponseDto;
-import com.jd.twitterclonebackend.dto.response.PostResponseDto;
 import com.jd.twitterclonebackend.integration.IntegrationTestInitData;
 import com.jd.twitterclonebackend.service.CommentService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -63,6 +65,13 @@ class CommentControllerTest extends IntegrationTestInitData {
     @Test
     void should_getCommentResponseDtoList_byPostId() throws Exception {
         // given
+        Pageable pageable = PageRequest.of(
+                0,
+                10,
+                Sort.Direction.DESC,
+                "createdAt"
+        );
+
         CommentResponseDto commentResponseDto = initCommentResponseDto();
 
         List<CommentResponseDto> commentResponseDtoList = List.of(
@@ -72,7 +81,7 @@ class CommentControllerTest extends IntegrationTestInitData {
         );
 
         // when then
-        when(commentService.getAllCommentsForPost(any()))
+        when(commentService.getAllCommentsForPost(any(), pageable))
                 .thenReturn(commentResponseDtoList);
 
         mockMvc.perform(
@@ -90,6 +99,13 @@ class CommentControllerTest extends IntegrationTestInitData {
     @Test
     void should_getCommentResponseDtoList_byUsername() throws Exception {
         // given
+        Pageable pageable = PageRequest.of(
+                0,
+                10,
+                Sort.Direction.DESC,
+                "createdAt"
+        );
+
         CommentResponseDto commentResponseDto = initCommentResponseDto();
 
         List<CommentResponseDto> commentResponseDtoList = List.of(
@@ -99,7 +115,7 @@ class CommentControllerTest extends IntegrationTestInitData {
         );
 
         // when then
-        when(commentService.getAllCommentsForUser(any()))
+        when(commentService.getAllCommentsForUser(any(), pageable))
                 .thenReturn(commentResponseDtoList);
 
         mockMvc.perform(
