@@ -92,6 +92,8 @@ public class PostController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .build();
+
+        // todo: send notification to post creator
     }
 
     // GET LIKED POSTS
