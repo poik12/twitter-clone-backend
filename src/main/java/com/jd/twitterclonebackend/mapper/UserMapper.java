@@ -76,10 +76,6 @@ public class UserMapper {
                                              MultipartFile profileImageFile,
                                              MultipartFile backgroundImageFile) {
 
-        // TODO: Description not added yet
-        // TODO: Add username line in frontend
-
-
         // Map User Details from Json to Dto
         UserDetailsRequestDto userDetailsRequestDto = jsonMapper.mapFromJsonToDto(
                 userDetailsRequestJson,
@@ -89,9 +85,6 @@ public class UserMapper {
         if (!userDetailsRequestDto.getName().isBlank()) {
             userEntity.setName(userDetailsRequestDto.getName());
         }
-        if (!userDetailsRequestDto.getUsername().isBlank()) {
-            userEntity.setUsername(userDetailsRequestDto.getUsername());
-        }
         if (!userDetailsRequestDto.getEmailAddress().isBlank()) {
             userEntity.setEmailAddress(userDetailsRequestDto.getEmailAddress());
         }
@@ -100,6 +93,9 @@ public class UserMapper {
         }
         if (!userDetailsRequestDto.getPassword().isBlank()) {
             userEntity.setPassword(passwordEncoder.encode(userDetailsRequestDto.getPassword()));
+        }
+        if (!userDetailsRequestDto.getDescription().isBlank()) {
+            userEntity.setDescription(userDetailsRequestDto.getDescription());
         }
         if (Objects.nonNull(profileImageFile)) {
             userEntity.setProfilePicture(fileService.convertFileToByteArray(profileImageFile));

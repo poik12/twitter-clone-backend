@@ -1,6 +1,7 @@
 package com.jd.twitterclonebackend.mapper;
 
 import com.github.marlonlom.utilities.timeago.TimeAgo;
+import com.google.common.collect.Multimap;
 import com.jd.twitterclonebackend.entity.PostEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.dto.request.PostRequestDto;
@@ -8,9 +9,7 @@ import com.jd.twitterclonebackend.dto.response.PostResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Component
 @RequiredArgsConstructor
@@ -59,10 +58,72 @@ public class PostMapper {
 
     }
 
+    public PostResponseDto mapFromEntityToDto(PostEntity postEntity) {
+
+        if (Objects.isNull(postEntity)) {
+            return null;
+        }
+
+        return PostResponseDto.builder()
+                .id(postEntity.getId())
+                .description(postEntity.getDescription())
+                .createdAt(postEntity.getCreatedAt())
+                .commentNo(getCommentCount(postEntity))
+                .likeNo(getPostCount(postEntity))
+                .postTimeDuration(getPostTimeDuration(postEntity))
+                .username(postEntity.getUser().getUsername())
+                .name(postEntity.getUser().getName())
+                .userProfilePicture(postEntity.getUser().getProfilePicture())
+                .likedByLoggedUser(false)
+                .fileContent(Collections.emptyList())
+                .build();
+    }
+
+
+//    public PostResponseDto mapFromEntityToDtoForMulti(PostEntity postEntity, Multimap<Long, byte[]> imageFileMap) {
+//
+//        if (Objects.isNull(postEntity)) {
+//            return null;
+//        }
+//
+//        return PostResponseDto.builder()
+//                .id(postEntity.getId())
+//                .description(postEntity.getDescription())
+//                .createdAt(postEntity.getCreatedAt())
+//                .commentNo(getCommentCount(postEntity))
+//                .likeNo(getPostCount(postEntity))
+//                .postTimeDuration(getPostTimeDuration(postEntity))
+//                .username(postEntity.getUser().getUsername())
+//                .name(postEntity.getUser().getName())
+//                .fileContent(getImageFileByPostId(postEntity.getId(), imageFileMap))
+//                .userProfilePicture(postEntity.getUser().getProfilePicture())
+//                .likedByLoggedUser(false)
+//                .build();
+//    }
 
     // Get image file content in byte[] by post id
-    private byte[] getImageFileByPostId(Long postId, Map<Long, byte[]> imageFileMap) {
-        return imageFileMap.getOrDefault(postId, null);
+    private List<byte[]> getImageFileByPostId(Long postId, Multimap<Long, byte[]> imageFileMap) {
+//        return imageFileMap.getOrDefault(postId, null);
+        List<byte[]> fileContent = new ArrayList<>();
+        imageFileMap.forEach((aLong, bytes) -> {
+            if (postId.equals(aLong)) {
+                fileContent.add(bytes);
+            }
+        });
+        return fileContent;
+    }
+
+
+    // Get image file content in byte[] by post id
+    private List<byte[]> getImageFileByPostId(Long postId, Map<Long, byte[]> imageFileMap) {
+//        return imageFileMap.getOrDefault(postId, null);
+        List<byte[]> fileContent = new ArrayList<>();
+        imageFileMap.forEach((aLong, bytes) -> {
+            if (postId.equals(aLong)) {
+                fileContent.add(bytes);
+            }
+        });
+        return fileContent;
     }
 
     // Number of comments

@@ -1,5 +1,6 @@
 package com.jd.twitterclonebackend.service;
 
+import com.jd.twitterclonebackend.dto.response.PostResponseDto;
 import com.jd.twitterclonebackend.entity.PostEntity;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -10,7 +11,9 @@ public interface FileService {
     // Upload image file into db
     void uploadImageFile(PostEntity postEntity, MultipartFile file);
     // Get image file map from db
-    Map<Long, byte[]> getAllImageFiles();
+//    Map<Long, byte[]> getAllImageFiles();
+
+    List<PostResponseDto> getAllImageFiles(List<PostResponseDto> postResponseDtoList);
     // Get image file by post list
     Map<Long, byte[]> getImageFilesByPostList(List<PostEntity> postList);
     // Get array from image path

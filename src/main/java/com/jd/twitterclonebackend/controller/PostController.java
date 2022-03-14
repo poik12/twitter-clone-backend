@@ -23,16 +23,28 @@ public class PostController {
     private final PostService postService;
 
     // ADD NEW POST
+//    @PostMapping
+//    public ResponseEntity<Void> addPost(
+//            @RequestParam(required = false, value = "file") MultipartFile file,
+//            @RequestParam(required = true, value = "postRequest") String postRequestJson
+//    ) {
+//        postService.addPost(file, postRequestJson);
+//        return ResponseEntity
+//                .status(HttpStatus.CREATED)
+//                .build();
+//    }
+
     @PostMapping
     public ResponseEntity<Void> addPost(
-            @RequestParam(required = false, value = "file") MultipartFile file,
+            @RequestParam(required = false, value = "files") MultipartFile[] files,
             @RequestParam(required = true, value = "postRequest") String postRequestJson
     ) {
-        postService.addPost(file, postRequestJson);
+        postService.addPost(files, postRequestJson);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .build();
     }
+
 
     // GET ALL POSTS IN PAGES SORTED BY TIMESTAMP DESC
     @GetMapping()

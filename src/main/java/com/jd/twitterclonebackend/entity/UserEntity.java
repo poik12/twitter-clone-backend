@@ -55,7 +55,7 @@ public class UserEntity implements Serializable {
 
     private Long followingNo;
 
-    @Column(length = 280)
+    @Column(length = 1000)
     private String description;
 
     @OneToOne(

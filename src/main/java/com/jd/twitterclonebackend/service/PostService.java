@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface PostService {
 
-    void addPost(MultipartFile file, String postRequestJson);
+    void addPost(MultipartFile[] file, String postRequestJson);
 
     List<PostResponseDto> getAllPosts(Pageable pageable);
 
@@ -21,4 +21,5 @@ public interface PostService {
     void likePostById(Long postId);
 
     List<PostResponseDto> getLikedPostsByUsername(String username, Pageable pageable);
+
 }

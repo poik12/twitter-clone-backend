@@ -19,10 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,8 +34,28 @@ public class PostServiceImpl implements PostService {
 
     private final PostMapper postMapper;
 
+//    @Override
+//    public void addPost(MultipartFile file, String postRequestJson) {
+//        // Get User who created post
+//        UserEntity userEntity = userDetailsService.currentLoggedUserEntity();
+//        // Map Post from request to post entity
+//        PostEntity postEntity = postMapper.mapFromDtoToEntity(
+//                postRequestJson,
+//                userEntity
+//        );
+//        // Save mapped post in repository
+//        postRepository.save(postEntity);
+//        // If file is not empty - upload into db
+//        if (Objects.nonNull(file)) {
+//            fileService.uploadImageFile(
+//                    postEntity,
+//                    file
+//            );
+//        }
+//    }
+
     @Override
-    public void addPost(MultipartFile file, String postRequestJson) {
+    public void addPost(MultipartFile[] files, String postRequestJson) {
         // Get User who created post
         UserEntity userEntity = userDetailsService.currentLoggedUserEntity();
         // Map Post from request to post entity
@@ -49,13 +66,13 @@ public class PostServiceImpl implements PostService {
         // Save mapped post in repository
         postRepository.save(postEntity);
         // If file is not empty - upload into db
-        if (Objects.nonNull(file)) {
-            fileService.uploadImageFile(
-                    postEntity,
-                    file
-            );
+
+        if (Objects.nonNull(files)) {
+            Arrays.stream(files)
+                    .forEach(file -> fileService.uploadImageFile(postEntity, file));
         }
     }
+
 
     @Override
     @Transactional(readOnly = true)
@@ -67,23 +84,18 @@ public class PostServiceImpl implements PostService {
                 .map(PostEntity::getId)
                 .toList();
 
-        // Get map of post id and content in byte from db
-        Map<Long, byte[]> imageFilesMap = fileService.getAllImageFiles();
-
-        //Find all posts in repository sorted by created timestamp and map them from entities to dto
-        return postRepository
+        List<PostResponseDto> postResponseDtoList = postRepository
                 .findAllByOrderByCreatedAtDesc(pageable)
                 .stream()
-                .map(postEntity -> postMapper.mapFromEntityToDto(
-                        postEntity,
-                        imageFilesMap
-                ))
+                .map(postMapper::mapFromEntityToDto)
                 .peek(postResponseDto -> {
                     if (likedPostIdListByLoggedUser.contains(postResponseDto.getId())) {
-                        postResponseDto.setLikedByLoggedUser(true);
+                            postResponseDto.setLikedByLoggedUser(true);
                     }
                 })
                 .toList();
+
+        return fileService.getAllImageFiles(postResponseDtoList);
     }
 
     @Override

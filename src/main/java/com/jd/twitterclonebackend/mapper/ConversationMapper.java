@@ -52,12 +52,6 @@ public class ConversationMapper {
                 .creatorName(conversationEntity.getCreator().getName())
                 .creatorUsername(conversationEntity.getCreator().getUsername())
                 .creatorProfilePicture(conversationEntity.getCreator().getProfilePicture())
-                .messages(
-                        conversationEntity.getMessages()
-                        .stream()
-                        .map(messageMapper::mapFromEntityToDto)
-                        .toList()
-                )
                 .latestMessageContent(conversationEntity.getLatestMessageContent())
                 .latestMessageRead(conversationEntity.getLatestMessageRead())
                 .latestMessageTime(messageMapper.getRelativeDate(conversationEntity.getLatestMessageTime()))

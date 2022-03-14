@@ -4,6 +4,7 @@ import lombok.*;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Builder
@@ -19,7 +20,7 @@ public class PostResponseDto {
     private Long likeNo;
     private Date createdAt;
     private String postTimeDuration;
-    private byte[] fileContent;
+    private List<byte[]> fileContent;
     private byte[] userProfilePicture;
     private boolean likedByLoggedUser;
 

@@ -3,6 +3,7 @@ package com.jd.twitterclonebackend.repository;
 import com.jd.twitterclonebackend.entity.ConversationEntity;
 import com.jd.twitterclonebackend.entity.MessageEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -19,12 +20,11 @@ public interface ConversationRepository extends JpaRepository<ConversationEntity
     @Query(value = "SELECT m from ConversationEntity m " +
             "WHERE m.creator = :creator OR m.participant = :participant " +
             "ORDER BY m.latestMessageContent DESC")
-    List<ConversationEntity> findAllByCreatorOrParticipant(UserEntity creator, UserEntity participant);
+    List<ConversationEntity> findAllByCreatorOrParticipant(UserEntity creator,
+                                                           UserEntity participant,
+                                                           Pageable pageable);
 
-    @Query(value = "SELECT m.messages FROM ConversationEntity m WHERE m.id = :conversationId")
-    List<MessageEntity> findMessagesForConversationId(@Param("conversationId") Long conversationId);
-
-    @Transactional
+//    @Transactional
     @Modifying
     @Query(value = "UPDATE ConversationEntity c " +
             "SET c.latestMessageContent = :messageContent, c.latestMessageTime = :messageCreatedAt " +

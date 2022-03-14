@@ -3,6 +3,7 @@ package com.jd.twitterclonebackend.service.impl;
 import com.jd.twitterclonebackend.dto.request.ConversationRequestDto;
 import com.jd.twitterclonebackend.dto.request.MessageRequestDto;
 import com.jd.twitterclonebackend.dto.response.ConversationResponseDto;
+import com.jd.twitterclonebackend.dto.response.MessageResponseDto;
 import com.jd.twitterclonebackend.entity.ConversationEntity;
 import com.jd.twitterclonebackend.entity.MessageEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
@@ -17,12 +18,13 @@ import com.jd.twitterclonebackend.repository.MessageRepository;
 import com.jd.twitterclonebackend.repository.UserRepository;
 import com.jd.twitterclonebackend.service.ConversationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -63,23 +65,25 @@ public class ConversationServiceImpl implements ConversationService {
     }
 
     @Override
-    public List<ConversationResponseDto> getAllConversations() {
+    public List<ConversationResponseDto> getAllConversations(Pageable pageable) {
 
         UserEntity loggedUserEntity = userDetailsService.currentLoggedUserEntity();
 
         return conversationRepository
                 .findAllByCreatorOrParticipant(
                         loggedUserEntity,
-                        loggedUserEntity
+                        loggedUserEntity,
+                        pageable
                 )
                 .stream()
+                .sorted(Comparator.comparing(ConversationEntity::getLatestMessageTime).reversed())
                 .map(conversationMapper::mapFromEntityToDto)
                 .toList();
     }
 
     @Override
     @Transactional
-    public void sendMessage(MessageRequestDto messageRequestDto) {
+    public MessageResponseDto sendMessage(MessageRequestDto messageRequestDto) {
 
         UserEntity senderEntity = userDetailsService.currentLoggedUserEntity();
 
@@ -106,11 +110,8 @@ public class ConversationServiceImpl implements ConversationService {
                         HttpStatus.NOT_FOUND
                 ));
 
-        // todo: empty string in conversation as last message
         // todo: sending massages check
         // todo: add to conversation in user profile?
-        // todo: update like post for post entity
-        // todo: in userprofile add retweets (comment list) and likes
         // todo: add delete comment
 
         MessageEntity messageEntity = messageMapper.mapFromDtoToEntity(
@@ -134,6 +135,11 @@ public class ConversationServiceImpl implements ConversationService {
                 Date.from(Instant.now())
         );
 
+        // TODO: change date
+        savedMessageEntity.setCreatedAt(Date.from(Instant.now()));
+        MessageResponseDto messageResponseDto = messageMapper.mapFromEntityToDto(savedMessageEntity);
+        System.out.println(messageResponseDto);
+        return messageResponseDto;
     }
 
     @Override
@@ -145,5 +151,16 @@ public class ConversationServiceImpl implements ConversationService {
                         HttpStatus.NOT_FOUND
                 ));
         return conversationMapper.mapFromEntityToDto(conversationEntity);
+    }
+
+    @Override
+    public List<MessageResponseDto> getMessagesForConversationById(Long conversationId, Pageable pageable) {
+
+        return messageRepository
+                .findMessagesByConversationId(conversationId, pageable)
+                .stream()
+                .sorted(Comparator.comparing(MessageEntity::getCreatedAt))
+                .map(messageMapper::mapFromEntityToDto)
+                .toList();
     }
 }
