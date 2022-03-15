@@ -1,7 +1,8 @@
 package com.jd.twitterclonebackend.mapper;
 
 import com.github.marlonlom.utilities.timeago.TimeAgo;
-import com.google.common.collect.Multimap;
+import com.jd.twitterclonebackend.dto.response.CommentResponseDto;
+import com.jd.twitterclonebackend.dto.response.RepliedPostResponseDto;
 import com.jd.twitterclonebackend.entity.PostEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.dto.request.PostRequestDto;
@@ -54,6 +55,20 @@ public class PostMapper {
                 .userProfilePicture(postEntity.getUser().getProfilePicture())
                 .likedByLoggedUser(false)
                 .fileContent(Collections.emptyList())
+                .build();
+    }
+
+    public RepliedPostResponseDto mapToRepliedPostResponse(PostResponseDto postResponseDto,
+                                                           List<CommentResponseDto> commentResponseDtoList) {
+
+        if (Objects.isNull(postResponseDto)
+                || Objects.isNull(commentResponseDtoList)) {
+            return null;
+        }
+
+        return RepliedPostResponseDto.builder()
+                .post(postResponseDto)
+                .comments(commentResponseDtoList)
                 .build();
     }
 

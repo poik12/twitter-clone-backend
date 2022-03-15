@@ -80,8 +80,9 @@ public class FileServiceImpl implements FileService {
                 .stream()
                 .map(imageFileEntity -> decompressBytes(imageFileEntity.getContent()))
                 .toList();
-        postResponseDto.setFileContent(contentList);
-
+        if (!contentList.isEmpty()) {
+            postResponseDto.setFileContent(contentList);
+        }
         return postResponseDto;
     }
 

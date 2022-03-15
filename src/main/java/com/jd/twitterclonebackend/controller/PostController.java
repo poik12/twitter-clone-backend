@@ -2,6 +2,7 @@ package com.jd.twitterclonebackend.controller;
 
 import com.jd.twitterclonebackend.config.swagger.ApiRestController;
 import com.jd.twitterclonebackend.dto.response.PostResponseDto;
+import com.jd.twitterclonebackend.dto.response.RepliedPostResponseDto;
 import com.jd.twitterclonebackend.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -84,6 +85,22 @@ public class PostController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .build();
+    }
+
+    @GetMapping(path = "/by-post/{username}")
+    public ResponseEntity<List<RepliedPostResponseDto>>  getPostsCommentedByUsername(@PathVariable String username,
+                                                                                     @RequestParam("pageNumber") int pageNumber,
+                                                                                     @RequestParam("pageSize") int pageSize) {
+        Pageable pageable = PageRequest.of(
+                pageNumber,
+                pageSize,
+                Sort.Direction.DESC,
+                "createdAt"
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(postService.getRepliedPostsWithCommentsByUsername(username, pageable));
     }
 
     // LIKE POST

@@ -1,19 +1,26 @@
 package com.jd.twitterclonebackend.service.impl;
 
+import com.jd.twitterclonebackend.dto.response.CommentResponseDto;
 import com.jd.twitterclonebackend.dto.response.PostResponseDto;
+import com.jd.twitterclonebackend.dto.response.RepliedPostResponseDto;
 import com.jd.twitterclonebackend.entity.PostEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.exception.PostException;
 import com.jd.twitterclonebackend.exception.UserException;
 import com.jd.twitterclonebackend.exception.enums.InvalidPostEnum;
 import com.jd.twitterclonebackend.exception.enums.InvalidUserEnum;
+import com.jd.twitterclonebackend.mapper.CommentMapper;
 import com.jd.twitterclonebackend.mapper.PostMapper;
+import com.jd.twitterclonebackend.repository.CommentRepository;
+import com.jd.twitterclonebackend.repository.ImageFileRepository;
 import com.jd.twitterclonebackend.repository.PostRepository;
 import com.jd.twitterclonebackend.repository.UserRepository;
 import com.jd.twitterclonebackend.service.FileService;
 import com.jd.twitterclonebackend.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,11 +35,14 @@ public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final ImageFileRepository imageFileRepository;
+    private final CommentRepository commentRepository;
 
     private final UserDetailsServiceImpl userDetailsService;
     private final FileService fileService;
 
     private final PostMapper postMapper;
+    private final CommentMapper commentMapper;
 
     @Override
     public void addPost(MultipartFile[] files, String postRequestJson) {
@@ -119,13 +129,15 @@ public class PostServiceImpl implements PostService {
                 })
                 .collect(Collectors.toList());
     }
+
     @Override
     @Transactional
     public void deletePostById(Long postId) {
         // TODO: check if cascade words - should delete comments and images from repo
         // todo: liked post doesnt delete
-//        imageFileRepository.deleteByPostId(postId);
-//        commentRepository.deleteByPostId(postId);
+        imageFileRepository.deleteByPostId(postId);
+        commentRepository.deleteByPostId(postId);
+//        userRepository.deleteLikedPostsByPostId(postId);
         postRepository.deleteById(postId);
     }
 
@@ -176,7 +188,7 @@ public class PostServiceImpl implements PostService {
     private List<PostResponseDto> getLikedPostResponseDtoListForLoggedUser(Pageable pageable,
                                                                            UserEntity loggedUser) {
 
-        return  postRepository.findByUserLikes(loggedUser, pageable)
+        return postRepository.findByUserLikes(loggedUser, pageable)
                 .stream()
                 .map(postMapper::mapFromEntityToDto)
                 .map(fileService::getAllImageFilesForPost)
@@ -214,5 +226,49 @@ public class PostServiceImpl implements PostService {
                 .sorted(Comparator.comparing(PostResponseDto::getCreatedAt).reversed())
                 .toList();
     }
+
+    @Override
+    public List<RepliedPostResponseDto> getRepliedPostsWithCommentsByUsername(String username, Pageable pageable) {
+
+        UserEntity userEntity = userRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new UserException(
+                        InvalidUserEnum.USER_NOT_FOUND_WITH_USERNAME.getMessage() + username,
+                        HttpStatus.NOT_FOUND
+                ));
+
+        List<Long> likedPostIdListByLoggedUser = userDetailsService.currentLoggedUserEntity()
+                .getLikedPosts()
+                .stream()
+                .map(PostEntity::getId)
+                .toList();
+
+        // Limit result to last 3
+        Pageable commentRequest = PageRequest.of(0, 3, Sort.Direction.DESC, "createdAt");
+
+        List<PostResponseDto> postResponseDtoList = postRepository.findPostByCommentsFromUsername(userEntity, pageable)
+                .stream()
+                .map(postMapper::mapFromEntityToDto)
+                .peek(postResponseDto -> {
+                    if (likedPostIdListByLoggedUser.contains(postResponseDto.getId())) {
+                        postResponseDto.setLikedByLoggedUser(true);
+                    }
+                })
+                .toList();
+
+        // Get all comments created by user, map them to dto, collect to list and return
+        return postResponseDtoList.stream().map(postResponseDto -> {
+            List<CommentResponseDto> commentResponseDtoList = commentRepository.findAllByUserAndOrderByCreatedAtDesc(userEntity,
+                            postResponseDto.getId(),
+                            commentRequest)
+                    .stream()
+                    .map(commentMapper::mapFromEntityToDto)
+                    .toList();
+            return postMapper.mapToRepliedPostResponse(postResponseDto, commentResponseDtoList);
+        }).toList();
+
+
+    }
+
 
 }

@@ -115,7 +115,7 @@ class CommentControllerTest extends IntegrationTestInitData {
         );
 
         // when then
-        when(commentService.getAllCommentsForUser(any(), pageable))
+        when(commentService.getThreeLastCommentsForPostByUsernameAndPostId(any(), any(), pageable))
                 .thenReturn(commentResponseDtoList);
 
         mockMvc.perform(

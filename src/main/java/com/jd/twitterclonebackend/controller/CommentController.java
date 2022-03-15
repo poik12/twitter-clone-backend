@@ -47,20 +47,21 @@ public class CommentController {
                 .body(commentService.getAllCommentsForPost(postId, pageable));
     }
 
-    @GetMapping(path ="/by-user/{username}")
-    public ResponseEntity<List<CommentResponseDto>> getAllCommentsForUser(@PathVariable String username,
-                                                                          @RequestParam("pageNumber") int pageNumber,
-                                                                          @RequestParam("pageSize") int pageSize) {
+    @GetMapping(path ="/by-user/{username}/{postId}")
+    public ResponseEntity<List<CommentResponseDto>> getThreeLastUserCommentsForPost(@PathVariable String username,
+                                                                                    @PathVariable Long postId) {
+
+        // Limit result to last 3
         Pageable pageable = PageRequest.of(
-                pageNumber,
-                pageSize,
+                0,
+                3,
                 Sort.Direction.DESC,
                 "createdAt"
         );
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(commentService.getAllCommentsForUser(username, pageable));
+                .body(commentService.getThreeLastCommentsForPostByUsernameAndPostId(username, postId, pageable));
     }
 
     @DeleteMapping(path ="/{commentId}")

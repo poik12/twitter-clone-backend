@@ -20,8 +20,11 @@ public interface CommentRepository extends JpaRepository<CommentEntity, Long> {
     List<CommentEntity> findAllByPostAndOrderByCreatedAtDesc(@Param("postEntity") PostEntity postEntity,
                                                              Pageable pageable);
 
-    @Query(value = "FROM CommentEntity WHERE user = :userEntity ORDER BY createdAt DESC")
+    @Query(value = "SELECT c FROM CommentEntity c " +
+            "WHERE c.user = :userEntity AND c.post.id = :postId " +
+            "ORDER BY c.createdAt DESC")
     List<CommentEntity> findAllByUserAndOrderByCreatedAtDesc(@Param("userEntity") UserEntity userEntity,
+                                                             @Param("postId") Long postId,
                                                              Pageable pageable);
 
     void deleteAllByUser(UserEntity userEntity);
