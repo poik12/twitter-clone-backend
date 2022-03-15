@@ -1,7 +1,5 @@
 package com.jd.twitterclonebackend.service.impl;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
 import com.jd.twitterclonebackend.dto.response.PostResponseDto;
 import com.jd.twitterclonebackend.entity.ImageFileEntity;
 import com.jd.twitterclonebackend.entity.PostEntity;
@@ -14,14 +12,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.security.DenyAll;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
@@ -33,7 +28,7 @@ public class FileServiceImpl implements FileService {
 
     private final ImageFileRepository imageFileRepository;
 
-    // UPLOAD IMAGE INTO DATABASE
+    // Upload image into database
     @Override
     public void uploadImageFile(PostEntity postEntity, MultipartFile file) {
 
@@ -76,76 +71,18 @@ public class FileServiceImpl implements FileService {
         return outputStream.toByteArray();
     }
 
-    // GET ALL IMAGES FROM DATABASE
-    @Override
-    public List<PostResponseDto> getAllImageFiles(List<PostResponseDto> postResponseDtoList) {
+    // Get all images for post form database
+    public PostResponseDto getAllImageFilesForPost(PostResponseDto postResponseDto) {
 
-        // todo: write it better
-
-
-        // Get content from image entities
-        List<ImageFileDto> imageFileDtoList = imageFileRepository.findAll()
+        // Get content list for post
+        List<byte[]> contentList = imageFileRepository
+                .findAllByPostId(postResponseDto.getId())
                 .stream()
-                .map(this::mapFromEntityToDto)
+                .map(imageFileEntity -> decompressBytes(imageFileEntity.getContent()))
                 .toList();
+        postResponseDto.setFileContent(contentList);
 
-        for (PostResponseDto postResponseDto : postResponseDtoList) {
-
-            List<byte[]> contentList = new ArrayList<>();
-
-            for (ImageFileDto imageFileDto : imageFileDtoList) {
-                if (imageFileDto.getPostId().equals(postResponseDto.getId())) {
-                    contentList.add(imageFileDto.getContent());
-                }
-            }
-            postResponseDto.setFileContent(contentList);
-        }
-
-        return postResponseDtoList;
-
-    }
-
-    private ImageFileDto mapFromEntityToDto(ImageFileEntity imageFileEntity) {
-        return ImageFileDto.builder()
-                .postId(imageFileEntity.getPost().getId())
-                .content(decompressBytes(imageFileEntity.getContent()))
-                .build();
-    }
-
-
-    @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Data
-    static class ImageFileDto {
-        private Long postId;
-        private byte[] content;
-    }
-
-    // GET ALL IMAGES FROM DATABASE
-//    @Override
-//    public Map<Long, byte[]> getAllImageFiles() {
-//        // Get content from image entities
-//        return imageFileRepository
-//                .findAll()
-//                .stream()
-//                .collect(Collectors.toMap(
-//                        imageFileEntity -> imageFileEntity.getPost().getId(),
-//                        imageFileEntity -> decompressBytes(imageFileEntity.getContent()
-//                        ))
-//                );
-//    }
-
-    // GET IMAGE FILE MAP BY POST LIST
-    @Override
-    public Map<Long, byte[]> getImageFilesByPostList(List<PostEntity> postList) {
-        return postList.stream()
-                .map(imageFileRepository::getByPost)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toMap(
-                        fileEntity -> fileEntity.getPost().getId(),
-                        fileEntity -> decompressBytes(fileEntity.getContent())
-                ));
+        return postResponseDto;
     }
 
     // Uncompress retrieved image bytes from database
@@ -172,7 +109,7 @@ public class FileServiceImpl implements FileService {
         return outputStream.toByteArray();
     }
 
-    // CONVERT IMAGE TO BYTE ARRAY USING IMAGE PATH
+    // Convert image to byte array using image path
     @Override
     @Nullable
     public byte[] convertFilePathToByteArray(String filePath) {
@@ -188,7 +125,7 @@ public class FileServiceImpl implements FileService {
         return content;
     }
 
-    // CONVERT FILE TO BYTE ARRAY USING IMAGE FILE
+    // Convert file to byte array using image file
     @Override
     @Nullable
     public byte[] convertFileToByteArray(MultipartFile file) {

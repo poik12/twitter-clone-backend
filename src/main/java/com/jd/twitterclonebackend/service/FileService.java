@@ -10,12 +10,8 @@ import java.util.Map;
 public interface FileService {
     // Upload image file into db
     void uploadImageFile(PostEntity postEntity, MultipartFile file);
-    // Get image file map from db
-//    Map<Long, byte[]> getAllImageFiles();
-
-    List<PostResponseDto> getAllImageFiles(List<PostResponseDto> postResponseDtoList);
-    // Get image file by post list
-    Map<Long, byte[]> getImageFilesByPostList(List<PostEntity> postList);
+    // Get image file list fro post
+    PostResponseDto getAllImageFilesForPost(PostResponseDto postResponseDtoList);
     // Get array from image path
     byte[] convertFilePathToByteArray(String imagePath);
     // Get array from multipart file

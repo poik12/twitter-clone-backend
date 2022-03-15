@@ -36,28 +36,6 @@ public class PostMapper {
                 .build();
     }
 
-    public PostResponseDto mapFromEntityToDto(PostEntity postEntity, Map<Long, byte[]> imageFileMap) {
-
-        if (Objects.isNull(postEntity)) {
-            return null;
-        }
-
-        return PostResponseDto.builder()
-                .id(postEntity.getId())
-                .description(postEntity.getDescription())
-                .createdAt(postEntity.getCreatedAt())
-                .commentNo(getCommentCount(postEntity))
-                .likeNo(getPostCount(postEntity))
-                .postTimeDuration(getPostTimeDuration(postEntity))
-                .username(postEntity.getUser().getUsername())
-                .name(postEntity.getUser().getName())
-                .fileContent(getImageFileByPostId(postEntity.getId(), imageFileMap))
-                .userProfilePicture(postEntity.getUser().getProfilePicture())
-                .likedByLoggedUser(false)
-                .build();
-
-    }
-
     public PostResponseDto mapFromEntityToDto(PostEntity postEntity) {
 
         if (Objects.isNull(postEntity)) {
@@ -77,53 +55,6 @@ public class PostMapper {
                 .likedByLoggedUser(false)
                 .fileContent(Collections.emptyList())
                 .build();
-    }
-
-
-//    public PostResponseDto mapFromEntityToDtoForMulti(PostEntity postEntity, Multimap<Long, byte[]> imageFileMap) {
-//
-//        if (Objects.isNull(postEntity)) {
-//            return null;
-//        }
-//
-//        return PostResponseDto.builder()
-//                .id(postEntity.getId())
-//                .description(postEntity.getDescription())
-//                .createdAt(postEntity.getCreatedAt())
-//                .commentNo(getCommentCount(postEntity))
-//                .likeNo(getPostCount(postEntity))
-//                .postTimeDuration(getPostTimeDuration(postEntity))
-//                .username(postEntity.getUser().getUsername())
-//                .name(postEntity.getUser().getName())
-//                .fileContent(getImageFileByPostId(postEntity.getId(), imageFileMap))
-//                .userProfilePicture(postEntity.getUser().getProfilePicture())
-//                .likedByLoggedUser(false)
-//                .build();
-//    }
-
-    // Get image file content in byte[] by post id
-    private List<byte[]> getImageFileByPostId(Long postId, Multimap<Long, byte[]> imageFileMap) {
-//        return imageFileMap.getOrDefault(postId, null);
-        List<byte[]> fileContent = new ArrayList<>();
-        imageFileMap.forEach((aLong, bytes) -> {
-            if (postId.equals(aLong)) {
-                fileContent.add(bytes);
-            }
-        });
-        return fileContent;
-    }
-
-
-    // Get image file content in byte[] by post id
-    private List<byte[]> getImageFileByPostId(Long postId, Map<Long, byte[]> imageFileMap) {
-//        return imageFileMap.getOrDefault(postId, null);
-        List<byte[]> fileContent = new ArrayList<>();
-        imageFileMap.forEach((aLong, bytes) -> {
-            if (postId.equals(aLong)) {
-                fileContent.add(bytes);
-            }
-        });
-        return fileContent;
     }
 
     // Number of comments

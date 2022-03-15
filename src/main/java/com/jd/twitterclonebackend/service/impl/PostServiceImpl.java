@@ -34,26 +34,6 @@ public class PostServiceImpl implements PostService {
 
     private final PostMapper postMapper;
 
-//    @Override
-//    public void addPost(MultipartFile file, String postRequestJson) {
-//        // Get User who created post
-//        UserEntity userEntity = userDetailsService.currentLoggedUserEntity();
-//        // Map Post from request to post entity
-//        PostEntity postEntity = postMapper.mapFromDtoToEntity(
-//                postRequestJson,
-//                userEntity
-//        );
-//        // Save mapped post in repository
-//        postRepository.save(postEntity);
-//        // If file is not empty - upload into db
-//        if (Objects.nonNull(file)) {
-//            fileService.uploadImageFile(
-//                    postEntity,
-//                    file
-//            );
-//        }
-//    }
-
     @Override
     public void addPost(MultipartFile[] files, String postRequestJson) {
         // Get User who created post
@@ -73,7 +53,6 @@ public class PostServiceImpl implements PostService {
         }
     }
 
-
     @Override
     @Transactional(readOnly = true)
     public List<PostResponseDto> getAllPosts(Pageable pageable) {
@@ -84,18 +63,17 @@ public class PostServiceImpl implements PostService {
                 .map(PostEntity::getId)
                 .toList();
 
-        List<PostResponseDto> postResponseDtoList = postRepository
+        return postRepository
                 .findAllByOrderByCreatedAtDesc(pageable)
                 .stream()
                 .map(postMapper::mapFromEntityToDto)
+                .map(fileService::getAllImageFilesForPost)
                 .peek(postResponseDto -> {
                     if (likedPostIdListByLoggedUser.contains(postResponseDto.getId())) {
-                            postResponseDto.setLikedByLoggedUser(true);
+                        postResponseDto.setLikedByLoggedUser(true);
                     }
                 })
                 .toList();
-
-        return fileService.getAllImageFiles(postResponseDtoList);
     }
 
     @Override
@@ -107,15 +85,9 @@ public class PostServiceImpl implements PostService {
                         InvalidPostEnum.POST_NOT_FOUND_WITH_ID.getMessage() + postId,
                         HttpStatus.NOT_FOUND
                 ));
-        // Create list of that post entity to use file service method
-        List<PostEntity> postList = List.of(postEntity);
-        // Find image file in db by post entity
-        Map<Long, byte[]> imageFile = fileService.getImageFilesByPostList(postList);
-        // Map Post from entity to dto and return
-        return postMapper.mapFromEntityToDto(
-                postEntity,
-                imageFile
-        );
+        // Map Post from entity to dto, get image files and return
+        PostResponseDto postResponseDto = postMapper.mapFromEntityToDto(postEntity);
+        return fileService.getAllImageFilesForPost(postResponseDto);
     }
 
     @Override
@@ -134,16 +106,12 @@ public class PostServiceImpl implements PostService {
                         InvalidUserEnum.USER_NOT_FOUND_WITH_USERNAME.getMessage() + username,
                         HttpStatus.NOT_FOUND
                 ));
+
         // Find all posts by user entity, map them to dto and return
-        List<PostEntity> postList = postRepository.findAllByUserAndOrderByCreatedAtDesc(userEntity, pageable);
-        // Get image map -> key: postId, value: imageEntity
-        Map<Long, byte[]> imageFileMap = fileService.getImageFilesByPostList(postList);
-        // Map post entity to dto and collect to list
-        return postList.stream()
-                .map(postEntity -> postMapper.mapFromEntityToDto(
-                        postEntity,
-                        imageFileMap
-                ))
+        return postRepository.findAllByUserAndOrderByCreatedAtDesc(userEntity, pageable)
+                .stream()
+                .map(postMapper::mapFromEntityToDto)
+                .map(fileService::getAllImageFilesForPost)
                 .peek(postResponseDto -> {
                     if (likedPostIdListByLoggedUser.contains(postResponseDto.getId())) {
                         postResponseDto.setLikedByLoggedUser(true);
@@ -151,11 +119,11 @@ public class PostServiceImpl implements PostService {
                 })
                 .collect(Collectors.toList());
     }
-
     @Override
     @Transactional
     public void deletePostById(Long postId) {
         // TODO: check if cascade words - should delete comments and images from repo
+        // todo: liked post doesnt delete
 //        imageFileRepository.deleteByPostId(postId);
 //        commentRepository.deleteByPostId(postId);
         postRepository.deleteById(postId);
@@ -207,19 +175,11 @@ public class PostServiceImpl implements PostService {
 
     private List<PostResponseDto> getLikedPostResponseDtoListForLoggedUser(Pageable pageable,
                                                                            UserEntity loggedUser) {
-        List<PostEntity> postEntityListLikedByLoggedUser = postRepository.findByUserLikes(
-                loggedUser,
-                pageable
-        );
-        // Get image map -> key: postId, value: imageEntity
-        Map<Long, byte[]> imageFileMap = fileService.getImageFilesByPostList(postEntityListLikedByLoggedUser);
 
-        return postEntityListLikedByLoggedUser
+        return  postRepository.findByUserLikes(loggedUser, pageable)
                 .stream()
-                .map(postEntity -> postMapper.mapFromEntityToDto(
-                        postEntity,
-                        imageFileMap
-                ))
+                .map(postMapper::mapFromEntityToDto)
+                .map(fileService::getAllImageFilesForPost)
                 .peek(postResponseDto -> postResponseDto.setLikedByLoggedUser(true))
                 .sorted(Comparator.comparing(PostResponseDto::getCreatedAt).reversed())
                 .toList();
@@ -241,21 +201,11 @@ public class PostServiceImpl implements PostService {
                         HttpStatus.NOT_FOUND
                 ));
 
-        List<PostEntity> postEntityListLikedByUser = postRepository.findByUserLikes(
-                userEntity,
-                pageable
-        );
-
-        // Get image map -> key: postId, value: imageEntity
-        Map<Long, byte[]> imageFileMap = fileService.getImageFilesByPostList(postEntityListLikedByUser);
-
         // Find all posts liked by user entity, map them to dto and return
-        return postEntityListLikedByUser
+        return postRepository.findByUserLikes(userEntity, pageable)
                 .stream()
-                .map(postEntity -> postMapper.mapFromEntityToDto(
-                        postEntity,
-                        imageFileMap
-                ))
+                .map(postMapper::mapFromEntityToDto)
+                .map(fileService::getAllImageFilesForPost)
                 .peek(postResponseDto -> {
                     if (likedPostIdListByLoggedUser.contains(postResponseDto.getId())) {
                         postResponseDto.setLikedByLoggedUser(true);

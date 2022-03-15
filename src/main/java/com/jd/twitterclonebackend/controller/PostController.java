@@ -23,17 +23,6 @@ public class PostController {
     private final PostService postService;
 
     // ADD NEW POST
-//    @PostMapping
-//    public ResponseEntity<Void> addPost(
-//            @RequestParam(required = false, value = "file") MultipartFile file,
-//            @RequestParam(required = true, value = "postRequest") String postRequestJson
-//    ) {
-//        postService.addPost(file, postRequestJson);
-//        return ResponseEntity
-//                .status(HttpStatus.CREATED)
-//                .build();
-//    }
-
     @PostMapping
     public ResponseEntity<Void> addPost(
             @RequestParam(required = false, value = "files") MultipartFile[] files,
@@ -105,7 +94,7 @@ public class PostController {
                 .status(HttpStatus.OK)
                 .build();
 
-        // todo: send notification to post creator
+        // todo: send notification to post creator - check who liked which post
     }
 
     // GET LIKED POSTS
