@@ -1,5 +1,6 @@
 package com.jd.twitterclonebackend.repository;
 
+import com.jd.twitterclonebackend.dto.response.PostResponseDto;
 import com.jd.twitterclonebackend.entity.PostEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
 import org.springframework.data.domain.Pageable;
@@ -27,4 +28,9 @@ public interface PostRepository extends JpaRepository<PostEntity, Long> {
 
     List<PostEntity> findByUserLikes(UserEntity userEntity, Pageable pageable);
 
+    @Query(value = "SELECT p FROM PostEntity p " +
+            "JOIN FETCH p.comments c " +
+            "WHERE c.user = :userEntity " +
+            "ORDER BY p.createdAt DESC")
+    List<PostEntity> findPostByCommentsFromUsername(UserEntity userEntity, Pageable pageable);
 }

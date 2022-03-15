@@ -17,7 +17,9 @@ import com.jd.twitterclonebackend.repository.PostRepository;
 import com.jd.twitterclonebackend.repository.UserRepository;
 import com.jd.twitterclonebackend.service.CommentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -82,7 +84,9 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<CommentResponseDto> getAllCommentsForUser(String username, Pageable pageable) {
+    public List<CommentResponseDto> getThreeLastCommentsForPostByUsernameAndPostId(String username,
+                                                                                   Long postId,
+                                                                                   Pageable pageable) {
         // Find user who created comments in user repository by username
         UserEntity userEntity = userRepository
                 .findByUsername(username)
@@ -90,9 +94,10 @@ public class CommentServiceImpl implements CommentService {
                         InvalidUserEnum.USER_NOT_FOUND_WITH_USERNAME.getMessage() + username,
                         HttpStatus.NOT_FOUND
                 ));
+
         // Get all comments created by user, map them to dto, collect to list and return
         return commentRepository
-                .findAllByUserAndOrderByCreatedAtDesc(userEntity, pageable)
+                .findAllByUserAndOrderByCreatedAtDesc(userEntity, postId, pageable)
                 .stream()
                 .map(commentMapper::mapFromEntityToDto)
                 .collect(Collectors.toList());

@@ -270,14 +270,16 @@ public abstract class IntegrationTestInitData {
         return requestJSON;
     }
 
-    protected MultipartFile initMultiPartFile() {
+    protected MultipartFile[] initMultiPartFile() {
         byte[] content = fileService.convertFilePathToByteArray(DEFAULT_BACKGROUND_PICTURE_PATH);
-        return new MockMultipartFile(
+        List<MockMultipartFile> mockMultipartFiles = List.of(new MockMultipartFile(
                 "file.txt",
                 "file.txt",
                 "text/plain",
                 content
-        );
+        ));
+        return null;
+
     }
 
     protected PostRequestDto initPostRequestDto() {
@@ -303,11 +305,11 @@ public abstract class IntegrationTestInitData {
     protected List<PostEntity> initPostsInDatabase() {
         initCurrentLoggedUser();
         String postRequestAsJson = initRequestDtoAsJson(initPostRequestDto());
-        MultipartFile file = initMultiPartFile();
+//        MultipartFile[] file = initMultiPartFile().toArray(new MultipartFile[0]);
 
-        postService.addPost(file, postRequestAsJson);
-        postService.addPost(file, postRequestAsJson);
-        postService.addPost(null, postRequestAsJson);
+//        postService.addPost(file, postRequestAsJson);
+//        postService.addPost(file, postRequestAsJson);
+//        postService.addPost(file, postRequestAsJson);
 
         return postRepository.findAll();
     }

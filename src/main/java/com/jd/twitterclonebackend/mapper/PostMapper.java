@@ -1,6 +1,8 @@
 package com.jd.twitterclonebackend.mapper;
 
 import com.github.marlonlom.utilities.timeago.TimeAgo;
+import com.jd.twitterclonebackend.dto.response.CommentResponseDto;
+import com.jd.twitterclonebackend.dto.response.RepliedPostResponseDto;
 import com.jd.twitterclonebackend.entity.PostEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.dto.request.PostRequestDto;
@@ -8,9 +10,7 @@ import com.jd.twitterclonebackend.dto.response.PostResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Component
 @RequiredArgsConstructor
@@ -37,7 +37,7 @@ public class PostMapper {
                 .build();
     }
 
-    public PostResponseDto mapFromEntityToDto(PostEntity postEntity, Map<Long, byte[]> imageFileMap) {
+    public PostResponseDto mapFromEntityToDto(PostEntity postEntity) {
 
         if (Objects.isNull(postEntity)) {
             return null;
@@ -52,17 +52,24 @@ public class PostMapper {
                 .postTimeDuration(getPostTimeDuration(postEntity))
                 .username(postEntity.getUser().getUsername())
                 .name(postEntity.getUser().getName())
-                .fileContent(getImageFileByPostId(postEntity.getId(), imageFileMap))
                 .userProfilePicture(postEntity.getUser().getProfilePicture())
                 .likedByLoggedUser(false)
+                .fileContent(Collections.emptyList())
                 .build();
-
     }
 
+    public RepliedPostResponseDto mapToRepliedPostResponse(PostResponseDto postResponseDto,
+                                                           List<CommentResponseDto> commentResponseDtoList) {
 
-    // Get image file content in byte[] by post id
-    private byte[] getImageFileByPostId(Long postId, Map<Long, byte[]> imageFileMap) {
-        return imageFileMap.getOrDefault(postId, null);
+        if (Objects.isNull(postResponseDto)
+                || Objects.isNull(commentResponseDtoList)) {
+            return null;
+        }
+
+        return RepliedPostResponseDto.builder()
+                .post(postResponseDto)
+                .comments(commentResponseDtoList)
+                .build();
     }
 
     // Number of comments

@@ -23,6 +23,7 @@ public class ConversationResponseDto {
     private String latestMessageTime;
     private String latestMessageContent;
     private Boolean latestMessageRead;
-    private List<MessageResponseDto> messages;
+
+//    private List<MessageResponseDto> messages;
 
 }

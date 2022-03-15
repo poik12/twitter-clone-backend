@@ -64,10 +64,7 @@ class PostMapperTest extends UnitTestInitData {
         Map<Long, byte[]> imageFileMap = new HashMap<>();
 
         // when
-        var result = postMapper.mapFromEntityToDto(
-                postEntity,
-                imageFileMap
-        );
+        var result = postMapper.mapFromEntityToDto(postEntity);
         System.out.println(result);
 
         // then

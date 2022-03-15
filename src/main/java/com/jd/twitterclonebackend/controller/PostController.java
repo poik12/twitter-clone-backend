@@ -2,6 +2,7 @@ package com.jd.twitterclonebackend.controller;
 
 import com.jd.twitterclonebackend.config.swagger.ApiRestController;
 import com.jd.twitterclonebackend.dto.response.PostResponseDto;
+import com.jd.twitterclonebackend.dto.response.RepliedPostResponseDto;
 import com.jd.twitterclonebackend.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -25,14 +26,15 @@ public class PostController {
     // ADD NEW POST
     @PostMapping
     public ResponseEntity<Void> addPost(
-            @RequestParam(required = false, value = "file") MultipartFile file,
+            @RequestParam(required = false, value = "files") MultipartFile[] files,
             @RequestParam(required = true, value = "postRequest") String postRequestJson
     ) {
-        postService.addPost(file, postRequestJson);
+        postService.addPost(files, postRequestJson);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .build();
     }
+
 
     // GET ALL POSTS IN PAGES SORTED BY TIMESTAMP DESC
     @GetMapping()
@@ -85,6 +87,22 @@ public class PostController {
                 .build();
     }
 
+    @GetMapping(path = "/by-post/{username}")
+    public ResponseEntity<List<RepliedPostResponseDto>>  getPostsCommentedByUsername(@PathVariable String username,
+                                                                                     @RequestParam("pageNumber") int pageNumber,
+                                                                                     @RequestParam("pageSize") int pageSize) {
+        Pageable pageable = PageRequest.of(
+                pageNumber,
+                pageSize,
+                Sort.Direction.DESC,
+                "createdAt"
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(postService.getRepliedPostsWithCommentsByUsername(username, pageable));
+    }
+
     // LIKE POST
     @GetMapping(path = "/like/{postId}")
     public ResponseEntity<Void> likePost(@PathVariable Long postId) {
@@ -93,7 +111,7 @@ public class PostController {
                 .status(HttpStatus.OK)
                 .build();
 
-        // todo: send notification to post creator
+        // todo: send notification to post creator - check who liked which post
     }
 
     // GET LIKED POSTS

@@ -12,7 +12,9 @@ public interface CommentService {
 
     List<CommentResponseDto> getAllCommentsForPost(Long postId, Pageable pageable);
 
-    List<CommentResponseDto> getAllCommentsForUser(String username, Pageable pageable);
+    List<CommentResponseDto> getThreeLastCommentsForPostByUsernameAndPostId(String username,
+                                                                            Long postId,
+                                                                            Pageable pageable);
 
     void deleteCommentById(Long commentId);
 }
