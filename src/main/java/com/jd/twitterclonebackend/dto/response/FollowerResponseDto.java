@@ -10,19 +10,10 @@ import javax.persistence.Lob;
 @NoArgsConstructor
 public class FollowerResponseDto {
 
-
     private Long id;
     private String name;
     private String username;
-    private String emailAddress;
-
-    @Lob
     private byte[] userProfilePicture;
-    @Lob
-    private byte[] userBackgroundPicture;
-
     private long tweetNo;
-    private long followerNo;
-    private long followingNo;
 
 }

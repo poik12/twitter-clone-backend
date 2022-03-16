@@ -1,4 +1,4 @@
-create table if not exists posts (
+create table if not exists tweets (
     id          bigint       not null primary key,
     comment_no  bigint       null,
     created_at  datetime(6)  null,

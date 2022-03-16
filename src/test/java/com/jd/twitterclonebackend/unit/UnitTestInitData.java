@@ -1,11 +1,11 @@
 package com.jd.twitterclonebackend.unit;
 
 import com.jd.twitterclonebackend.dto.request.CommentRequestDto;
-import com.jd.twitterclonebackend.dto.request.PostRequestDto;
+import com.jd.twitterclonebackend.dto.request.TweetRequestDto;
 import com.jd.twitterclonebackend.dto.request.RegisterRequestDto;
 import com.jd.twitterclonebackend.dto.request.UserDetailsRequestDto;
 import com.jd.twitterclonebackend.entity.CommentEntity;
-import com.jd.twitterclonebackend.entity.PostEntity;
+import com.jd.twitterclonebackend.entity.TweetEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.entity.enums.UserRole;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -72,8 +72,8 @@ public abstract class UnitTestInitData {
                 .build();
     }
 
-    protected PostEntity initPostEntity(UserEntity userEntity) {
-        return PostEntity.builder()
+    protected TweetEntity initPostEntity(UserEntity userEntity) {
+        return TweetEntity.builder()
                 .id(1L)
                 .description(POST_DESCRIPTION)
                 .commentNo(0L)
@@ -86,23 +86,23 @@ public abstract class UnitTestInitData {
     protected CommentRequestDto initCommentRequestDto() {
         return CommentRequestDto.builder()
                 .username(USER_PRIME_USERNAME)
-                .postId(1L)
+                .tweetId(1L)
                 .text(COMMENT_TEXT)
                 .build();
     }
 
-    protected CommentEntity initCommentEntity(UserEntity userEntity, PostEntity postEntity) {
+    protected CommentEntity initCommentEntity(UserEntity userEntity, TweetEntity tweetEntity) {
         return CommentEntity.builder()
                 .id(1L)
-                .post(postEntity)
+                .tweet(tweetEntity)
                 .user(userEntity)
                 .text(COMMENT_TEXT)
                 .createdAt(Instant.now())
                 .build();
     }
 
-    protected PostRequestDto initPostRequestDto() {
-        return PostRequestDto.builder()
+    protected TweetRequestDto initPostRequestDto() {
+        return TweetRequestDto.builder()
                 .description(POST_DESCRIPTION)
                 .build();
     }

@@ -9,7 +9,7 @@ import lombok.*;
 public class CommentRequestDto {
 
     private String username;
-    private Long postId;
+    private Long tweetId;
     private String text;
 
 }

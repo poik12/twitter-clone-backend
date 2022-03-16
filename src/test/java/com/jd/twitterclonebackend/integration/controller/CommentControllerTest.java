@@ -85,7 +85,7 @@ class CommentControllerTest extends IntegrationTestInitData {
                 .thenReturn(commentResponseDtoList);
 
         mockMvc.perform(
-                        get("/comments/by-post/{postId}", commentResponseDto.getPostId())
+                        get("/comments/by-tweet/{postId}", commentResponseDto.getTweetId())
                                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 )
                 .andDo(print())
@@ -137,7 +137,7 @@ class CommentControllerTest extends IntegrationTestInitData {
 
         // when then
         mockMvc.perform(
-                        delete("/comments/{commentId}", commentResponseDto.getPostId())
+                        delete("/comments/{commentId}", commentResponseDto.getTweetId())
                                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 )
                 .andDo(print())

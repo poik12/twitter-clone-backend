@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
                         HttpStatus.NOT_FOUND
                 ));
         // Map user entity to user response
-        return userMapper.mapFromEntityToUserDto(userEntity);
+        return userMapper.mapFromEntityToDto(userEntity);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
         return userRepository
                 .findAll()
                 .stream()
-                .map(userMapper::mapFromEntityToUserDto)
+                .map(userMapper::mapFromEntityToDto)
                 .collect(Collectors.toList());
     }
 
@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
         // Get user who updates details
         UserEntity userEntity = userDetailsService.currentLoggedUserEntity();
         // Map user request to user entity
-        UserEntity updatedUserEntity = userMapper.mapFromUserDtoToEntity(
+        UserEntity updatedUserEntity = userMapper.mapFromDtoToEntity(
                 userEntity,
                 userDetailsRequestJson,
                 profileImageFile,

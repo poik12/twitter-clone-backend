@@ -6,7 +6,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PostRequestDto {
+public class TweetRequestDto {
 
     private String description;
 

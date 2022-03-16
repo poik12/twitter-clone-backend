@@ -11,9 +11,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RepliedPostResponseDto {
+public class RepliedTweetResponseDto {
 
-    private PostResponseDto post;
+    private TweetResponseDto tweet;
     private List<CommentResponseDto> comments;
 
 }

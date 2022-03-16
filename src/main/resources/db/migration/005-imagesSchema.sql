@@ -4,7 +4,7 @@ create table if not exists images (
     name        varchar(255) null,
     size        bigint       null,
     upload_time datetime(6)  null,
-    post_id     bigint       null,
-    constraint FKcp0pycisii8ub3q4b7x5mfpn1 foreign key (post_id) references posts (id)
+    tweet_id     bigint       null,
+    constraint FKcp0pycisii8ub3q4b7x5mfpn1 foreign key (tweet_id) references tweets (id)
 );
 

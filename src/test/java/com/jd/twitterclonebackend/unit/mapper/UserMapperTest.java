@@ -5,7 +5,7 @@ import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.mapper.JsonMapper;
 import com.jd.twitterclonebackend.mapper.UserMapper;
 import com.jd.twitterclonebackend.service.FileService;
-import com.jd.twitterclonebackend.service.PostService;
+import com.jd.twitterclonebackend.service.TweetService;
 import com.jd.twitterclonebackend.unit.UnitTestInitData;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -25,7 +25,7 @@ class UserMapperTest extends UnitTestInitData {
     private UserMapper userMapper;
 
     @Mock
-    private PostService postService;
+    private TweetService tweetService;
     @Mock
     private FileService fileService;
     @Mock
@@ -39,7 +39,7 @@ class UserMapperTest extends UnitTestInitData {
         UserEntity userEntity = initUserEntity();
 
         // when
-        var result = userMapper.mapFromEntityToUserDto(userEntity);
+        var result = userMapper.mapFromEntityToDto(userEntity);
         System.out.println(result);
 
         // then
@@ -76,7 +76,7 @@ class UserMapperTest extends UnitTestInitData {
         when(jsonMapper.mapFromJsonToDto(any(), any()))
                 .thenReturn(userDetailsRequestDto);
 
-        var result = userMapper.mapFromUserDtoToEntity(
+        var result = userMapper.mapFromDtoToEntity(
                 userEntity,
                 userDetailsRequestJson,
                 profileImageFile,

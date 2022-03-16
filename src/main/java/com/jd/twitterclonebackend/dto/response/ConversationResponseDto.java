@@ -24,6 +24,4 @@ public class ConversationResponseDto {
     private String latestMessageContent;
     private Boolean latestMessageRead;
 
-//    private List<MessageResponseDto> messages;
-
 }

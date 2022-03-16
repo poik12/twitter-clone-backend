@@ -14,12 +14,12 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "posts")
+@Table(name = "tweets")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PostEntity implements Serializable {
+public class TweetEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -38,7 +38,7 @@ public class PostEntity implements Serializable {
     @OneToMany(
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,
-            mappedBy = "post"
+            mappedBy = "tweet"
     ) // many comments belong to post
     private List<CommentEntity> comments;
 
@@ -47,21 +47,21 @@ public class PostEntity implements Serializable {
     @OneToMany(
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,
-            mappedBy = "post"
+            mappedBy = "tweet"
     )
     private List<ImageFileEntity> images;
 
     @ManyToMany(
-            mappedBy = "likedPosts",
+            mappedBy = "likedTweets",
             cascade = CascadeType.ALL
     )
-    private List<UserEntity> userLikes = new ArrayList<>();
+    private List<UserEntity> userLikes;
 
     @ManyToMany
     @JoinTable(
-            name = "posts_hashtags",
+            name = "tweets_hashtags",
             joinColumns = @JoinColumn(
-                    name = "post_id",
+                    name = "tweet_id",
                     referencedColumnName = "id"
             ),
             inverseJoinColumns = @JoinColumn(
@@ -69,7 +69,7 @@ public class PostEntity implements Serializable {
                     referencedColumnName = "id"
             )
     ) // many posts have many hashtags
-    private List<HashtagEntity> hashtags = new ArrayList<>();
+    private List<HashtagEntity> hashtags;
 
     @CreationTimestamp
     private Date createdAt;

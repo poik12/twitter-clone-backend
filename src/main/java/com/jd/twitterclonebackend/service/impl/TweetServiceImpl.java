@@ -1,23 +1,22 @@
 package com.jd.twitterclonebackend.service.impl;
 
 import com.jd.twitterclonebackend.dto.response.CommentResponseDto;
-import com.jd.twitterclonebackend.dto.response.PostResponseDto;
-import com.jd.twitterclonebackend.dto.response.RepliedPostResponseDto;
-import com.jd.twitterclonebackend.entity.PostEntity;
+import com.jd.twitterclonebackend.dto.response.TweetResponseDto;
+import com.jd.twitterclonebackend.dto.response.RepliedTweetResponseDto;
+import com.jd.twitterclonebackend.entity.TweetEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.exception.PostException;
 import com.jd.twitterclonebackend.exception.UserException;
 import com.jd.twitterclonebackend.exception.enums.InvalidPostEnum;
 import com.jd.twitterclonebackend.exception.enums.InvalidUserEnum;
 import com.jd.twitterclonebackend.mapper.CommentMapper;
-import com.jd.twitterclonebackend.mapper.PostMapper;
+import com.jd.twitterclonebackend.mapper.TweetMapper;
 import com.jd.twitterclonebackend.repository.CommentRepository;
 import com.jd.twitterclonebackend.repository.ImageFileRepository;
-import com.jd.twitterclonebackend.repository.PostRepository;
+import com.jd.twitterclonebackend.repository.TweetRepository;
 import com.jd.twitterclonebackend.repository.UserRepository;
 import com.jd.twitterclonebackend.service.FileService;
-import com.jd.twitterclonebackend.service.HashtagService;
-import com.jd.twitterclonebackend.service.PostService;
+import com.jd.twitterclonebackend.service.TweetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -32,9 +31,9 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class PostServiceImpl implements PostService {
+public class TweetServiceImpl implements TweetService {
 
-    private final PostRepository postRepository;
+    private final TweetRepository tweetRepository;
     private final UserRepository userRepository;
     private final ImageFileRepository imageFileRepository;
     private final CommentRepository commentRepository;
@@ -43,41 +42,41 @@ public class PostServiceImpl implements PostService {
     private final FileService fileService;
 
 
-    private final PostMapper postMapper;
+    private final TweetMapper tweetMapper;
     private final CommentMapper commentMapper;
 
     @Override
-    public void addPost(MultipartFile[] files, String postRequestJson) {
+    public void addTweet(MultipartFile[] files, String tweetRequestJson) {
         // Get User who created post
         UserEntity userEntity = userDetailsService.currentLoggedUserEntity();
         // Map Post from request to post entity
-        PostEntity postEntity = postMapper.mapFromDtoToEntity(
-                postRequestJson,
+        TweetEntity tweetEntity = tweetMapper.mapFromDtoToEntity(
+                tweetRequestJson,
                 userEntity
         );
         // Save mapped post in repository
-        postRepository.save(postEntity);
+        tweetRepository.save(tweetEntity);
         // If file is not empty - upload into db
         if (Objects.nonNull(files)) {
             Arrays.stream(files)
-                    .forEach(file -> fileService.uploadImageFile(postEntity, file));
+                    .forEach(file -> fileService.uploadImageFile(tweetEntity, file));
         }
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<PostResponseDto> getAllPosts(Pageable pageable) {
+    public List<TweetResponseDto> getAllTweets(Pageable pageable) {
 
         List<Long> likedPostIdListByLoggedUser = userDetailsService.currentLoggedUserEntity()
-                .getLikedPosts()
+                .getLikedTweets()
                 .stream()
-                .map(PostEntity::getId)
+                .map(TweetEntity::getId)
                 .toList();
 
-        return postRepository
+        return tweetRepository
                 .findAllByOrderByCreatedAtDesc(pageable)
                 .stream()
-                .map(postMapper::mapFromEntityToDto)
+                .map(tweetMapper::mapFromEntityToDto)
                 .map(fileService::getAllImageFilesForPost)
                 .peek(postResponseDto -> {
                     if (likedPostIdListByLoggedUser.contains(postResponseDto.getId())) {
@@ -88,26 +87,26 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostResponseDto getPostById(Long postId) {
+    public TweetResponseDto getTweetById(Long tweetId) {
         // Find post by id or else throw exception
-        PostEntity postEntity = postRepository
-                .findById(postId)
+        TweetEntity tweetEntity = tweetRepository
+                .findById(tweetId)
                 .orElseThrow(() -> new PostException(
-                        InvalidPostEnum.POST_NOT_FOUND_WITH_ID.getMessage() + postId,
+                        InvalidPostEnum.POST_NOT_FOUND_WITH_ID.getMessage() + tweetId,
                         HttpStatus.NOT_FOUND
                 ));
         // Map Post from entity to dto, get image files and return
-        PostResponseDto postResponseDto = postMapper.mapFromEntityToDto(postEntity);
-        return fileService.getAllImageFilesForPost(postResponseDto);
+        TweetResponseDto tweetResponseDto = tweetMapper.mapFromEntityToDto(tweetEntity);
+        return fileService.getAllImageFilesForPost(tweetResponseDto);
     }
 
     @Override
     @Transactional
-    public List<PostResponseDto> getPostsByUsername(String username, Pageable pageable) {
+    public List<TweetResponseDto> getTweetsByUsername(String username, Pageable pageable) {
         List<Long> likedPostIdListByLoggedUser = userDetailsService.currentLoggedUserEntity()
-                .getLikedPosts()
+                .getLikedTweets()
                 .stream()
-                .map(PostEntity::getId)
+                .map(TweetEntity::getId)
                 .toList();
 
         // Find user in user repository
@@ -119,9 +118,9 @@ public class PostServiceImpl implements PostService {
                 ));
 
         // Find all posts by user entity, map them to dto and return
-        return postRepository.findAllByUserAndOrderByCreatedAtDesc(userEntity, pageable)
+        return tweetRepository.findAllByUserAndOrderByCreatedAtDesc(userEntity, pageable)
                 .stream()
-                .map(postMapper::mapFromEntityToDto)
+                .map(tweetMapper::mapFromEntityToDto)
                 .map(fileService::getAllImageFilesForPost)
                 .peek(postResponseDto -> {
                     if (likedPostIdListByLoggedUser.contains(postResponseDto.getId())) {
@@ -133,33 +132,33 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public void deletePostById(Long postId) {
+    public void deleteTweetById(Long tweetId) {
         // TODO: check if cascade words - should delete comments and images from repo
         // todo: liked post doesnt delete
-        imageFileRepository.deleteByPostId(postId);
-        commentRepository.deleteByPostId(postId);
+        imageFileRepository.deleteByTweetId(tweetId);
+        commentRepository.deleteByTweetId(tweetId);
 //        userRepository.deleteLikedPostsByPostId(postId);
-        postRepository.deleteById(postId);
+        tweetRepository.deleteById(tweetId);
     }
 
     @Override
     @Transactional
-    public void likePostById(Long postId) {
+    public void likeTweetById(Long tweetId) {
         UserEntity userEntity = userDetailsService.currentLoggedUserEntity();
 
-        PostEntity postEntity = postRepository
-                .findById(postId)
+        TweetEntity tweetEntity = tweetRepository
+                .findById(tweetId)
                 .orElseThrow(() -> new PostException(
-                        InvalidPostEnum.POST_NOT_FOUND_WITH_ID.getMessage() + postId,
+                        InvalidPostEnum.POST_NOT_FOUND_WITH_ID.getMessage() + tweetId,
                         HttpStatus.NOT_FOUND
                 ));
 
         // If user like post then dislike it -> remove from postLies
-        boolean doesUserLikeCurrentPost = postEntity.getUserLikes().contains(userEntity);
+        boolean doesUserLikeCurrentPost = tweetEntity.getUserLikes().contains(userEntity);
         if (doesUserLikeCurrentPost) {
-            userEntity.getLikedPosts().remove(postEntity);
+            userEntity.getLikedTweets().remove(tweetEntity);
         } else {
-            userEntity.getLikedPosts().add(postEntity);
+            userEntity.getLikedTweets().add(tweetEntity);
         }
         userRepository.save(userEntity);
 
@@ -168,7 +167,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public List<PostResponseDto> getLikedPostsByUsername(String username, Pageable pageable) {
+    public List<TweetResponseDto> getLikedTweetsByUsername(String username, Pageable pageable) {
 
         UserEntity loggedUser = userDetailsService.currentLoggedUserEntity();
 
@@ -186,25 +185,25 @@ public class PostServiceImpl implements PostService {
         );
     }
 
-    private List<PostResponseDto> getLikedPostResponseDtoListForLoggedUser(Pageable pageable,
-                                                                           UserEntity loggedUser) {
+    private List<TweetResponseDto> getLikedPostResponseDtoListForLoggedUser(Pageable pageable,
+                                                                            UserEntity loggedUser) {
 
-        return postRepository.findByUserLikes(loggedUser, pageable)
+        return tweetRepository.findByUserLikes(loggedUser, pageable)
                 .stream()
-                .map(postMapper::mapFromEntityToDto)
+                .map(tweetMapper::mapFromEntityToDto)
                 .map(fileService::getAllImageFilesForPost)
                 .peek(postResponseDto -> postResponseDto.setLikedByLoggedUser(true))
-                .sorted(Comparator.comparing(PostResponseDto::getCreatedAt).reversed())
+                .sorted(Comparator.comparing(TweetResponseDto::getCreatedAt).reversed())
                 .toList();
     }
 
-    private List<PostResponseDto> getLikedPostResponseDtoListForRegularUser(String username,
-                                                                            Pageable pageable,
-                                                                            UserEntity loggedUser) {
+    private List<TweetResponseDto> getLikedPostResponseDtoListForRegularUser(String username,
+                                                                             Pageable pageable,
+                                                                             UserEntity loggedUser) {
         List<Long> likedPostIdListByLoggedUser = loggedUser
-                .getLikedPosts()
+                .getLikedTweets()
                 .stream()
-                .map(PostEntity::getId)
+                .map(TweetEntity::getId)
                 .toList();
 
         UserEntity userEntity = userRepository
@@ -215,21 +214,21 @@ public class PostServiceImpl implements PostService {
                 ));
 
         // Find all posts liked by user entity, map them to dto and return
-        return postRepository.findByUserLikes(userEntity, pageable)
+        return tweetRepository.findByUserLikes(userEntity, pageable)
                 .stream()
-                .map(postMapper::mapFromEntityToDto)
+                .map(tweetMapper::mapFromEntityToDto)
                 .map(fileService::getAllImageFilesForPost)
                 .peek(postResponseDto -> {
                     if (likedPostIdListByLoggedUser.contains(postResponseDto.getId())) {
                         postResponseDto.setLikedByLoggedUser(true);
                     }
                 })
-                .sorted(Comparator.comparing(PostResponseDto::getCreatedAt).reversed())
+                .sorted(Comparator.comparing(TweetResponseDto::getCreatedAt).reversed())
                 .toList();
     }
 
     @Override
-    public List<RepliedPostResponseDto> getRepliedPostsWithCommentsByUsername(String username, Pageable pageable) {
+    public List<RepliedTweetResponseDto> getRepliedTweetsWithCommentsByUsername(String username, Pageable pageable) {
 
         UserEntity userEntity = userRepository
                 .findByUsername(username)
@@ -239,17 +238,17 @@ public class PostServiceImpl implements PostService {
                 ));
 
         List<Long> likedPostIdListByLoggedUser = userDetailsService.currentLoggedUserEntity()
-                .getLikedPosts()
+                .getLikedTweets()
                 .stream()
-                .map(PostEntity::getId)
+                .map(TweetEntity::getId)
                 .toList();
 
         // Limit result to last 3
         Pageable commentRequest = PageRequest.of(0, 3, Sort.Direction.DESC, "createdAt");
 
-        List<PostResponseDto> postResponseDtoList = postRepository.findPostByCommentsFromUsername(userEntity, pageable)
+        List<TweetResponseDto> tweetResponseDtoList = tweetRepository.findPostByCommentsFromUsername(userEntity, pageable)
                 .stream()
-                .map(postMapper::mapFromEntityToDto)
+                .map(tweetMapper::mapFromEntityToDto)
                 .peek(postResponseDto -> {
                     if (likedPostIdListByLoggedUser.contains(postResponseDto.getId())) {
                         postResponseDto.setLikedByLoggedUser(true);
@@ -258,7 +257,7 @@ public class PostServiceImpl implements PostService {
                 .toList();
 
         // Get all comments created by user, map them to dto, collect to list and return
-        return postResponseDtoList.stream()
+        return tweetResponseDtoList.stream()
                 .map(postResponseDto -> {
                             List<CommentResponseDto> commentResponseDtoList = commentRepository
                                     .findAllByUserAndOrderByCreatedAtDesc(
@@ -269,7 +268,7 @@ public class PostServiceImpl implements PostService {
                                     .stream()
                                     .map(commentMapper::mapFromEntityToDto)
                                     .toList();
-                            return postMapper.mapToRepliedPostResponse(
+                            return tweetMapper.mapToRepliedTweetResponse(
                                     postResponseDto,
                                     commentResponseDtoList
                             );
