@@ -1,10 +1,11 @@
 package com.jd.twitterclonebackend.service.impl;
 
 import com.jd.twitterclonebackend.dto.response.CommentResponseDto;
-import com.jd.twitterclonebackend.dto.response.TweetResponseDto;
 import com.jd.twitterclonebackend.dto.response.RepliedTweetResponseDto;
+import com.jd.twitterclonebackend.dto.response.TweetResponseDto;
 import com.jd.twitterclonebackend.entity.TweetEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
+import com.jd.twitterclonebackend.entity.enums.NotificationType;
 import com.jd.twitterclonebackend.exception.TweetException;
 import com.jd.twitterclonebackend.exception.UserException;
 import com.jd.twitterclonebackend.exception.enums.InvalidTweetEnum;
@@ -16,6 +17,7 @@ import com.jd.twitterclonebackend.repository.ImageFileRepository;
 import com.jd.twitterclonebackend.repository.TweetRepository;
 import com.jd.twitterclonebackend.repository.UserRepository;
 import com.jd.twitterclonebackend.service.FileService;
+import com.jd.twitterclonebackend.service.NotificationService;
 import com.jd.twitterclonebackend.service.TweetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -26,7 +28,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,6 +45,7 @@ public class TweetServiceImpl implements TweetService {
 
     private final UserDetailsServiceImpl userDetailsService;
     private final FileService fileService;
+    private final NotificationService notificationService;
 
 
     private final TweetMapper tweetMapper;
@@ -48,11 +54,11 @@ public class TweetServiceImpl implements TweetService {
     @Override
     public void addTweet(MultipartFile[] files, String tweetRequestJson) {
         // Get User who created post
-        UserEntity userEntity = userDetailsService.currentLoggedUserEntity();
+        UserEntity loggedUser = userDetailsService.currentLoggedUserEntity();
         // Map Post from request to post entity
         TweetEntity tweetEntity = tweetMapper.mapFromDtoToEntity(
                 tweetRequestJson,
-                userEntity
+                loggedUser
         );
         // Save mapped post in repository
         tweetRepository.save(tweetEntity);
@@ -61,6 +67,12 @@ public class TweetServiceImpl implements TweetService {
             Arrays.stream(files)
                     .forEach(file -> fileService.uploadImageFile(tweetEntity, file));
         }
+        // Send notification to user followers
+        loggedUser.getFollowers().forEach(followerEntity -> notificationService.notifyFollower(
+                followerEntity,
+                NotificationType.TWEET,
+                tweetEntity.getId()
+        ));
     }
 
     @Override
@@ -144,7 +156,7 @@ public class TweetServiceImpl implements TweetService {
     @Override
     @Transactional
     public void likeTweetById(Long tweetId) {
-        UserEntity userEntity = userDetailsService.currentLoggedUserEntity();
+        UserEntity loggedUser = userDetailsService.currentLoggedUserEntity();
 
         TweetEntity tweetEntity = tweetRepository
                 .findById(tweetId)
@@ -154,15 +166,20 @@ public class TweetServiceImpl implements TweetService {
                 ));
 
         // If user like post then dislike it -> remove from postLies
-        boolean doesUserLikeCurrentPost = tweetEntity.getUserLikes().contains(userEntity);
+        boolean doesUserLikeCurrentPost = tweetEntity.getUserLikes().contains(loggedUser);
         if (doesUserLikeCurrentPost) {
-            userEntity.getLikedTweets().remove(tweetEntity);
+            loggedUser.getLikedTweets().remove(tweetEntity);
         } else {
-            userEntity.getLikedTweets().add(tweetEntity);
+            loggedUser.getLikedTweets().add(tweetEntity);
+            // Send notification to tweet publisher
+            notificationService.notifyUser(
+                    tweetEntity.getUser(),
+                    NotificationType.LIKE,
+                    tweetEntity.getId()
+            );
         }
-        userRepository.save(userEntity);
 
-        // todo: send notification to post.getUserId() that logged user likes his post
+        userRepository.save(loggedUser);
     }
 
     @Override

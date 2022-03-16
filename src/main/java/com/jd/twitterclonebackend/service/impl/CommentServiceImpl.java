@@ -5,6 +5,7 @@ import com.jd.twitterclonebackend.dto.response.CommentResponseDto;
 import com.jd.twitterclonebackend.entity.CommentEntity;
 import com.jd.twitterclonebackend.entity.TweetEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
+import com.jd.twitterclonebackend.entity.enums.NotificationType;
 import com.jd.twitterclonebackend.exception.CommentException;
 import com.jd.twitterclonebackend.exception.TweetException;
 import com.jd.twitterclonebackend.exception.UserException;
@@ -16,6 +17,7 @@ import com.jd.twitterclonebackend.repository.CommentRepository;
 import com.jd.twitterclonebackend.repository.TweetRepository;
 import com.jd.twitterclonebackend.repository.UserRepository;
 import com.jd.twitterclonebackend.service.CommentService;
+import com.jd.twitterclonebackend.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -34,6 +36,7 @@ public class CommentServiceImpl implements CommentService {
     private final UserRepository userRepository;
 
     private final UserDetailsServiceImpl userDetailsService;
+    private final NotificationService notificationService;
 
     private final CommentMapper commentMapper;
 
@@ -60,8 +63,12 @@ public class CommentServiceImpl implements CommentService {
         // Increment no of comments in post
         tweetEntity.setCommentNo(tweetEntity.getCommentNo() + 1);
         tweetRepository.save(tweetEntity);
-
-        // TODO: notification for user who created post
+        // Send notification to tweet publisher
+        notificationService.notifyUser(
+                tweetEntity.getUser(),
+                NotificationType.COMMENT,
+                tweetEntity.getId()
+        );
     }
 
     @Override

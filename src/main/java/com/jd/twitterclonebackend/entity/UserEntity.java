@@ -141,6 +141,17 @@ public class UserEntity implements Serializable {
     ) // many users like many posts
     private List<TweetEntity> likedTweets;
 
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            mappedBy = "subscriber"
+    )
+    private List<NotificationEntity> publishedNotifications;
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            mappedBy = "publisher"
+    )
+    private List<NotificationEntity> subscribedNotifications;
+
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
