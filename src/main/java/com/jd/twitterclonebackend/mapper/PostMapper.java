@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -47,7 +48,6 @@ public class PostMapper {
     }
 
 
-
     public PostResponseDto mapFromEntityToDto(PostEntity postEntity) {
 
         if (Objects.isNull(postEntity)) {
@@ -66,6 +66,11 @@ public class PostMapper {
                 .userProfilePicture(postEntity.getUser().getProfilePicture())
                 .likedByLoggedUser(false)
                 .fileContent(Collections.emptyList())
+                .hashtags(postEntity.getHashtags()
+                        .stream()
+                        .map(HashtagEntity::getValue)
+                        .collect(Collectors.toList())
+                )
                 .build();
     }
 
