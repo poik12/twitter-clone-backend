@@ -6,10 +6,10 @@ import com.jd.twitterclonebackend.entity.CommentEntity;
 import com.jd.twitterclonebackend.entity.TweetEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.exception.CommentException;
-import com.jd.twitterclonebackend.exception.PostException;
+import com.jd.twitterclonebackend.exception.TweetException;
 import com.jd.twitterclonebackend.exception.UserException;
 import com.jd.twitterclonebackend.exception.enums.InvalidCommentEnum;
-import com.jd.twitterclonebackend.exception.enums.InvalidPostEnum;
+import com.jd.twitterclonebackend.exception.enums.InvalidTweetEnum;
 import com.jd.twitterclonebackend.exception.enums.InvalidUserEnum;
 import com.jd.twitterclonebackend.mapper.CommentMapper;
 import com.jd.twitterclonebackend.repository.CommentRepository;
@@ -45,8 +45,8 @@ public class CommentServiceImpl implements CommentService {
         // Find post for comment
         TweetEntity tweetEntity = tweetRepository
                 .findById(commentRequestDto.getTweetId())
-                .orElseThrow(() -> new PostException(
-                        InvalidPostEnum.POST_FOR_COMMENT_NOT_FOUND.getMessage() + commentRequestDto.getTweetId(),
+                .orElseThrow(() -> new TweetException(
+                        InvalidTweetEnum.TWEET_FOR_COMMENT_NOT_FOUND.getMessage() + commentRequestDto.getTweetId(),
                         HttpStatus.NOT_FOUND
                 ));
         // Map Comment from comment request Dto to comment entity
@@ -69,8 +69,8 @@ public class CommentServiceImpl implements CommentService {
         // Find post with comments in post repository
         TweetEntity tweetEntity = tweetRepository
                 .findById(tweetId)
-                .orElseThrow(() -> new PostException(
-                        InvalidPostEnum.POST_FOR_COMMENT_NOT_FOUND.getMessage() + tweetId,
+                .orElseThrow(() -> new TweetException(
+                        InvalidTweetEnum.TWEET_FOR_COMMENT_NOT_FOUND.getMessage() + tweetId,
                         HttpStatus.NOT_FOUND
                 ));
         // Get all comments for found post, map them to DTO and collect to list

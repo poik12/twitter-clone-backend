@@ -3,7 +3,7 @@ package com.jd.twitterclonebackend.controller.handler;
 import com.jd.twitterclonebackend.controller.CommentController;
 import com.jd.twitterclonebackend.controller.handler.dto.ExceptionMessageDto;
 import com.jd.twitterclonebackend.exception.CommentException;
-import com.jd.twitterclonebackend.exception.PostException;
+import com.jd.twitterclonebackend.exception.TweetException;
 import com.jd.twitterclonebackend.exception.UserException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -27,11 +27,11 @@ public class CommentControllerExceptionHandler {
                 .build();
     }
 
-    @ExceptionHandler(value = PostException.class)
-    public ExceptionMessageDto handleException(PostException postException) {
+    @ExceptionHandler(value = TweetException.class)
+    public ExceptionMessageDto handleException(TweetException tweetException) {
         return ExceptionMessageDto.builder()
-                .status(postException.getStatus())
-                .message(postException.getMessage())
+                .status(tweetException.getStatus())
+                .message(tweetException.getMessage())
                 .build();
     }
 

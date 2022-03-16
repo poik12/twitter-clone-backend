@@ -2,7 +2,7 @@ package com.jd.twitterclonebackend.integration.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jd.twitterclonebackend.controller.TweetController;
-import com.jd.twitterclonebackend.controller.handler.PostControllerExceptionHandler;
+import com.jd.twitterclonebackend.controller.handler.TweetControllerExceptionHandler;
 import com.jd.twitterclonebackend.dto.request.TweetRequestDto;
 import com.jd.twitterclonebackend.dto.response.TweetResponseDto;
 import com.jd.twitterclonebackend.integration.IntegrationTestInitData;
@@ -47,7 +47,7 @@ class TweetControllerTest extends IntegrationTestInitData {
     @BeforeEach
     public void setup() {
         mockMvc = MockMvcBuilders.standaloneSetup(tweetController)
-                .setControllerAdvice(new PostControllerExceptionHandler())
+                .setControllerAdvice(new TweetControllerExceptionHandler())
                 .build();
     }
 

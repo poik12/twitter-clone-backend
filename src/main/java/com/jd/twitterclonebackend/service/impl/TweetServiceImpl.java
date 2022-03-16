@@ -5,9 +5,9 @@ import com.jd.twitterclonebackend.dto.response.TweetResponseDto;
 import com.jd.twitterclonebackend.dto.response.RepliedTweetResponseDto;
 import com.jd.twitterclonebackend.entity.TweetEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
-import com.jd.twitterclonebackend.exception.PostException;
+import com.jd.twitterclonebackend.exception.TweetException;
 import com.jd.twitterclonebackend.exception.UserException;
-import com.jd.twitterclonebackend.exception.enums.InvalidPostEnum;
+import com.jd.twitterclonebackend.exception.enums.InvalidTweetEnum;
 import com.jd.twitterclonebackend.exception.enums.InvalidUserEnum;
 import com.jd.twitterclonebackend.mapper.CommentMapper;
 import com.jd.twitterclonebackend.mapper.TweetMapper;
@@ -91,8 +91,8 @@ public class TweetServiceImpl implements TweetService {
         // Find post by id or else throw exception
         TweetEntity tweetEntity = tweetRepository
                 .findById(tweetId)
-                .orElseThrow(() -> new PostException(
-                        InvalidPostEnum.POST_NOT_FOUND_WITH_ID.getMessage() + tweetId,
+                .orElseThrow(() -> new TweetException(
+                        InvalidTweetEnum.TWEET_NOT_FOUND_WITH_ID.getMessage() + tweetId,
                         HttpStatus.NOT_FOUND
                 ));
         // Map Post from entity to dto, get image files and return
@@ -148,8 +148,8 @@ public class TweetServiceImpl implements TweetService {
 
         TweetEntity tweetEntity = tweetRepository
                 .findById(tweetId)
-                .orElseThrow(() -> new PostException(
-                        InvalidPostEnum.POST_NOT_FOUND_WITH_ID.getMessage() + tweetId,
+                .orElseThrow(() -> new TweetException(
+                        InvalidTweetEnum.TWEET_NOT_FOUND_WITH_ID.getMessage() + tweetId,
                         HttpStatus.NOT_FOUND
                 ));
 
