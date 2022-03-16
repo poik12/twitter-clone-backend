@@ -3,20 +3,25 @@ package com.jd.twitterclonebackend.mapper;
 import com.github.marlonlom.utilities.timeago.TimeAgo;
 import com.jd.twitterclonebackend.dto.response.CommentResponseDto;
 import com.jd.twitterclonebackend.dto.response.RepliedPostResponseDto;
+import com.jd.twitterclonebackend.entity.HashtagEntity;
 import com.jd.twitterclonebackend.entity.PostEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.dto.request.PostRequestDto;
 import com.jd.twitterclonebackend.dto.response.PostResponseDto;
+import com.jd.twitterclonebackend.service.HashtagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Component
 @RequiredArgsConstructor
 public class PostMapper {
 
     private final JsonMapper jsonMapper;
+    private final HashtagService hashtagService;
 
     public PostEntity mapFromDtoToEntity(String postRequestJson, UserEntity userEntity) {
         // Map Post request from Json to Dto
@@ -29,13 +34,19 @@ public class PostMapper {
             return null;
         }
 
+        // Check if post contains hashtags
+        List<HashtagEntity> hashtagEntityList = hashtagService.checkHashTags(postRequestDto.getDescription());
+
         return PostEntity.builder()
                 .description(postRequestDto.getDescription())
                 .user(userEntity)
                 .comments(Collections.emptyList())
                 .commentNo(0L)
+                .hashtags(hashtagEntityList)
                 .build();
     }
+
+
 
     public PostResponseDto mapFromEntityToDto(PostEntity postEntity) {
 

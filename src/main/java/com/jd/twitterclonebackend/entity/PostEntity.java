@@ -57,15 +57,24 @@ public class PostEntity implements Serializable {
     )
     private List<UserEntity> userLikes = new ArrayList<>();
 
+    @ManyToMany
+    @JoinTable(
+            name = "posts_hashtags",
+            joinColumns = @JoinColumn(
+                    name = "post_id",
+                    referencedColumnName = "id"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "hashtag_id",
+                    referencedColumnName = "id"
+            )
+    ) // many posts have many hashtags
+    private List<HashtagEntity> hashtags = new ArrayList<>();
+
     @CreationTimestamp
     private Date createdAt;
 
     @UpdateTimestamp
     private Date updatedAt;
-
-    // One post can have multiple images
-//    @OneToMany(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "id", referencedColumnName = "id")
-//    private List<ImageFileEntity> images = new ArrayList<>();
 
 }

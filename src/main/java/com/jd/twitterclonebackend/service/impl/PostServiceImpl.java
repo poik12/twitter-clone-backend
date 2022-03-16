@@ -16,6 +16,7 @@ import com.jd.twitterclonebackend.repository.ImageFileRepository;
 import com.jd.twitterclonebackend.repository.PostRepository;
 import com.jd.twitterclonebackend.repository.UserRepository;
 import com.jd.twitterclonebackend.service.FileService;
+import com.jd.twitterclonebackend.service.HashtagService;
 import com.jd.twitterclonebackend.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -41,6 +42,7 @@ public class PostServiceImpl implements PostService {
     private final UserDetailsServiceImpl userDetailsService;
     private final FileService fileService;
 
+
     private final PostMapper postMapper;
     private final CommentMapper commentMapper;
 
@@ -56,7 +58,6 @@ public class PostServiceImpl implements PostService {
         // Save mapped post in repository
         postRepository.save(postEntity);
         // If file is not empty - upload into db
-
         if (Objects.nonNull(files)) {
             Arrays.stream(files)
                     .forEach(file -> fileService.uploadImageFile(postEntity, file));
@@ -257,15 +258,23 @@ public class PostServiceImpl implements PostService {
                 .toList();
 
         // Get all comments created by user, map them to dto, collect to list and return
-        return postResponseDtoList.stream().map(postResponseDto -> {
-            List<CommentResponseDto> commentResponseDtoList = commentRepository.findAllByUserAndOrderByCreatedAtDesc(userEntity,
-                            postResponseDto.getId(),
-                            commentRequest)
-                    .stream()
-                    .map(commentMapper::mapFromEntityToDto)
-                    .toList();
-            return postMapper.mapToRepliedPostResponse(postResponseDto, commentResponseDtoList);
-        }).toList();
+        return postResponseDtoList.stream()
+                .map(postResponseDto -> {
+                            List<CommentResponseDto> commentResponseDtoList = commentRepository
+                                    .findAllByUserAndOrderByCreatedAtDesc(
+                                            userEntity,
+                                            postResponseDto.getId(),
+                                            commentRequest
+                                    )
+                                    .stream()
+                                    .map(commentMapper::mapFromEntityToDto)
+                                    .toList();
+                            return postMapper.mapToRepliedPostResponse(
+                                    postResponseDto,
+                                    commentResponseDtoList
+                            );
+                        }
+                ).toList();
 
 
     }
