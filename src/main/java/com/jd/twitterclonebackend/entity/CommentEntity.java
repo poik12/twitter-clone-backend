@@ -34,14 +34,12 @@ public class CommentEntity implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
-            name = "post_id",
+            name = "tweet_id",
             referencedColumnName = "id"
     )
-    private PostEntity post;
+    private TweetEntity tweet;
 
     @CreationTimestamp
     private Instant createdAt;
 
-//    @OneToMany
-//    private ImageFileEntity image;
 }

@@ -3,12 +3,11 @@ package com.jd.twitterclonebackend.unit.mapper;
 import com.jd.twitterclonebackend.dto.request.RegisterRequestDto;
 import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.mapper.AuthMapper;
-import com.jd.twitterclonebackend.mapper.mapstruct.NewAuthMapper;
-import com.jd.twitterclonebackend.mapper.mapstruct.NewAuthMapperImpl;
 import com.jd.twitterclonebackend.service.FileService;
 import com.jd.twitterclonebackend.unit.UnitTestInitData;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.assertAll;

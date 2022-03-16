@@ -1,12 +1,12 @@
 package com.jd.twitterclonebackend.integration.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jd.twitterclonebackend.controller.PostController;
+import com.jd.twitterclonebackend.controller.TweetController;
 import com.jd.twitterclonebackend.controller.handler.PostControllerExceptionHandler;
-import com.jd.twitterclonebackend.dto.request.PostRequestDto;
-import com.jd.twitterclonebackend.dto.response.PostResponseDto;
+import com.jd.twitterclonebackend.dto.request.TweetRequestDto;
+import com.jd.twitterclonebackend.dto.response.TweetResponseDto;
 import com.jd.twitterclonebackend.integration.IntegrationTestInitData;
-import com.jd.twitterclonebackend.service.PostService;
+import com.jd.twitterclonebackend.service.TweetService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,21 +32,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
-class PostControllerTest extends IntegrationTestInitData {
+class TweetControllerTest extends IntegrationTestInitData {
 
     public MockMvc mockMvc;
 
     @Autowired
-    public PostController postController;
+    public TweetController tweetController;
 
     @MockBean
-    public PostService postService;
+    public TweetService tweetService;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
     public void setup() {
-        mockMvc = MockMvcBuilders.standaloneSetup(postController)
+        mockMvc = MockMvcBuilders.standaloneSetup(tweetController)
                 .setControllerAdvice(new PostControllerExceptionHandler())
                 .build();
     }
@@ -54,8 +54,8 @@ class PostControllerTest extends IntegrationTestInitData {
     @Test
     void should_addPostRequestWithFile() throws Exception {
         // given
-        PostRequestDto postRequestDto = initPostRequestDto();
-        String postRequestJson = initRequestDtoAsJson(postRequestDto);
+        TweetRequestDto tweetRequestDto = initPostRequestDto();
+        String postRequestJson = initRequestDtoAsJson(tweetRequestDto);
         MultipartFile file = new MockMultipartFile("file", "file".getBytes());
 
 
@@ -81,15 +81,15 @@ class PostControllerTest extends IntegrationTestInitData {
         );
 
 
-        PostResponseDto postResponseDto = initPostResponseDto();
-        List<PostResponseDto> postResponseDtoList = List.of(
-                postResponseDto,
-                postResponseDto,
-                postResponseDto
+        TweetResponseDto tweetResponseDto = initPostResponseDto();
+        List<TweetResponseDto> tweetResponseDtoList = List.of(
+                tweetResponseDto,
+                tweetResponseDto,
+                tweetResponseDto
         );
 
         // when then
-        when(postService.getAllPosts(pageable)).thenReturn(postResponseDtoList);
+        when(tweetService.getAllTweets(pageable)).thenReturn(tweetResponseDtoList);
 
         mockMvc.perform(
                         get("/posts")
@@ -98,26 +98,26 @@ class PostControllerTest extends IntegrationTestInitData {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(3)))
-                .andExpect(jsonPath("$[0].id").value(postResponseDto.getId()))
-                .andExpect(jsonPath("$[0].name").value(postResponseDto.getName()));
+                .andExpect(jsonPath("$[0].id").value(tweetResponseDto.getId()))
+                .andExpect(jsonPath("$[0].name").value(tweetResponseDto.getName()));
     }
 
     @Test
     void should_getPostResponseDto_byPostId() throws Exception {
         // given
-        PostResponseDto postResponseDto = initPostResponseDto();
+        TweetResponseDto tweetResponseDto = initPostResponseDto();
 
         // when then
-        when(postService.getPostById(any())).thenReturn(postResponseDto);
+        when(tweetService.getTweetById(any())).thenReturn(tweetResponseDto);
 
         mockMvc.perform(
-                        get("/posts/{postId}", postResponseDto.getId())
+                        get("/posts/{postId}", tweetResponseDto.getId())
                                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(postResponseDto.getId()))
-                .andExpect(jsonPath("$.name").value(postResponseDto.getName()));
+                .andExpect(jsonPath("$.id").value(tweetResponseDto.getId()))
+                .andExpect(jsonPath("$.name").value(tweetResponseDto.getName()));
 
     }
 
@@ -131,36 +131,36 @@ class PostControllerTest extends IntegrationTestInitData {
                 "createdAt"
         );
 
-        PostResponseDto postResponseDto = initPostResponseDto();
+        TweetResponseDto tweetResponseDto = initPostResponseDto();
 
-        List<PostResponseDto> postResponseDtoList = List.of(
-                postResponseDto,
-                postResponseDto,
-                postResponseDto
+        List<TweetResponseDto> tweetResponseDtoList = List.of(
+                tweetResponseDto,
+                tweetResponseDto,
+                tweetResponseDto
         );
 
         // when then
-        when(postService.getPostsByUsername(any(), pageable)).thenReturn(postResponseDtoList);
+        when(tweetService.getTweetsByUsername(any(), pageable)).thenReturn(tweetResponseDtoList);
 
         mockMvc.perform(
-                        get("/posts/by-user/{username}", postResponseDto.getUsername())
+                        get("/posts/by-user/{username}", tweetResponseDto.getUsername())
                                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(3)))
-                .andExpect(jsonPath("$[0].id").value(postResponseDto.getId()))
-                .andExpect(jsonPath("$[0].name").value(postResponseDto.getName()));
+                .andExpect(jsonPath("$[0].id").value(tweetResponseDto.getId()))
+                .andExpect(jsonPath("$[0].name").value(tweetResponseDto.getName()));
     }
 
     @Test
     void should_deletePost_byId() throws Exception {
         // given
-        PostResponseDto postResponseDto = initPostResponseDto();
+        TweetResponseDto tweetResponseDto = initPostResponseDto();
 
         // when then
         mockMvc.perform(
-                        delete("/posts/{postId}", postResponseDto.getId())
+                        delete("/posts/{postId}", tweetResponseDto.getId())
                                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 )
                 .andDo(print())

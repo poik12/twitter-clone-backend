@@ -1,5 +1,6 @@
 package com.jd.twitterclonebackend.service.impl;
 
+import com.jd.twitterclonebackend.config.security.jwt.RefreshTokenProvider;
 import com.jd.twitterclonebackend.dto.request.RefreshTokenRequestDto;
 import com.jd.twitterclonebackend.dto.request.RegisterRequestDto;
 import com.jd.twitterclonebackend.dto.response.AuthResponseDto;
@@ -10,11 +11,9 @@ import com.jd.twitterclonebackend.entity.VerificationTokenEntity;
 import com.jd.twitterclonebackend.exception.UserException;
 import com.jd.twitterclonebackend.exception.enums.InvalidUserEnum;
 import com.jd.twitterclonebackend.mapper.AuthMapper;
-import com.jd.twitterclonebackend.mapper.mapstruct.NewAuthMapper;
 import com.jd.twitterclonebackend.repository.RefreshTokenRepository;
 import com.jd.twitterclonebackend.repository.UserRepository;
 import com.jd.twitterclonebackend.repository.VerificationTokenRepository;
-import com.jd.twitterclonebackend.config.security.jwt.RefreshTokenProvider;
 import com.jd.twitterclonebackend.service.AuthService;
 import com.jd.twitterclonebackend.service.MailService;
 import com.jd.twitterclonebackend.service.VerificationTokenService;

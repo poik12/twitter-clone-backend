@@ -1,13 +1,13 @@
 package com.jd.twitterclonebackend.controller.handler;
 
-import com.jd.twitterclonebackend.controller.PostController;
+import com.jd.twitterclonebackend.controller.TweetController;
 import com.jd.twitterclonebackend.controller.handler.dto.ExceptionMessageDto;
 import com.jd.twitterclonebackend.exception.PostException;
 import com.jd.twitterclonebackend.exception.UserException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@RestControllerAdvice(assignableTypes = PostController.class)
+@RestControllerAdvice(assignableTypes = TweetController.class)
 public class PostControllerExceptionHandler {
 
     @ExceptionHandler(value = UserException.class)

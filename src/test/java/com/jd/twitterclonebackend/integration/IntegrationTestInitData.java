@@ -9,16 +9,16 @@ import com.jd.twitterclonebackend.dto.request.CommentRequestDto;
 import com.jd.twitterclonebackend.dto.request.RegisterRequestDto;
 import com.jd.twitterclonebackend.dto.request.UserDetailsRequestDto;
 import com.jd.twitterclonebackend.dto.response.CommentResponseDto;
-import com.jd.twitterclonebackend.dto.response.PostResponseDto;
+import com.jd.twitterclonebackend.dto.response.TweetResponseDto;
 import com.jd.twitterclonebackend.dto.response.UserResponseDto;
-import com.jd.twitterclonebackend.entity.PostEntity;
+import com.jd.twitterclonebackend.entity.TweetEntity;
 import com.jd.twitterclonebackend.entity.RefreshTokenEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
-import com.jd.twitterclonebackend.dto.request.PostRequestDto;
+import com.jd.twitterclonebackend.dto.request.TweetRequestDto;
 import com.jd.twitterclonebackend.entity.VerificationTokenEntity;
 import com.jd.twitterclonebackend.entity.enums.UserRole;
 import com.jd.twitterclonebackend.mapper.AuthMapper;
-import com.jd.twitterclonebackend.mapper.PostMapper;
+import com.jd.twitterclonebackend.mapper.TweetMapper;
 import com.jd.twitterclonebackend.repository.*;
 import com.jd.twitterclonebackend.config.security.jwt.RefreshTokenProvider;
 import com.jd.twitterclonebackend.service.*;
@@ -53,7 +53,7 @@ public abstract class IntegrationTestInitData {
     @Autowired
     protected FileService fileService;
     @Autowired
-    protected PostService postService;
+    protected TweetService tweetService;
 
     @Autowired
     protected VerificationTokenService verificationTokenService;
@@ -63,12 +63,12 @@ public abstract class IntegrationTestInitData {
     protected RefreshTokenProvider refreshTokenProvider;
 
     @Autowired
-    protected PostMapper postMapper;
+    protected TweetMapper tweetMapper;
     @Autowired
     protected AuthMapper authMapper;
 
     @Autowired
-    protected PostRepository postRepository;
+    protected TweetRepository tweetRepository;
     @Autowired
     protected UserRepository userRepository;
     @Autowired
@@ -282,27 +282,27 @@ public abstract class IntegrationTestInitData {
 
     }
 
-    protected PostRequestDto initPostRequestDto() {
-            return PostRequestDto.builder()
+    protected TweetRequestDto initPostRequestDto() {
+            return TweetRequestDto.builder()
                 .description(POST_DESCRIPTION)
                 .build();
     }
 
-    protected PostResponseDto initPostResponseDto() {
-        return PostResponseDto.builder()
+    protected TweetResponseDto initPostResponseDto() {
+        return TweetResponseDto.builder()
                 .id(1L)
                 .name(USER_PRIME_NAME)
                 .username(USER_PRIME_USERNAME)
                 .description(USER_PRIME_TEST_DESCRIPTION)
                 .commentNo(0L)
                 .createdAt(Date.from(Instant.now()))
-                .postTimeDuration(null)
+                .tweetTimeDuration(null)
                 .fileContent(null)
                 .userProfilePicture(null)
                 .build();
     }
 
-    protected List<PostEntity> initPostsInDatabase() {
+    protected List<TweetEntity> initPostsInDatabase() {
         initCurrentLoggedUser();
         String postRequestAsJson = initRequestDtoAsJson(initPostRequestDto());
 //        MultipartFile[] file = initMultiPartFile().toArray(new MultipartFile[0]);
@@ -311,13 +311,13 @@ public abstract class IntegrationTestInitData {
 //        postService.addPost(file, postRequestAsJson);
 //        postService.addPost(file, postRequestAsJson);
 
-        return postRepository.findAll();
+        return tweetRepository.findAll();
     }
 
     protected CommentRequestDto initCommentRequestDto() {
         return CommentRequestDto.builder()
                 .username(USER_PRIME_USERNAME)
-                .postId(1L)
+                .tweetId(1L)
                 .text(COMMENT_TEXT)
                 .build();
     }
@@ -327,7 +327,7 @@ public abstract class IntegrationTestInitData {
                 .username(USER_PRIME_USERNAME)
                 .name(USER_PRIME_NAME)
                 .profileImage(null)
-                .postId(1L)
+                .tweetId(1L)
                 .timeOfCreation(null)
                 .text(COMMENT_TEXT)
                 .build();

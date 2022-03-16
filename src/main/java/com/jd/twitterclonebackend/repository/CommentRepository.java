@@ -1,7 +1,7 @@
 package com.jd.twitterclonebackend.repository;
 
 import com.jd.twitterclonebackend.entity.CommentEntity;
-import com.jd.twitterclonebackend.entity.PostEntity;
+import com.jd.twitterclonebackend.entity.TweetEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,17 +14,19 @@ import java.util.List;
 @Repository
 public interface CommentRepository extends JpaRepository<CommentEntity, Long> {
 
-    void deleteByPostId(Long postId);
+    void deleteByTweetId(Long tweetId);
 
-    @Query(value = "FROM CommentEntity WHERE post = :postEntity ORDER BY createdAt DESC")
-    List<CommentEntity> findAllByPostAndOrderByCreatedAtDesc(@Param("postEntity") PostEntity postEntity,
+    @Query(value = "SELECT c FROM CommentEntity c " +
+            "WHERE c.tweet = :tweetEntity " +
+            "ORDER BY c.createdAt DESC")
+    List<CommentEntity> findAllByPostAndOrderByCreatedAtDesc(@Param("tweetEntity") TweetEntity tweetEntity,
                                                              Pageable pageable);
 
     @Query(value = "SELECT c FROM CommentEntity c " +
-            "WHERE c.user = :userEntity AND c.post.id = :postId " +
+            "WHERE c.user = :userEntity AND c.tweet.id = :tweetId " +
             "ORDER BY c.createdAt DESC")
     List<CommentEntity> findAllByUserAndOrderByCreatedAtDesc(@Param("userEntity") UserEntity userEntity,
-                                                             @Param("postId") Long postId,
+                                                             @Param("tweetId") Long tweetId,
                                                              Pageable pageable);
 
     void deleteAllByUser(UserEntity userEntity);

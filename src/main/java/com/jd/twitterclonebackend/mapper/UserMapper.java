@@ -12,7 +12,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.ZoneOffset;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 
 @Component
@@ -24,8 +26,9 @@ public class UserMapper {
     private final PasswordEncoder passwordEncoder;
 
     private final JsonMapper jsonMapper;
+    private final FollowerMapper followerMapper;
 
-    public UserResponseDto mapFromEntityToUserDto(UserEntity userEntity) {
+    public UserResponseDto mapFromEntityToDto(UserEntity userEntity) {
 
         if (Objects.isNull(userEntity)) {
             return null;
@@ -36,45 +39,23 @@ public class UserMapper {
                 .name(userEntity.getName())
                 .username(userEntity.getUsername())
                 .createdAt(getDateOfCreation(userEntity.getCreatedAt()))
-                .tweetNo(userEntity.getPosts().size())
-                .followingNo(getUserFollowings(userEntity))
-                .followerNo(getUserFollowers(userEntity))
+                .tweetNo(userEntity.getTweets().size())
+                .followingNo(followerMapper.getUserFollowings(userEntity))
+                .followerNo(followerMapper.getUserFollowers(userEntity))
                 .userProfilePicture(userEntity.getProfilePicture())
                 .userBackgroundPicture(userEntity.getBackgroundPicture())
                 .description(userEntity.getDescription())
-                .followers(userEntity.getFollowers()
-                        .stream()
-                        .map(followerEntity -> mapFromEntityToFollowerDto(followerEntity.getFrom()))
-                        .toList()
-                )
-                .following(userEntity.getFollowing()
-                        .stream()
-                        .map(followingEntity -> mapFromEntityToFollowerDto(followingEntity.getTo()))
-                        .toList()
-                )
+                .followers(getFollowerDtoList(userEntity))
+                .following(getFollowingDtoList(userEntity))
                 .build();
     }
 
-    private String getDateOfCreation(Date createdAt) {
-        // Get month and year from Instant created at
-        String month = createdAt.toInstant().atZone(ZoneOffset.UTC).getMonth().toString().toLowerCase();
-        int year = createdAt.toInstant().atZone(ZoneOffset.UTC).getYear();
-        // Return string eg. "August 2014"
-        return month + " " + year;
-    }
 
-    private long getUserFollowers(UserEntity userEntity) {
-        return userEntity.getFollowers().size();
-    }
 
-    private long getUserFollowings(UserEntity userEntity) {
-        return userEntity.getFollowing().size();
-    }
-
-    public UserEntity mapFromUserDtoToEntity(UserEntity userEntity,
-                                             String userDetailsRequestJson,
-                                             MultipartFile profileImageFile,
-                                             MultipartFile backgroundImageFile) {
+    public UserEntity mapFromDtoToEntity(UserEntity userEntity,
+                                         String userDetailsRequestJson,
+                                         MultipartFile profileImageFile,
+                                         MultipartFile backgroundImageFile) {
 
         // Map User Details from Json to Dto
         UserDetailsRequestDto userDetailsRequestDto = jsonMapper.mapFromJsonToDto(
@@ -103,28 +84,28 @@ public class UserMapper {
         if (Objects.nonNull(backgroundImageFile)) {
             userEntity.setBackgroundPicture(fileService.convertFileToByteArray(backgroundImageFile));
         }
-
         return userEntity;
     }
 
+    private String getDateOfCreation(Date createdAt) {
+        // Get month and year from Instant created at
+        String month = createdAt.toInstant().atZone(ZoneOffset.UTC).getMonth().toString().toLowerCase();
+        int year = createdAt.toInstant().atZone(ZoneOffset.UTC).getYear();
+        // Return string eg. "August 2014"
+        return month + " " + year;
+    }
 
-    private FollowerResponseDto mapFromEntityToFollowerDto(UserEntity userEntity) {
+    private List<FollowerResponseDto> getFollowerDtoList(UserEntity userEntity) {
+        return userEntity.getFollowers()
+                .stream()
+                .map(followerEntity -> followerMapper.mapFromEntityToDto(followerEntity.getFrom()))
+                .collect(Collectors.toList());
+    }
 
-        if (Objects.isNull(userEntity)) {
-            return null;
-        }
-
-        return FollowerResponseDto.builder()
-                .id(userEntity.getId())
-                .name(userEntity.getName())
-                .username(userEntity.getUsername())
-                .emailAddress(userEntity.getEmailAddress())
-                .userProfilePicture(userEntity.getProfilePicture())
-                .userBackgroundPicture(userEntity.getBackgroundPicture())
-                .tweetNo(userEntity.getPosts().size())
-                .followingNo(getUserFollowings(userEntity))
-                .followerNo(getUserFollowers(userEntity))
-                .build();
-
+    private List<FollowerResponseDto> getFollowingDtoList(UserEntity userEntity) {
+        return userEntity.getFollowing()
+                .stream()
+                .map(followingEntity ->  followerMapper.mapFromEntityToDto(followingEntity.getTo()))
+                .collect(Collectors.toList());
     }
 }

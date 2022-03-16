@@ -1,25 +1,11 @@
 package com.jd.twitterclonebackend.integration.service;
 
-import com.jd.twitterclonebackend.dto.request.PostRequestDto;
-import com.jd.twitterclonebackend.entity.ImageFileEntity;
-import com.jd.twitterclonebackend.entity.PostEntity;
-import com.jd.twitterclonebackend.exception.PostException;
-import com.jd.twitterclonebackend.exception.enums.InvalidPostEnum;
 import com.jd.twitterclonebackend.integration.IntegrationTestInitData;
 import org.junit.jupiter.api.Test;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.web.multipart.MultipartFile;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.List;
-
-class PostServiceImplTest extends IntegrationTestInitData {
+class TweetServiceImplTest extends IntegrationTestInitData {
 
 //    @Test
 //    void should_addPost_withoutFile() {

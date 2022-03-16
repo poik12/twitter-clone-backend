@@ -2,7 +2,7 @@ package com.jd.twitterclonebackend.mapper;
 
 import com.github.marlonlom.utilities.timeago.TimeAgo;
 import com.jd.twitterclonebackend.entity.CommentEntity;
-import com.jd.twitterclonebackend.entity.PostEntity;
+import com.jd.twitterclonebackend.entity.TweetEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.dto.request.CommentRequestDto;
 import com.jd.twitterclonebackend.dto.response.CommentResponseDto;
@@ -14,7 +14,7 @@ import java.util.Objects;
 public class CommentMapper {
 
     public CommentEntity mapFromDtoToEntity(CommentRequestDto commentRequestDto,
-                                            PostEntity postEntity,
+                                            TweetEntity tweetEntity,
                                             UserEntity userEntity) {
 
         if (Objects.isNull(commentRequestDto)) {
@@ -22,7 +22,7 @@ public class CommentMapper {
         }
 
         return CommentEntity.builder()
-                .post(postEntity)
+                .tweet(tweetEntity)
                 .user(userEntity)
                 .text(commentRequestDto.getText())
                 .build();
@@ -38,7 +38,7 @@ public class CommentMapper {
                 .name(commentEntity.getUser().getName())
                 .username(commentEntity.getUser().getUsername())
                 .profileImage(commentEntity.getUser().getProfilePicture())
-                .postId(commentEntity.getPost().getId())
+                .tweetId(commentEntity.getTweet().getId())
                 .text(commentEntity.getText())
                 .timeOfCreation(getCommentTimeDuration(commentEntity))
                 .build();

@@ -1,11 +1,11 @@
 package com.jd.twitterclonebackend.unit.mapper;
 
 import com.github.marlonlom.utilities.timeago.TimeAgo;
-import com.jd.twitterclonebackend.dto.request.PostRequestDto;
-import com.jd.twitterclonebackend.entity.PostEntity;
+import com.jd.twitterclonebackend.dto.request.TweetRequestDto;
+import com.jd.twitterclonebackend.entity.TweetEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.mapper.JsonMapper;
-import com.jd.twitterclonebackend.mapper.PostMapper;
+import com.jd.twitterclonebackend.mapper.TweetMapper;
 import com.jd.twitterclonebackend.unit.UnitTestInitData;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -20,10 +20,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-class PostMapperTest extends UnitTestInitData {
+class TweetMapperTest extends UnitTestInitData {
 
     @InjectMocks
-    private PostMapper postMapper;
+    private TweetMapper tweetMapper;
 
     @Mock
     private JsonMapper jsonMapper;
@@ -31,15 +31,15 @@ class PostMapperTest extends UnitTestInitData {
     @Test
     void should_mapFromPostRequestDto_toPostEntity() {
         // given
-        PostRequestDto postRequestDto = initPostRequestDto();
+        TweetRequestDto tweetRequestDto = initPostRequestDto();
         String postRequestJson = "";
         UserEntity userEntity = initUserEntity();
 
         // when
         when(jsonMapper.mapFromJsonToDto(any(), any()))
-                .thenReturn(postRequestDto);
+                .thenReturn(tweetRequestDto);
 
-        var result = postMapper.mapFromDtoToEntity(
+        var result = tweetMapper.mapFromDtoToEntity(
                 postRequestJson,
                 userEntity
         );
@@ -48,7 +48,7 @@ class PostMapperTest extends UnitTestInitData {
         // then
         assertAll(
                 () -> {
-                    assertEquals(postRequestDto.getDescription(), result.getDescription());
+                    assertEquals(tweetRequestDto.getDescription(), result.getDescription());
                     assertEquals(userEntity, result.getUser());
                     assertEquals(Collections.emptyList(), result.getComments());
                     assertEquals(0L, result.getCommentNo());
@@ -60,25 +60,25 @@ class PostMapperTest extends UnitTestInitData {
     void should_mapFromPostEntity_toPostResponseDto_withoutImageFiles() {
         // given
         UserEntity userEntity = initUserEntity();
-        PostEntity postEntity = initPostEntity(userEntity);
+        TweetEntity tweetEntity = initPostEntity(userEntity);
         Map<Long, byte[]> imageFileMap = new HashMap<>();
 
         // when
-        var result = postMapper.mapFromEntityToDto(postEntity);
+        var result = tweetMapper.mapFromEntityToDto(tweetEntity);
         System.out.println(result);
 
         // then
         assertAll(
                 () -> {
-                    assertEquals(postEntity.getId(), result.getId());
-                    assertEquals(postEntity.getUser().getName(), result.getName());
-                    assertEquals(postEntity.getUser().getUsername(), result.getUsername());
-                    assertEquals(postEntity.getUser().getDescription(), result.getDescription());
-                    assertEquals(postEntity.getCommentNo(), result.getCommentNo());
-                    assertEquals(postEntity.getCreatedAt(), result.getCreatedAt());
-                    assertEquals(TimeAgo.using(postEntity.getCreatedAt().toInstant().toEpochMilli()),
-                            result.getPostTimeDuration());
-                    assertEquals(postEntity.getUser().getProfilePicture(), result.getUserProfilePicture());
+                    assertEquals(tweetEntity.getId(), result.getId());
+                    assertEquals(tweetEntity.getUser().getName(), result.getName());
+                    assertEquals(tweetEntity.getUser().getUsername(), result.getUsername());
+                    assertEquals(tweetEntity.getUser().getDescription(), result.getDescription());
+                    assertEquals(tweetEntity.getCommentNo(), result.getCommentNo());
+                    assertEquals(tweetEntity.getCreatedAt(), result.getCreatedAt());
+                    assertEquals(TimeAgo.using(tweetEntity.getCreatedAt().toInstant().toEpochMilli()),
+                            result.getTweetTimeDuration());
+                    assertEquals(tweetEntity.getUser().getProfilePicture(), result.getUserProfilePicture());
                 }
         );
 

@@ -1,8 +1,8 @@
 package com.jd.twitterclonebackend.service.impl;
 
-import com.jd.twitterclonebackend.dto.response.PostResponseDto;
+import com.jd.twitterclonebackend.dto.response.TweetResponseDto;
 import com.jd.twitterclonebackend.entity.ImageFileEntity;
-import com.jd.twitterclonebackend.entity.PostEntity;
+import com.jd.twitterclonebackend.entity.TweetEntity;
 import com.jd.twitterclonebackend.repository.ImageFileRepository;
 import com.jd.twitterclonebackend.service.FileService;
 import lombok.*;
@@ -16,7 +16,6 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
@@ -30,7 +29,7 @@ public class FileServiceImpl implements FileService {
 
     // Upload image into database
     @Override
-    public void uploadImageFile(PostEntity postEntity, MultipartFile file) {
+    public void uploadImageFile(TweetEntity tweetEntity, MultipartFile file) {
 
         String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
 
@@ -40,7 +39,7 @@ public class FileServiceImpl implements FileService {
                 .name(fileName)
                 .content(compressBytes(content))
                 .size(file.getSize())
-                .post(postEntity)
+                .tweet(tweetEntity)
                 .build();
 
         imageFileRepository.save(imageFileEntity);
@@ -72,18 +71,18 @@ public class FileServiceImpl implements FileService {
     }
 
     // Get all images for post form database
-    public PostResponseDto getAllImageFilesForPost(PostResponseDto postResponseDto) {
+    public TweetResponseDto getAllImageFilesForPost(TweetResponseDto tweetResponseDto) {
 
         // Get content list for post
         List<byte[]> contentList = imageFileRepository
-                .findAllByPostId(postResponseDto.getId())
+                .findAllByPostId(tweetResponseDto.getId())
                 .stream()
                 .map(imageFileEntity -> decompressBytes(imageFileEntity.getContent()))
                 .toList();
         if (!contentList.isEmpty()) {
-            postResponseDto.setFileContent(contentList);
+            tweetResponseDto.setFileContent(contentList);
         }
-        return postResponseDto;
+        return tweetResponseDto;
     }
 
     // Uncompress retrieved image bytes from database

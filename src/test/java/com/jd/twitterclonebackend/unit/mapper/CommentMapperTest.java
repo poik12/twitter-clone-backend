@@ -3,7 +3,7 @@ package com.jd.twitterclonebackend.unit.mapper;
 import com.github.marlonlom.utilities.timeago.TimeAgo;
 import com.jd.twitterclonebackend.dto.request.CommentRequestDto;
 import com.jd.twitterclonebackend.entity.CommentEntity;
-import com.jd.twitterclonebackend.entity.PostEntity;
+import com.jd.twitterclonebackend.entity.TweetEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.mapper.CommentMapper;
 import com.jd.twitterclonebackend.unit.UnitTestInitData;
@@ -21,13 +21,13 @@ class CommentMapperTest extends UnitTestInitData {
     void should_mapFromCommentDto_ToCommentEntity() {
         // given
         UserEntity userEntity = initUserEntity();
-        PostEntity postEntity = initPostEntity(userEntity);
+        TweetEntity tweetEntity = initPostEntity(userEntity);
         CommentRequestDto commentRequestDto = initCommentRequestDto();
 
         // when
         var result = commentMapper.mapFromDtoToEntity(
                 commentRequestDto,
-                postEntity,
+                tweetEntity,
                 userEntity
         );
         System.out.println(result);
@@ -36,7 +36,7 @@ class CommentMapperTest extends UnitTestInitData {
         assertAll(
                 () -> {
                     assertEquals(userEntity, result.getUser());
-                    assertEquals(postEntity, result.getPost());
+                    assertEquals(tweetEntity, result.getTweet());
                     assertEquals(commentRequestDto.getText(), result.getText());
                 }
         );
@@ -47,8 +47,8 @@ class CommentMapperTest extends UnitTestInitData {
     void should_mapFromCommentEntity_toCommentResponseDto() {
         // given
         UserEntity userEntity = initUserEntity();
-        PostEntity postEntity = initPostEntity(userEntity);
-        CommentEntity commentEntity = initCommentEntity(userEntity, postEntity);
+        TweetEntity tweetEntity = initPostEntity(userEntity);
+        CommentEntity commentEntity = initCommentEntity(userEntity, tweetEntity);
 
         // when
         var result = commentMapper.mapFromEntityToDto(commentEntity);
@@ -60,7 +60,7 @@ class CommentMapperTest extends UnitTestInitData {
                     assertEquals(commentEntity.getUser().getName(), result.getName());
                     assertEquals(commentEntity.getUser().getUsername(), result.getUsername());
                     assertEquals(commentEntity.getUser().getProfilePicture(), result.getProfileImage());
-                    assertEquals(commentEntity.getPost().getId(), result.getPostId());
+                    assertEquals(commentEntity.getTweet().getId(), result.getTweetId());
                     assertEquals(commentEntity.getText(), result.getText());
                     assertEquals(
                             TimeAgo.using(commentEntity.getCreatedAt().toEpochMilli()),

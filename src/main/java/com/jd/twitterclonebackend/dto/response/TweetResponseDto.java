@@ -2,7 +2,6 @@ package com.jd.twitterclonebackend.dto.response;
 
 import lombok.*;
 
-import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 
@@ -10,7 +9,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PostResponseDto {
+public class TweetResponseDto {
 
     private Long id;
     private String name;
@@ -19,7 +18,7 @@ public class PostResponseDto {
     private Long commentNo;
     private Long likeNo;
     private Date createdAt;
-    private String postTimeDuration;
+    private String tweetTimeDuration;
     private List<byte[]> fileContent;
     private byte[] userProfilePicture;
     private boolean likedByLoggedUser;

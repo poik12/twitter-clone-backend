@@ -25,10 +25,8 @@ public class HashtagEntity {
 
     private String value;
 
-    @ManyToMany(
-            mappedBy = "hashtags"
-    )
-    private List<PostEntity> posts = new ArrayList<>();
+    @ManyToMany(mappedBy = "hashtags")
+    private List<TweetEntity> posts;
 
     @CreationTimestamp
     private Date createdAt;

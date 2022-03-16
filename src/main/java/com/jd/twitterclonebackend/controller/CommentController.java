@@ -31,8 +31,8 @@ public class CommentController {
     }
 
     // GET ALL COMMENT FOR POST SORTED BY TIMESTAMP DESC
-    @GetMapping(path ="/by-post/{postId}")
-    public ResponseEntity<List<CommentResponseDto>> getAllCommentsForPost(@PathVariable Long postId,
+    @GetMapping(path = "/by-tweet/{tweetId}")
+    public ResponseEntity<List<CommentResponseDto>> getAllCommentsForPost(@PathVariable Long tweetId,
                                                                           @RequestParam("pageNumber") int pageNumber,
                                                                           @RequestParam("pageSize") int pageSize) {
         Pageable pageable = PageRequest.of(
@@ -44,12 +44,12 @@ public class CommentController {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(commentService.getAllCommentsForPost(postId, pageable));
+                .body(commentService.getAllCommentsForPost(tweetId, pageable));
     }
 
-    @GetMapping(path ="/by-user/{username}/{postId}")
+    @GetMapping(path = "/by-user/{username}/{tweetId}")
     public ResponseEntity<List<CommentResponseDto>> getThreeLastUserCommentsForPost(@PathVariable String username,
-                                                                                    @PathVariable Long postId) {
+                                                                                    @PathVariable Long tweetId) {
 
         // Limit result to last 3
         Pageable pageable = PageRequest.of(
@@ -61,7 +61,7 @@ public class CommentController {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(commentService.getThreeLastCommentsForPostByUsernameAndPostId(username, postId, pageable));
+                .body(commentService.getThreeLastCommentsForPostByUsernameAndPostId(username, tweetId, pageable));
     }
 
     @DeleteMapping(path ="/{commentId}")

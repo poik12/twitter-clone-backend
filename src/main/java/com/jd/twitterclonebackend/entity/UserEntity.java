@@ -11,7 +11,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -94,7 +93,7 @@ public class UserEntity implements Serializable {
             fetch = FetchType.LAZY,
             mappedBy = "user"
     ) // user has many posts
-    private List<PostEntity> posts;
+    private List<TweetEntity> tweets;
 
     @OneToMany(
             orphanRemoval = true,
@@ -130,22 +129,22 @@ public class UserEntity implements Serializable {
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
-            name = "user_post_likes",
+            name = "user_tweet_likes",
             joinColumns = @JoinColumn(
                     name = "user_id",
                     referencedColumnName = "id"
             ),
             inverseJoinColumns = @JoinColumn(
-                    name = "post_id",
+                    name = "tweet_id",
                     referencedColumnName = "id"
             )
     ) // many users like many posts
-    private List<PostEntity> likedPosts = new ArrayList<>();
+    private List<TweetEntity> likedTweets;
 
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
-    private Boolean enabled = false;
+    private Boolean enabled;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp

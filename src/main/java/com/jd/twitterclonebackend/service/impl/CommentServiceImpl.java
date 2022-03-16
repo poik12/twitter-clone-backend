@@ -3,7 +3,7 @@ package com.jd.twitterclonebackend.service.impl;
 import com.jd.twitterclonebackend.dto.request.CommentRequestDto;
 import com.jd.twitterclonebackend.dto.response.CommentResponseDto;
 import com.jd.twitterclonebackend.entity.CommentEntity;
-import com.jd.twitterclonebackend.entity.PostEntity;
+import com.jd.twitterclonebackend.entity.TweetEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.exception.CommentException;
 import com.jd.twitterclonebackend.exception.PostException;
@@ -13,13 +13,11 @@ import com.jd.twitterclonebackend.exception.enums.InvalidPostEnum;
 import com.jd.twitterclonebackend.exception.enums.InvalidUserEnum;
 import com.jd.twitterclonebackend.mapper.CommentMapper;
 import com.jd.twitterclonebackend.repository.CommentRepository;
-import com.jd.twitterclonebackend.repository.PostRepository;
+import com.jd.twitterclonebackend.repository.TweetRepository;
 import com.jd.twitterclonebackend.repository.UserRepository;
 import com.jd.twitterclonebackend.service.CommentService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +30,7 @@ import java.util.stream.Collectors;
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
-    private final PostRepository postRepository;
+    private final TweetRepository tweetRepository;
     private final UserRepository userRepository;
 
     private final UserDetailsServiceImpl userDetailsService;
@@ -45,39 +43,39 @@ public class CommentServiceImpl implements CommentService {
         // Get user who created post
         UserEntity userEntity = userDetailsService.currentLoggedUserEntity();
         // Find post for comment
-        PostEntity postEntity = postRepository
-                .findById(commentRequestDto.getPostId())
+        TweetEntity tweetEntity = tweetRepository
+                .findById(commentRequestDto.getTweetId())
                 .orElseThrow(() -> new PostException(
-                        InvalidPostEnum.POST_FOR_COMMENT_NOT_FOUND.getMessage() + commentRequestDto.getPostId(),
+                        InvalidPostEnum.POST_FOR_COMMENT_NOT_FOUND.getMessage() + commentRequestDto.getTweetId(),
                         HttpStatus.NOT_FOUND
                 ));
         // Map Comment from comment request Dto to comment entity
         CommentEntity commentEntity = commentMapper.mapFromDtoToEntity(
                 commentRequestDto,
-                postEntity,
+                tweetEntity,
                 userEntity
         );
         // Save comment in repository
         commentRepository.save(commentEntity);
         // Increment no of comments in post
-        postEntity.setCommentNo(postEntity.getCommentNo() + 1);
-        postRepository.save(postEntity);
+        tweetEntity.setCommentNo(tweetEntity.getCommentNo() + 1);
+        tweetRepository.save(tweetEntity);
 
         // TODO: notification for user who created post
     }
 
     @Override
-    public List<CommentResponseDto> getAllCommentsForPost(Long postId, Pageable pageable) {
+    public List<CommentResponseDto> getAllCommentsForPost(Long tweetId, Pageable pageable) {
         // Find post with comments in post repository
-        PostEntity postEntity = postRepository
-                .findById(postId)
+        TweetEntity tweetEntity = tweetRepository
+                .findById(tweetId)
                 .orElseThrow(() -> new PostException(
-                        InvalidPostEnum.POST_FOR_COMMENT_NOT_FOUND.getMessage() + postId,
+                        InvalidPostEnum.POST_FOR_COMMENT_NOT_FOUND.getMessage() + tweetId,
                         HttpStatus.NOT_FOUND
                 ));
         // Get all comments for found post, map them to DTO and collect to list
         return commentRepository
-                .findAllByPostAndOrderByCreatedAtDesc(postEntity, pageable)
+                .findAllByPostAndOrderByCreatedAtDesc(tweetEntity, pageable)
                 .stream()
                 .map(commentMapper::mapFromEntityToDto)
                 .collect(Collectors.toList());
@@ -85,7 +83,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<CommentResponseDto> getThreeLastCommentsForPostByUsernameAndPostId(String username,
-                                                                                   Long postId,
+                                                                                   Long tweetId,
                                                                                    Pageable pageable) {
         // Find user who created comments in user repository by username
         UserEntity userEntity = userRepository
@@ -97,7 +95,7 @@ public class CommentServiceImpl implements CommentService {
 
         // Get all comments created by user, map them to dto, collect to list and return
         return commentRepository
-                .findAllByUserAndOrderByCreatedAtDesc(userEntity, postId, pageable)
+                .findAllByUserAndOrderByCreatedAtDesc(userEntity, tweetId, pageable)
                 .stream()
                 .map(commentMapper::mapFromEntityToDto)
                 .collect(Collectors.toList());
