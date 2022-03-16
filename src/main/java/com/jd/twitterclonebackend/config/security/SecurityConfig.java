@@ -74,7 +74,7 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
         // CONTROLLER MAPPINGS
         httpSecurity.authorizeRequests().antMatchers("/auth/**").permitAll();
         httpSecurity.authorizeRequests().antMatchers("/users/**").permitAll();
-        httpSecurity.authorizeRequests().antMatchers("/posts/**").permitAll();
+        httpSecurity.authorizeRequests().antMatchers("/tweets/**").permitAll();
         httpSecurity.authorizeRequests().antMatchers("/comments/**").permitAll();
         httpSecurity.authorizeRequests().antMatchers("/messages/**").permitAll();
 //        httpSecurity.authorizeRequests().antMatchers(HttpMethod.GET, "/api/user/**").hasAnyAuthority("ROLE_USER");

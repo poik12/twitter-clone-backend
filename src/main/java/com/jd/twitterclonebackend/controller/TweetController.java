@@ -50,7 +50,6 @@ public class TweetController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(tweetService.getAllTweets(pageable));
-
     }
 
     // GET SINGLE POST BY ID

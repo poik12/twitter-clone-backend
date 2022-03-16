@@ -4,11 +4,13 @@ import com.jd.twitterclonebackend.dto.response.FollowerResponseDto;
 import com.jd.twitterclonebackend.entity.FollowerEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.dto.response.UserResponseDto;
+import com.jd.twitterclonebackend.entity.enums.NotificationType;
 import com.jd.twitterclonebackend.exception.UserException;
 import com.jd.twitterclonebackend.exception.enums.InvalidUserEnum;
 import com.jd.twitterclonebackend.mapper.UserMapper;
 import com.jd.twitterclonebackend.repository.FollowerRepository;
 import com.jd.twitterclonebackend.repository.UserRepository;
+import com.jd.twitterclonebackend.service.NotificationService;
 import com.jd.twitterclonebackend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +31,7 @@ public class UserServiceImpl implements UserService {
     private final FollowerRepository followerRepository;
 
     private final UserDetailsServiceImpl userDetailsService;
+    private final NotificationService notificationService;
 
     private final UserMapper userMapper;
 
@@ -96,6 +99,12 @@ public class UserServiceImpl implements UserService {
         // Update no of followers in followed user entity
         userToFollow.setFollowerNo(userToFollow.getFollowerNo() + 1);
         userRepository.save(userToFollow);
+        // Send notification to followed user
+        notificationService.notifyUser(
+                userToFollow,
+                NotificationType.FOLLOWER,
+                loggedUserEntity.getId()
+        );
     }
 
     @Override

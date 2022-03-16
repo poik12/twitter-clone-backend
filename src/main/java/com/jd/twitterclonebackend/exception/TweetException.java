@@ -2,11 +2,11 @@ package com.jd.twitterclonebackend.exception;
 
 import org.springframework.http.HttpStatus;
 
-public class PostException extends RuntimeException {
+public class TweetException extends RuntimeException {
 
     private final HttpStatus status;
 
-    public PostException(String message, HttpStatus status) {
+    public TweetException(String message, HttpStatus status) {
         super(message);
         this.status = status;
     }
