@@ -23,5 +23,6 @@ public class PostResponseDto {
     private List<byte[]> fileContent;
     private byte[] userProfilePicture;
     private boolean likedByLoggedUser;
+    private List<String> hashtags;
 
 }
