@@ -5,7 +5,6 @@ import com.jd.twitterclonebackend.mapper.HashtagMapper;
 import com.jd.twitterclonebackend.repository.HashtagRepository;
 import com.jd.twitterclonebackend.service.HashtagService;
 import lombok.AllArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -59,7 +58,6 @@ public class HashtagServiceImpl implements HashtagService {
         return newHashtagEntityList;
     }
 
-    @NotNull
     private List<String> validateHashtags(String input) {
         List<String> hashTagList = new ArrayList<>();
 

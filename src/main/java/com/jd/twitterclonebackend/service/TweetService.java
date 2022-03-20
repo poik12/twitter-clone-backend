@@ -24,4 +24,6 @@ public interface TweetService {
     List<TweetResponseDto> getLikedTweetsByUsername(String username, Pageable pageable);
 
     List<RepliedTweetResponseDto> getRepliedTweetsWithCommentsByUsername(String username, Pageable pageable);
+
+    List<TweetResponseDto> searchTweets(String searchTerm, Pageable pageable);
 }
