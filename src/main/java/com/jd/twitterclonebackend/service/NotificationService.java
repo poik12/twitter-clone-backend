@@ -1,5 +1,6 @@
 package com.jd.twitterclonebackend.service;
 
+import com.jd.twitterclonebackend.dto.response.NotificationResponseDto;
 import com.jd.twitterclonebackend.entity.FollowerEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.entity.enums.NotificationType;

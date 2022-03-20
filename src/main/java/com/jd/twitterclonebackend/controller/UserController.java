@@ -28,7 +28,6 @@ public class UserController {
     }
 
     // GET ALL USERS
-    // TODO: pagination etc. some nested exception
     @GetMapping
     public ResponseEntity<List<UserResponseDto>> getUsers() {
         return ResponseEntity

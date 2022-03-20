@@ -17,6 +17,7 @@ public class UserResponseDto {
     private long tweetNo;
     private long followingNo;
     private long followerNo;
+    private long notificationNo;
     private byte[] userProfilePicture;
     private byte[] userBackgroundPicture;
     private String description;

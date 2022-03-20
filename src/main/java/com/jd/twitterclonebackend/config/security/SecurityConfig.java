@@ -3,8 +3,8 @@ package com.jd.twitterclonebackend.config.security;
 import com.jd.twitterclonebackend.config.security.filter.AuthenticationEntryPointImpl;
 import com.jd.twitterclonebackend.config.security.filter.AuthenticationFilter;
 import com.jd.twitterclonebackend.config.security.filter.AuthorizationFilter;
-import com.jd.twitterclonebackend.config.security.jwt.AccessTokenProvider;
-import com.jd.twitterclonebackend.config.security.jwt.RefreshTokenProvider;
+import com.jd.twitterclonebackend.config.security.filter.jwt.AccessTokenProvider;
+import com.jd.twitterclonebackend.config.security.filter.jwt.RefreshTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -72,13 +72,12 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
         // H2 Database
         httpSecurity.authorizeRequests().antMatchers("h2-console/**").permitAll();
         // CONTROLLER MAPPINGS
-        httpSecurity.authorizeRequests().antMatchers("/auth/**").permitAll();
-        httpSecurity.authorizeRequests().antMatchers("/users/**").permitAll();
-        httpSecurity.authorizeRequests().antMatchers("/tweets/**").permitAll();
-        httpSecurity.authorizeRequests().antMatchers("/comments/**").permitAll();
-        httpSecurity.authorizeRequests().antMatchers("/messages/**").permitAll();
-//        httpSecurity.authorizeRequests().antMatchers(HttpMethod.GET, "/api/user/**").hasAnyAuthority("ROLE_USER");
-//        httpSecurity.authorizeRequests().antMatchers(HttpMethod.POST, "/api/user/save/**").hasAnyAuthority("ROLE_ADMIN");
+//        httpSecurity.authorizeRequests().antMatchers("/auth/**").permitAll();
+//        httpSecurity.authorizeRequests().antMatchers("/users/**").permitAll();
+//        httpSecurity.authorizeRequests().antMatchers("/tweets/**").permitAll();
+//        httpSecurity.authorizeRequests().antMatchers("/comments/**").permitAll();
+//        httpSecurity.authorizeRequests().antMatchers("/messages/**").permitAll();
+
         httpSecurity.authorizeRequests().anyRequest().authenticated();
         httpSecurity.addFilter(authenticationFilter);
         httpSecurity.addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -105,9 +104,9 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     // TODO: needed for testing purpose - test doesn't work without it
     // TODO: comment when spring boot doesn't want to start
-//    @Bean
-//    public JavaMailSender javaMailSender() {
-//        return new JavaMailSenderImpl();
-//    }
+    @Bean
+    public JavaMailSender javaMailSender() {
+        return new JavaMailSenderImpl();
+    }
 
 }

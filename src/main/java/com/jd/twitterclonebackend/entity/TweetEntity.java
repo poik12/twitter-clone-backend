@@ -1,21 +1,18 @@
 package com.jd.twitterclonebackend.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "tweets")
-@Data
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -55,7 +52,7 @@ public class TweetEntity implements Serializable {
             mappedBy = "likedTweets",
             cascade = CascadeType.ALL
     )
-    private List<UserEntity> userLikes;
+    private Set<UserEntity> userLikes = new HashSet<>();
 
     @ManyToMany
     @JoinTable(
@@ -77,4 +74,7 @@ public class TweetEntity implements Serializable {
     @UpdateTimestamp
     private Date updatedAt;
 
+    public void removeLikedTweetFromUsers() {
+        userLikes.removeIf(userEntity -> userEntity.getLikedTweets().remove(this));
+    }
 }

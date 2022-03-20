@@ -5,22 +5,18 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.jd.twitterclonebackend.dto.request.CommentRequestDto;
-import com.jd.twitterclonebackend.dto.request.RegisterRequestDto;
-import com.jd.twitterclonebackend.dto.request.UserDetailsRequestDto;
-import com.jd.twitterclonebackend.dto.response.CommentResponseDto;
-import com.jd.twitterclonebackend.dto.response.TweetResponseDto;
-import com.jd.twitterclonebackend.dto.response.UserResponseDto;
+import com.jd.twitterclonebackend.dto.request.*;
+import com.jd.twitterclonebackend.dto.response.*;
 import com.jd.twitterclonebackend.entity.TweetEntity;
 import com.jd.twitterclonebackend.entity.RefreshTokenEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
-import com.jd.twitterclonebackend.dto.request.TweetRequestDto;
 import com.jd.twitterclonebackend.entity.VerificationTokenEntity;
+import com.jd.twitterclonebackend.entity.enums.NotificationType;
 import com.jd.twitterclonebackend.entity.enums.UserRole;
 import com.jd.twitterclonebackend.mapper.AuthMapper;
 import com.jd.twitterclonebackend.mapper.TweetMapper;
 import com.jd.twitterclonebackend.repository.*;
-import com.jd.twitterclonebackend.config.security.jwt.RefreshTokenProvider;
+import com.jd.twitterclonebackend.config.security.filter.jwt.RefreshTokenProvider;
 import com.jd.twitterclonebackend.service.*;
 import com.jd.twitterclonebackend.service.impl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,6 +109,8 @@ public abstract class IntegrationTestInitData {
     protected static final String POST_DESCRIPTION = "Post Description";
 
     protected static final String COMMENT_TEXT = "Comment text";
+
+    private static final String MESSAGE_CONTENT = "test message content";
 
 
     protected UserEntity initDatabaseByPrimeUserDisabled() {
@@ -355,6 +353,55 @@ public abstract class IntegrationTestInitData {
                 .emailAddress(USER_UPDATE_EMAIL_ADDRESS)
                 .password(USER_UPDATE_PASSWORD)
                 .phoneNumber(USER_UPDATE_PHONE_NUMBER)
+                .build();
+    }
+
+    protected ConversationRequestDto initConversationRequestDto() {
+        return ConversationRequestDto.builder()
+                .participantUsername(USER_PRIME_USERNAME)
+                .build();
+    }
+
+    protected ConversationResponseDto initConversationResponseDto() {
+        return ConversationResponseDto.builder()
+                .id(1L)
+                .participantName(USER_PRIME_NAME)
+                .participantUsername(USER_PRIME_USERNAME)
+                .participantProfilePicture(null)
+                .creatorName(USER_SECOND_NAME)
+                .creatorUsername(USER_SECOND_USERNAME)
+                .creatorProfilePicture(null)
+                .latestMessageTime(String.valueOf(Instant.now()))
+                .latestMessageContent(MESSAGE_CONTENT)
+                .latestMessageRead(true)
+                .build();
+    }
+
+    protected MessageRequestDto initMessageRequestDto() {
+        return MessageRequestDto.builder()
+                .conversationId(1L)
+                .content(MESSAGE_CONTENT)
+                .build();
+    }
+
+    protected MessageResponseDto initMessageResponseDto() {
+        return MessageResponseDto.builder()
+                .content(MESSAGE_CONTENT)
+                .senderUsername(USER_PRIME_USERNAME)
+                .recipientUsername(USER_SECOND_USERNAME)
+                .createdAt(String.valueOf(Instant.now()))
+                .build();
+    }
+
+    protected NotificationResponseDto initNotificationResponseDto() {
+        return NotificationResponseDto.builder()
+                .id(1L)
+                .name(USER_PRIME_NAME)
+                .username(USER_PRIME_USERNAME)
+                .userProfilePicture(null)
+                .timeDuration(String.valueOf(Instant.now()))
+                .type(NotificationType.FOLLOWER.getType())
+                .materialId(2L)
                 .build();
     }
 

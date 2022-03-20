@@ -42,6 +42,7 @@ public class UserMapper {
                 .tweetNo(userEntity.getTweets().size())
                 .followingNo(followerMapper.getUserFollowings(userEntity))
                 .followerNo(followerMapper.getUserFollowers(userEntity))
+                .notificationNo(userEntity.getPublishedNotifications().size())
                 .userProfilePicture(userEntity.getProfilePicture())
                 .userBackgroundPicture(userEntity.getBackgroundPicture())
                 .description(userEntity.getDescription())
@@ -49,8 +50,6 @@ public class UserMapper {
                 .following(getFollowingDtoList(userEntity))
                 .build();
     }
-
-
 
     public UserEntity mapFromDtoToEntity(UserEntity userEntity,
                                          String userDetailsRequestJson,

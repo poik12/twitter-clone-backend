@@ -1,6 +1,6 @@
 package com.jd.twitterclonebackend.service.impl;
 
-import com.jd.twitterclonebackend.config.security.jwt.RefreshTokenProvider;
+import com.jd.twitterclonebackend.config.security.filter.jwt.RefreshTokenProvider;
 import com.jd.twitterclonebackend.dto.request.RefreshTokenRequestDto;
 import com.jd.twitterclonebackend.dto.request.RegisterRequestDto;
 import com.jd.twitterclonebackend.dto.response.AuthResponseDto;

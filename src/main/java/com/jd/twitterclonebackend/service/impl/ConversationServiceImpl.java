@@ -111,8 +111,6 @@ public class ConversationServiceImpl implements ConversationService {
                 ));
 
         // todo: sending massages check
-        // todo: add to conversation in user profile?
-        // todo: add delete comment
 
         MessageEntity messageEntity = messageMapper.mapFromDtoToEntity(
                 senderEntity,

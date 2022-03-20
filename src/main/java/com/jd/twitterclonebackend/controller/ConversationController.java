@@ -47,7 +47,6 @@ public class ConversationController {
     }
 
     // TODO: delete conversation
-    // todo: conversation controller handler
 
 
     @GetMapping(path = "/{conversationId}")

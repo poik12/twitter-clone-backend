@@ -118,7 +118,6 @@ class TweetControllerTest extends IntegrationTestInitData {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(tweetResponseDto.getId()))
                 .andExpect(jsonPath("$.name").value(tweetResponseDto.getName()));
-
     }
 
     @Test
