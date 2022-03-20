@@ -17,4 +17,6 @@ public interface NotificationRepository extends JpaRepository<NotificationEntity
             "WHERE n.subscriber = :subscriber " +
             "ORDER BY n.createdAt DESC")
     List<NotificationEntity> findBySubscriber(@Param("subscriber") UserEntity subscriber, Pageable pageable);
+
+    void deleteByMaterialId(Long tweetId);
 }

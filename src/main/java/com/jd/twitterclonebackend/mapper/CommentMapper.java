@@ -35,10 +35,11 @@ public class CommentMapper {
         }
 
         return CommentResponseDto.builder()
-                .name(commentEntity.getUser().getName())
-                .username(commentEntity.getUser().getUsername())
-                .profileImage(commentEntity.getUser().getProfilePicture())
+                .id(commentEntity.getId())
                 .tweetId(commentEntity.getTweet().getId())
+                .username(commentEntity.getUser().getUsername())
+                .name(commentEntity.getUser().getName())
+                .profileImage(commentEntity.getUser().getProfilePicture())
                 .text(commentEntity.getText())
                 .timeOfCreation(getCommentTimeDuration(commentEntity))
                 .build();

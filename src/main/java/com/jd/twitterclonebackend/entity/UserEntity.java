@@ -1,10 +1,7 @@
 package com.jd.twitterclonebackend.entity;
 
 import com.jd.twitterclonebackend.entity.enums.UserRole;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -12,11 +9,15 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
-@Data
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -139,7 +140,7 @@ public class UserEntity implements Serializable {
                     referencedColumnName = "id"
             )
     ) // many users like many posts
-    private List<TweetEntity> likedTweets;
+    private Set<TweetEntity> likedTweets = new HashSet<>();
 
     @OneToMany(
             fetch = FetchType.LAZY,
@@ -164,4 +165,5 @@ public class UserEntity implements Serializable {
     @Column(name = "updated_at", nullable = false)
     @UpdateTimestamp
     private Date updatedAt;
+
 }

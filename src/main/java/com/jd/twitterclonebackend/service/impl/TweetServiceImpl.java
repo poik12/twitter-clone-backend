@@ -38,6 +38,7 @@ public class TweetServiceImpl implements TweetService {
     private final ImageFileRepository imageFileRepository;
     private final CommentRepository commentRepository;
     private final HashtagRepository hashtagRepository;
+    private final NotificationRepository notificationRepository;
 
     private final UserDetailsServiceImpl userDetailsService;
     private final FileService fileService;
@@ -141,11 +142,20 @@ public class TweetServiceImpl implements TweetService {
     @Override
     @Transactional
     public void deleteTweetById(Long tweetId) {
-        // TODO: check if cascade words - should delete comments and images from repo
-        // todo: liked post doesnt delete
+        tweetRepository
+                .findById(tweetId)
+                .ifPresentOrElse(
+                        TweetEntity::removeLikedTweetFromUsers,
+                        () -> {
+                            throw new TweetException(
+                                    InvalidTweetEnum.TWEET_NOT_FOUND_WITH_ID.getMessage() + tweetId,
+                                    HttpStatus.NOT_FOUND
+                            );
+                        }
+                );
+        notificationRepository.deleteByMaterialId(tweetId);
         imageFileRepository.deleteByTweetId(tweetId);
         commentRepository.deleteByTweetId(tweetId);
-//        userRepository.deleteLikedPostsByPostId(postId);
         tweetRepository.deleteById(tweetId);
     }
 
@@ -174,7 +184,6 @@ public class TweetServiceImpl implements TweetService {
                     tweetEntity.getId()
             );
         }
-
         userRepository.save(loggedUser);
     }
 
@@ -293,7 +302,7 @@ public class TweetServiceImpl implements TweetService {
 
     @Override
     public List<TweetResponseDto> searchTweets(String searchTerm, Pageable pageable) {
-       // todo: searching doesn't work
+        // todo: searching doesn't work
         String searchTermWithHashtag = "#" + searchTerm;
         return tweetRepository.findByHashTag(searchTermWithHashtag)
                 .stream()

@@ -12,13 +12,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 class WebConfig implements WebMvcConfigurer {
 
     public static final Long MAX_AGE = 3600L;
+    public static final String FRONTEND = "http://localhost:4200";
 
     @Override
     public void addCorsMappings(CorsRegistry corsRegistry) {
 
         corsRegistry
                 .addMapping("/**")
-                .allowedOrigins("http://localhost:4200")
+                .allowedOrigins(FRONTEND)
                 .allowedMethods(
                         HttpMethod.GET.name(),
                         HttpMethod.POST.name(),
@@ -28,30 +29,8 @@ class WebConfig implements WebMvcConfigurer {
                 .allowedHeaders("*")
                 .maxAge(MAX_AGE)
                 .allowedHeaders("*")
-                .exposedHeaders("Authorization")
-                .allowCredentials(false);
+                .exposedHeaders(HttpHeaders.AUTHORIZATION)
+                .allowCredentials(true);
     }
-
-//    @Override
-//    public void addCorsMappings(CorsRegistry corsRegistry) {
-//
-//        corsRegistry
-//                .addMapping("/api/v1/**")
-//                .allowedOrigins("http://localhost:4200")
-//                .allowedMethods(
-//                        HttpMethod.GET.name(),
-//                        HttpMethod.POST.name(),
-//                        HttpMethod.PUT.name(),
-//                        HttpMethod.DELETE.name()
-//                )
-//                .allowedHeaders(
-//                        HttpHeaders.AUTHORIZATION,
-//                        HttpHeaders.CONTENT_TYPE,
-//                        HttpHeaders.ACCEPT
-//                )
-//                .maxAge(MAX_AGE)
-//                .exposedHeaders(HttpHeaders.AUTHORIZATION)
-//                .allowCredentials(true);
-//    }
 
 }

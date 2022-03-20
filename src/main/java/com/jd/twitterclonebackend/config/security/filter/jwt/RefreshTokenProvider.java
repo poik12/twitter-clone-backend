@@ -1,4 +1,4 @@
-package com.jd.twitterclonebackend.config.security.jwt;
+package com.jd.twitterclonebackend.config.security.filter.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
@@ -84,7 +84,7 @@ public class RefreshTokenProvider extends JwtProvider {
         // Create new refresh token entity
         RefreshTokenEntity newRefreshTokenEntity = new RefreshTokenEntity(
                 refreshToken,
-                EXPIRATION_TIME_OF_REFRESH_TOKEN,
+                getExpirationTimeOfRefreshToken(),
                 userEntity
         );
         // Save created JWT in database
@@ -99,8 +99,8 @@ public class RefreshTokenProvider extends JwtProvider {
                 .withSubject(user.getUsername()) // Header
                 .withIssuer("Refresh Token")
                 .withIssuedAt(Date.from(Instant.now()))
-                .withExpiresAt(Date.from(EXPIRATION_TIME_OF_REFRESH_TOKEN))
-                .sign(ALGORITHM);
+                .withExpiresAt(Date.from(getExpirationTimeOfRefreshToken()))
+                .sign(getVerifySignature());
     }
 
     // Delete refresh token from repository
@@ -124,12 +124,12 @@ public class RefreshTokenProvider extends JwtProvider {
                         HttpStatus.NOT_FOUND
                 ));
         // Generate new access token for user
-        String accessToken = accessTokenProvider.refreshAccessTokenUserEntity(userEntity);
+        String accessToken = accessTokenProvider.refreshAccessTokenForPrincipal(userEntity);
         // Create response for user
         return AuthResponseDto.builder()
                 .username(username)
                 .authenticationToken(accessToken)
-                .expiresAt(String.valueOf(EXPIRATION_TIME_OF_ACCESS_TOKEN))
+                .expiresAt(String.valueOf(getExpirationTimeOfAccessToken()))
                 .refreshToken(refreshTokenRequestDto.getRefreshToken())
                 .build();
     }

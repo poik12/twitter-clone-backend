@@ -99,12 +99,7 @@ class CommentControllerTest extends IntegrationTestInitData {
     @Test
     void should_getCommentResponseDtoList_byUsername() throws Exception {
         // given
-        Pageable pageable = PageRequest.of(
-                0,
-                10,
-                Sort.Direction.DESC,
-                "createdAt"
-        );
+        Pageable pageable = PageRequest.of(0, 10);
 
         CommentResponseDto commentResponseDto = initCommentResponseDto();
 

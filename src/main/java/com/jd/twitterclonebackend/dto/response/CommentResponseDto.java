@@ -8,6 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 public class CommentResponseDto {
 
+    private Long id;
     private Long tweetId;
     private String username;
     private String name;

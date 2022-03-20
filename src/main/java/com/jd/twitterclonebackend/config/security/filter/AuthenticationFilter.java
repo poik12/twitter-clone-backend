@@ -1,11 +1,11 @@
 package com.jd.twitterclonebackend.config.security.filter;
 
 import com.jd.twitterclonebackend.config.security.SecurityResponse;
-import com.jd.twitterclonebackend.config.security.jwt.AccessTokenProvider;
+import com.jd.twitterclonebackend.config.security.filter.jwt.AccessTokenProvider;
 import com.jd.twitterclonebackend.dto.request.LoginRequestDto;
 import com.jd.twitterclonebackend.exception.UserException;
 import com.jd.twitterclonebackend.exception.enums.InvalidUserEnum;
-import com.jd.twitterclonebackend.config.security.jwt.RefreshTokenProvider;
+import com.jd.twitterclonebackend.config.security.filter.jwt.RefreshTokenProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

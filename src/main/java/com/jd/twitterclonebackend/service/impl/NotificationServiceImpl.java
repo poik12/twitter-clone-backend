@@ -6,7 +6,7 @@ import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.entity.enums.NotificationType;
 import com.jd.twitterclonebackend.mapper.NotificationMapper;
 import com.jd.twitterclonebackend.repository.NotificationRepository;
-import com.jd.twitterclonebackend.service.NotificationResponseDto;
+import com.jd.twitterclonebackend.dto.response.NotificationResponseDto;
 import com.jd.twitterclonebackend.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -68,13 +68,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public void deleteNotificationById(Long notificationId) {
-//        notificationRepository
-//                .deleteById(notificationId)
-//                .orElseThrow(() -> new NotificationException(
-//                        InvalidNotificationEnum.NOTIFICATION_NOT_FOUND_WITH_ID.getMessage() + notificationId,
-//                        HttpStatus.NOT_FOUND
-//                ));
-        //todo: implement delete notification by id from current logged user
+        notificationRepository.deleteById(notificationId);
     }
 
 

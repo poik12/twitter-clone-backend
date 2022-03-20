@@ -5,7 +5,7 @@ import com.jd.twitterclonebackend.entity.FollowerEntity;
 import com.jd.twitterclonebackend.entity.NotificationEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.entity.enums.NotificationType;
-import com.jd.twitterclonebackend.service.NotificationResponseDto;
+import com.jd.twitterclonebackend.dto.response.NotificationResponseDto;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -57,7 +57,7 @@ public class NotificationMapper {
         }
 
         return NotificationResponseDto.builder()
-                .id(notificationEntity.getPublisher().getId())
+                .id(notificationEntity.getId())
                 .name(notificationEntity.getPublisher().getName())
                 .username(notificationEntity.getPublisher().getUsername())
                 .userProfilePicture(notificationEntity.getPublisher().getProfilePicture())

@@ -1,4 +1,4 @@
-package com.jd.twitterclonebackend.service;
+package com.jd.twitterclonebackend.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -105,8 +105,6 @@ public class TweetController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .build();
-
-        // todo: send notification to post creator - check who liked which post
     }
 
     @GetMapping(path = "/like/by-user/{username}")
@@ -125,7 +123,6 @@ public class TweetController {
                 .body(tweetService.getLikedTweetsByUsername(username, pageable));
     }
 
-    // todo: doesn't work properly
     @GetMapping(path = "/search/{searchTerm}")
     public ResponseEntity<List<TweetResponseDto>> findBySearchTerm(@PathVariable String searchTerm,
                                                                   @RequestParam("pageNumber") int pageNumber,

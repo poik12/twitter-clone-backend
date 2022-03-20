@@ -15,7 +15,4 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     Optional<UserEntity> findByEmailAddress(String emailAddress);
 
-//    @Modifying
-//    @Query(value = "delete from UserEntity u where u.likedPosts = :postId")
-//    void deleteLikedPostsByPostId(Long postId);
 }
