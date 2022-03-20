@@ -3,6 +3,7 @@ package com.jd.twitterclonebackend.service.impl;
 import com.jd.twitterclonebackend.dto.response.CommentResponseDto;
 import com.jd.twitterclonebackend.dto.response.RepliedTweetResponseDto;
 import com.jd.twitterclonebackend.dto.response.TweetResponseDto;
+import com.jd.twitterclonebackend.entity.HashtagEntity;
 import com.jd.twitterclonebackend.entity.TweetEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.entity.enums.NotificationType;
@@ -12,10 +13,7 @@ import com.jd.twitterclonebackend.exception.enums.InvalidTweetEnum;
 import com.jd.twitterclonebackend.exception.enums.InvalidUserEnum;
 import com.jd.twitterclonebackend.mapper.CommentMapper;
 import com.jd.twitterclonebackend.mapper.TweetMapper;
-import com.jd.twitterclonebackend.repository.CommentRepository;
-import com.jd.twitterclonebackend.repository.ImageFileRepository;
-import com.jd.twitterclonebackend.repository.TweetRepository;
-import com.jd.twitterclonebackend.repository.UserRepository;
+import com.jd.twitterclonebackend.repository.*;
 import com.jd.twitterclonebackend.service.FileService;
 import com.jd.twitterclonebackend.service.NotificationService;
 import com.jd.twitterclonebackend.service.TweetService;
@@ -28,10 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,6 +37,7 @@ public class TweetServiceImpl implements TweetService {
     private final UserRepository userRepository;
     private final ImageFileRepository imageFileRepository;
     private final CommentRepository commentRepository;
+    private final HashtagRepository hashtagRepository;
 
     private final UserDetailsServiceImpl userDetailsService;
     private final FileService fileService;
@@ -292,6 +288,17 @@ public class TweetServiceImpl implements TweetService {
                         }
                 ).toList();
 
+
+    }
+
+    @Override
+    public List<TweetResponseDto> searchTweets(String searchTerm, Pageable pageable) {
+       // todo: searching doesn't work
+        String searchTermWithHashtag = "#" + searchTerm;
+        return tweetRepository.findByHashTag(searchTermWithHashtag)
+                .stream()
+                .map(tweetMapper::mapFromEntityToDto)
+                .collect(Collectors.toList());
 
     }
 

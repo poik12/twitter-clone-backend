@@ -1,5 +1,6 @@
 package com.jd.twitterclonebackend.repository;
 
+import com.jd.twitterclonebackend.entity.HashtagEntity;
 import com.jd.twitterclonebackend.entity.TweetEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
 import org.springframework.data.domain.Pageable;
@@ -32,4 +33,10 @@ public interface TweetRepository extends JpaRepository<TweetEntity, Long> {
             "WHERE c.user = :userEntity " +
             "ORDER BY t.createdAt DESC")
     List<TweetEntity> findPostByCommentsFromUsername(UserEntity userEntity, Pageable pageable);
+
+    @Query(value = "SELECT t FROM TweetEntity  t " +
+            "JOIN t.hashtags h " +
+            "WHERE h.value = :hashtag " +
+            "ORDER BY t.createdAt DESC")
+    List<TweetEntity> findByHashTag(@Param("hashtag") String hashtag);
 }

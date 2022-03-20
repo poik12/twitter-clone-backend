@@ -7,7 +7,6 @@ import com.jd.twitterclonebackend.repository.ImageFileRepository;
 import com.jd.twitterclonebackend.service.FileService;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -111,7 +110,6 @@ public class FileServiceImpl implements FileService {
 
     // Convert image to byte array using image path
     @Override
-    @Nullable
     public byte[] convertFilePathToByteArray(String filePath) {
         byte[] content = null;
         try {
@@ -127,7 +125,6 @@ public class FileServiceImpl implements FileService {
 
     // Convert file to byte array using image file
     @Override
-    @Nullable
     public byte[] convertFileToByteArray(MultipartFile file) {
         byte[] content = null;
         try {

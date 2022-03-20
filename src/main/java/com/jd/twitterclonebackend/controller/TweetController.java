@@ -23,7 +23,6 @@ public class TweetController {
 
     private final TweetService tweetService;
 
-    // ADD NEW POST
     @PostMapping
     public ResponseEntity<Void> addTweet(
             @RequestParam(required = false, value = "files") MultipartFile[] files,
@@ -35,8 +34,6 @@ public class TweetController {
                 .build();
     }
 
-
-    // GET ALL POSTS IN PAGES SORTED BY TIMESTAMP DESC
     @GetMapping()
     public ResponseEntity<List<TweetResponseDto>> getAllTweets(@RequestParam("pageNumber") int pageNumber,
                                                                @RequestParam("pageSize") int pageSize) {
@@ -52,7 +49,6 @@ public class TweetController {
                 .body(tweetService.getAllTweets(pageable));
     }
 
-    // GET SINGLE POST BY ID
     @GetMapping(path = "/{tweetId}")
     public ResponseEntity<TweetResponseDto> getTweetById(@PathVariable Long tweetId) {
         return ResponseEntity
@@ -60,7 +56,6 @@ public class TweetController {
                 .body(tweetService.getTweetById(tweetId));
     }
 
-    // GET POSTS BY USERNAME
     @GetMapping(path = "/by-user/{username}")
     public ResponseEntity<List<TweetResponseDto>> getTweetsByUsername(@PathVariable String username,
                                                                       @RequestParam("pageNumber") int pageNumber,
@@ -77,7 +72,6 @@ public class TweetController {
                 .body(tweetService.getTweetsByUsername(username, pageable));
     }
 
-    // DELETE POST BY ID
     @DeleteMapping(path = "/{tweetId}")
     public ResponseEntity<Void> deleteTweetById(@PathVariable Long tweetId) {
         tweetService.deleteTweetById(tweetId);
@@ -104,7 +98,7 @@ public class TweetController {
                 .body(tweetService.getRepliedTweetsWithCommentsByUsername(username, pageable));
     }
 
-    // LIKE POST
+    // LIKE TWEET
     @GetMapping(path = "/like/{tweetId}")
     public ResponseEntity<Void> likeTweet(@PathVariable Long tweetId) {
         tweetService.likeTweetById(tweetId);
@@ -115,7 +109,6 @@ public class TweetController {
         // todo: send notification to post creator - check who liked which post
     }
 
-    // GET LIKED POSTS
     @GetMapping(path = "/like/by-user/{username}")
     public ResponseEntity<List<TweetResponseDto>> getLikedTweetsByUsername(@PathVariable String username,
                                                                            @RequestParam("pageNumber") int pageNumber,
@@ -130,6 +123,23 @@ public class TweetController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(tweetService.getLikedTweetsByUsername(username, pageable));
+    }
+
+    // todo: doesn't work properly
+    @GetMapping(path = "/search/{searchTerm}")
+    public ResponseEntity<List<TweetResponseDto>> findBySearchTerm(@PathVariable String searchTerm,
+                                                                  @RequestParam("pageNumber") int pageNumber,
+                                                                  @RequestParam("pageSize") int pageSize) {
+        Pageable pageable = PageRequest.of(
+                pageNumber,
+                pageSize,
+                Sort.Direction.DESC,
+                "createdAt"
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(tweetService.searchTweets(searchTerm, pageable));
     }
 
 }
