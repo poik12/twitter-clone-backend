@@ -23,7 +23,6 @@
 ### Node version: 14.17.4
 ### Angular CLI version: 12.2.1
 
-
 ## Dependencies
 ### Backend
   - Spring Web
