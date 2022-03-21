@@ -95,3 +95,8 @@ What's next:
 
 
 ## Example Screenshots
+<img src = "./src/main/resources/images/twitter-clone-main-page.PNG" >
+<img src = "./src/main/resources/images/twitter-clone-messages-page.PNG" >
+<img src = "./src/main/resources/images/twitter-clone-notifications-page.PNG" >
+<img src = "./src/main/resources/images/twitter-clone-profile-page.PNG" >
+<img src = "./src/main/resources/images/twitter-clone-profile-page-2.PNG" >
