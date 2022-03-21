@@ -72,7 +72,7 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
         // H2 Database
         httpSecurity.authorizeRequests().antMatchers("h2-console/**").permitAll();
         // CONTROLLER MAPPINGS
-//        httpSecurity.authorizeRequests().antMatchers("/auth/**").permitAll();
+        httpSecurity.authorizeRequests().antMatchers("/auth/**").permitAll();
 //        httpSecurity.authorizeRequests().antMatchers("/users/**").permitAll();
 //        httpSecurity.authorizeRequests().antMatchers("/tweets/**").permitAll();
 //        httpSecurity.authorizeRequests().antMatchers("/comments/**").permitAll();
@@ -104,9 +104,9 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     // TODO: needed for testing purpose - test doesn't work without it
     // TODO: comment when spring boot doesn't want to start
-    @Bean
-    public JavaMailSender javaMailSender() {
-        return new JavaMailSenderImpl();
-    }
+//    @Bean
+//    public JavaMailSender javaMailSender() {
+//        return new JavaMailSenderImpl();
+//    }
 
 }
