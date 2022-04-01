@@ -37,7 +37,6 @@ public class TweetServiceImpl implements TweetService {
     private final UserRepository userRepository;
     private final ImageFileRepository imageFileRepository;
     private final CommentRepository commentRepository;
-    private final HashtagRepository hashtagRepository;
     private final NotificationRepository notificationRepository;
 
     private final UserDetailsServiceImpl userDetailsService;
@@ -65,8 +64,8 @@ public class TweetServiceImpl implements TweetService {
                     .forEach(file -> fileService.uploadImageFile(tweetEntity, file));
         }
         // Send notification to user followers
-        loggedUser.getFollowers().forEach(followerEntity -> notificationService.notifyFollower(
-                followerEntity,
+        loggedUser.getFollowers().forEach(followerEntity -> notificationService.notifyUser(
+                followerEntity.getFrom(),
                 NotificationType.TWEET,
                 tweetEntity.getId()
         ));
@@ -296,8 +295,6 @@ public class TweetServiceImpl implements TweetService {
                             );
                         }
                 ).toList();
-
-
     }
 
     @Override

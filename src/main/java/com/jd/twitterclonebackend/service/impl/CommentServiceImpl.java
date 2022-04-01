@@ -71,8 +71,7 @@ public class CommentServiceImpl implements CommentService {
         );
     }
 
-    @Override
-    public List<CommentResponseDto> getAllCommentsForPost(Long tweetId, Pageable pageable) {
+    public List<CommentResponseDto> getAllCommentsForTweet(Long tweetId, Pageable pageable) {
         // Find post with comments in post repository
         TweetEntity tweetEntity = tweetRepository
                 .findById(tweetId)
@@ -89,9 +88,9 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<CommentResponseDto> getThreeLastCommentsForPostByUsernameAndPostId(String username,
-                                                                                   Long tweetId,
-                                                                                   Pageable pageable) {
+    public List<CommentResponseDto> getThreeLastCommentsForTweetByUsernameAndTweetId(String username,
+                                                                                     Long tweetId,
+                                                                                     Pageable pageable) {
         // Find user who created comments in user repository by username
         UserEntity userEntity = userRepository
                 .findByUsername(username)

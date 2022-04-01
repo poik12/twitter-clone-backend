@@ -7,10 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.jd.twitterclonebackend.dto.request.*;
 import com.jd.twitterclonebackend.dto.response.*;
-import com.jd.twitterclonebackend.entity.TweetEntity;
-import com.jd.twitterclonebackend.entity.RefreshTokenEntity;
-import com.jd.twitterclonebackend.entity.UserEntity;
-import com.jd.twitterclonebackend.entity.VerificationTokenEntity;
+import com.jd.twitterclonebackend.entity.*;
 import com.jd.twitterclonebackend.entity.enums.NotificationType;
 import com.jd.twitterclonebackend.entity.enums.UserRole;
 import com.jd.twitterclonebackend.mapper.AuthMapper;
@@ -26,13 +23,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.time.Instant;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @SpringBootTest
 @Transactional // cleans db after each test
@@ -50,6 +44,8 @@ public abstract class IntegrationTestInitData {
     protected FileService fileService;
     @Autowired
     protected TweetService tweetService;
+    @Autowired
+    protected CommentService commentService;
 
     @Autowired
     protected VerificationTokenService verificationTokenService;
@@ -73,6 +69,8 @@ public abstract class IntegrationTestInitData {
     protected VerificationTokenRepository verificationTokenRepository;
     @Autowired
     protected RefreshTokenRepository refreshTokenRepository;
+    @Autowired
+    protected CommentRepository commentRepository;
 
     protected static final String DEFAULT_PROFILE_PICTURE_PATH = "src/main/resources/images/default_profile_picture_twitter.png";
     protected static final String DEFAULT_BACKGROUND_PICTURE_PATH = "src/main/resources/images/default_background_picture_twitter.png";
@@ -99,14 +97,14 @@ public abstract class IntegrationTestInitData {
     protected static final String USER_UPDATE_EMAIL_ADDRESS = "test-user-1 UPDATE@gmail.com";
     protected static final String USER_UPDATE_PASSWORD = "user1 UPDATE";
     protected static final String USER_UPDATE_PHONE_NUMBER = "111_111_111 UPDATE";
-    protected static final String USER_UPDATE_TEST_DESCRIPTION = "Test Description 1 UPDATE";
+    protected static final String USER_UPDATE_DESCRIPTION = "Test Description 1 UPDATE";
 
     protected static final String VERIFICATION_TOKEN = UUID.randomUUID().toString();
     protected static final String FAKE_VERIFICATION_TOKEN = UUID.randomUUID().toString();
 
     protected static final String FAKE_REFRESH_TOKEN = UUID.randomUUID().toString();
 
-    protected static final String POST_DESCRIPTION = "Post Description";
+    protected static final String TWEET_DESCRIPTION = "Post Description";
 
     protected static final String COMMENT_TEXT = "Comment text";
 
@@ -146,6 +144,8 @@ public abstract class IntegrationTestInitData {
                 .tweetNo(0L)
                 .followerNo(0L)
                 .followingNo(0L)
+                .followers(Collections.emptyList())
+                .following(Collections.emptyList())
                 .description(USER_PRIME_TEST_DESCRIPTION)
                 .build();
         return userRepository.save(userEntity);
@@ -165,6 +165,8 @@ public abstract class IntegrationTestInitData {
                 .tweetNo(0L)
                 .followerNo(0L)
                 .followingNo(0L)
+                .followers(Collections.emptyList())
+                .following(Collections.emptyList())
                 .description(USER_SECOND_TEST_DESCRIPTION)
                 .build();
         return userRepository.save(userEntity);
@@ -222,7 +224,7 @@ public abstract class IntegrationTestInitData {
         VerificationTokenEntity verificationTokenEntity = VerificationTokenEntity.builder()
                 .token(VERIFICATION_TOKEN)
                 .confirmedAt(null)
-                .expiresAt( Instant.now().plusSeconds(1000))
+                .expiresAt(Instant.now().plusSeconds(1000))
                 .user(userEntity)
                 .build();
         return verificationTokenRepository.save(verificationTokenEntity);
@@ -268,25 +270,32 @@ public abstract class IntegrationTestInitData {
         return requestJSON;
     }
 
-    protected MultipartFile[] initMultiPartFile() {
-        byte[] content = fileService.convertFilePathToByteArray(DEFAULT_BACKGROUND_PICTURE_PATH);
-        List<MockMultipartFile> mockMultipartFiles = List.of(new MockMultipartFile(
-                "file.txt",
-                "file.txt",
+    protected MockMultipartFile[] initMultiPartFiles() {
+        MockMultipartFile mockMultipartFileFirst = new MockMultipartFile(
+                "file1.txt",
+                "file1.txt",
                 "text/plain",
-                content
-        ));
-        return null;
-
+                fileService.convertFilePathToByteArray(DEFAULT_BACKGROUND_PICTURE_PATH)
+        );
+        MockMultipartFile mockMultipartFileSecond = new MockMultipartFile(
+                "file2.txt",
+                "file2.txt",
+                "text/plain",
+                fileService.convertFilePathToByteArray(DEFAULT_PROFILE_PICTURE_PATH)
+        );
+        return new MockMultipartFile[]{
+                mockMultipartFileFirst,
+                mockMultipartFileSecond
+        };
     }
 
-    protected TweetRequestDto initPostRequestDto() {
-            return TweetRequestDto.builder()
-                .description(POST_DESCRIPTION)
+    protected TweetRequestDto initTweetRequestDto() {
+        return TweetRequestDto.builder()
+                .description(TWEET_DESCRIPTION)
                 .build();
     }
 
-    protected TweetResponseDto initPostResponseDto() {
+    protected TweetResponseDto initTweetResponseDto() {
         return TweetResponseDto.builder()
                 .id(1L)
                 .name(USER_PRIME_NAME)
@@ -300,16 +309,32 @@ public abstract class IntegrationTestInitData {
                 .build();
     }
 
-    protected List<TweetEntity> initPostsInDatabase() {
-        initCurrentLoggedUser();
-        String postRequestAsJson = initRequestDtoAsJson(initPostRequestDto());
-//        MultipartFile[] file = initMultiPartFile().toArray(new MultipartFile[0]);
-
-//        postService.addPost(file, postRequestAsJson);
-//        postService.addPost(file, postRequestAsJson);
-//        postService.addPost(file, postRequestAsJson);
-
+    protected List<TweetEntity> initTweetListInDatabase() {
+        UserEntity userEntity = initCurrentLoggedUser();
+        TweetEntity tweetEntity = initTweetEntity(userEntity);
+        tweetRepository.save(tweetEntity);
         return tweetRepository.findAll();
+    }
+
+    protected TweetEntity initTweetInDatabase() {
+        UserEntity userEntity = initCurrentLoggedUser();
+        TweetEntity tweetEntity = initTweetEntity(userEntity);
+        return tweetRepository.save(tweetEntity);
+    }
+
+    protected TweetEntity initTweetEntity(UserEntity userEntity) {
+
+        return TweetEntity.builder()
+                .id(1L)
+                .description(TWEET_DESCRIPTION)
+                .user(userEntity)
+                .commentNo(0L)
+                .comments(Collections.emptyList())
+                .hashtags(Collections.emptyList())
+                .userLikes(Collections.emptySet())
+                .images(Collections.emptyList())
+                .createdAt(Date.from(Instant.now()))
+                .build();
     }
 
     protected CommentRequestDto initCommentRequestDto() {

@@ -68,7 +68,6 @@ public class MessageMapper {
 
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
         return formatter.format(messageDate);
-
     }
 
 }

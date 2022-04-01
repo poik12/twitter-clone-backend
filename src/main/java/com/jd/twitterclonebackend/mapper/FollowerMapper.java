@@ -24,11 +24,11 @@ public class FollowerMapper {
                 .build();
     }
 
-    public long getUserFollowers(UserEntity userEntity) {
+    public long getUserFollowerNo(UserEntity userEntity) {
         return userEntity.getFollowers().size();
     }
 
-    public long getUserFollowings(UserEntity userEntity) {
+    public long getUserFollowingNo(UserEntity userEntity) {
         return userEntity.getFollowing().size();
     }
 

@@ -10,11 +10,11 @@ public interface CommentService {
 
     void addComment(CommentRequestDto commentRequestDto);
 
-    List<CommentResponseDto> getAllCommentsForPost(Long tweetId, Pageable pageable);
+    List<CommentResponseDto> getAllCommentsForTweet(Long tweetId, Pageable pageable);
 
-    List<CommentResponseDto> getThreeLastCommentsForPostByUsernameAndPostId(String username,
-                                                                            Long tweetId,
-                                                                            Pageable pageable);
+    List<CommentResponseDto> getThreeLastCommentsForTweetByUsernameAndTweetId(String username,
+                                                                              Long tweetId,
+                                                                              Pageable pageable);
 
     void deleteCommentById(Long commentId);
 }

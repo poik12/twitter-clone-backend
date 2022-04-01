@@ -10,9 +10,7 @@ import java.util.List;
 
 public interface NotificationService {
 
-    void notifyFollower(FollowerEntity followerEntity, NotificationType notificationType, Long materialId);
-
-    void notifyUser(UserEntity publisherEntity, NotificationType notificationType, Long materialId);
+    void notifyUser(UserEntity notifiedUser, NotificationType notificationType, Long materialId);
 
     List<NotificationResponseDto> getAllNotifications(Pageable pageable);
 
