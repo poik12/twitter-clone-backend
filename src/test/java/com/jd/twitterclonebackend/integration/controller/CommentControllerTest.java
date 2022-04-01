@@ -12,9 +12,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -77,7 +74,7 @@ class CommentControllerTest extends IntegrationTestInitData {
         );
 
         // when then
-        when(commentService.getAllCommentsForPost(any(), any()))
+        when(commentService.getAllCommentsForTweet(any(), any()))
                 .thenReturn(commentResponseDtoList);
 
         mockMvc.perform(
@@ -107,7 +104,7 @@ class CommentControllerTest extends IntegrationTestInitData {
         );
 
         // when then
-        when(commentService.getThreeLastCommentsForPostByUsernameAndPostId(any(), any(), any()))
+        when(commentService.getThreeLastCommentsForTweetByUsernameAndTweetId(any(), any(), any()))
                 .thenReturn(commentResponseDtoList);
 
         mockMvc.perform(

@@ -295,8 +295,6 @@ public class TweetServiceImpl implements TweetService {
                             );
                         }
                 ).toList();
-
-
     }
 
     @Override

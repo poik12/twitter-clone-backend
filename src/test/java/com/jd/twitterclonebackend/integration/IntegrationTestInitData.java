@@ -44,6 +44,8 @@ public abstract class IntegrationTestInitData {
     protected FileService fileService;
     @Autowired
     protected TweetService tweetService;
+    @Autowired
+    protected CommentService commentService;
 
     @Autowired
     protected VerificationTokenService verificationTokenService;
@@ -67,6 +69,8 @@ public abstract class IntegrationTestInitData {
     protected VerificationTokenRepository verificationTokenRepository;
     @Autowired
     protected RefreshTokenRepository refreshTokenRepository;
+    @Autowired
+    protected CommentRepository commentRepository;
 
     protected static final String DEFAULT_PROFILE_PICTURE_PATH = "src/main/resources/images/default_profile_picture_twitter.png";
     protected static final String DEFAULT_BACKGROUND_PICTURE_PATH = "src/main/resources/images/default_background_picture_twitter.png";

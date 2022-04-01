@@ -1,6 +1,7 @@
 package com.jd.twitterclonebackend.integration.service;
 
 import com.jd.twitterclonebackend.dto.request.TweetRequestDto;
+import com.jd.twitterclonebackend.dto.response.TweetResponseDto;
 import com.jd.twitterclonebackend.entity.TweetEntity;
 import com.jd.twitterclonebackend.exception.TweetException;
 import com.jd.twitterclonebackend.exception.enums.InvalidTweetEnum;
@@ -17,8 +18,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 class TweetServiceImplTest extends IntegrationTestInitData {
@@ -155,10 +155,23 @@ class TweetServiceImplTest extends IntegrationTestInitData {
     @DisplayName(value = "Should get List<TweetResponseDto> by Username")
     void should_getTweets_byUsername() {
         // given
+        List<TweetEntity> tweetEntityList = initTweetListInDatabase();
+        Pageable pageable = PageRequest.of(
+                0,
+                10,
+                Sort.Direction.DESC,
+                "createdAt"
+        );
 
         // when
+        var result = tweetService.getTweetsByUsername(USER_PRIME_USERNAME, pageable);
 
         // then
+        assertAll(
+                () -> {
+                    assertThat(result.size()).isEqualTo(tweetEntityList.size());
+                }
+        );
 
     }
 
@@ -166,11 +179,18 @@ class TweetServiceImplTest extends IntegrationTestInitData {
     @DisplayName(value = "Should delete Tweet Entity by Tweet Id")
     void should_deleteTweetEntity_byId() {
         // given
+        TweetEntity tweetEntity = initTweetInDatabase();
 
         // when
+        tweetService.deleteTweetById(tweetEntity.getId());
 
         // then
-
+        assertAll(
+                () -> {
+                    assertTrue(tweetRepository.findById(tweetEntity.getId()).isEmpty());
+                    assertThat(tweetRepository.findAll().size()).isEqualTo(0);
+                }
+        );
     }
 
     @Test

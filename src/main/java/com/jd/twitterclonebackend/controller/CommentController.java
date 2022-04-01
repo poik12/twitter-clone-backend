@@ -44,7 +44,7 @@ public class CommentController {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(commentService.getAllCommentsForPost(tweetId, pageable));
+                .body(commentService.getAllCommentsForTweet(tweetId, pageable));
     }
 
     @GetMapping(path = "/by-user/{username}/{tweetId}")
@@ -61,7 +61,7 @@ public class CommentController {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(commentService.getThreeLastCommentsForPostByUsernameAndPostId(username, tweetId, pageable));
+                .body(commentService.getThreeLastCommentsForTweetByUsernameAndTweetId(username, tweetId, pageable));
     }
 
     @DeleteMapping(path ="/{commentId}")
