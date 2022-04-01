@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -26,7 +25,7 @@ public class HashtagEntity {
     private String value;
 
     @ManyToMany(mappedBy = "hashtags")
-    private List<TweetEntity> posts;
+    private List<TweetEntity> tweets;
 
     @CreationTimestamp
     private Date createdAt;

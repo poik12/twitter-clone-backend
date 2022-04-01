@@ -14,37 +14,20 @@ import java.util.Objects;
 @Component
 public class NotificationMapper {
 
-    public NotificationEntity mapFromDtoToEntity(FollowerEntity followerEntity,
-                                                 NotificationType notificationType,
-                                                 Long materialId) {
-
-        if (Objects.isNull(followerEntity)
-                || Objects.isNull(notificationType)) {
-            return null;
-        }
-
-        return NotificationEntity.builder()
-                .publisher(followerEntity.getTo())
-                .subscriber(followerEntity.getFrom())
-                .notificationType(notificationType)
-                .materialId(materialId)
-                .build();
-    }
-
     public NotificationEntity mapFromDtoToEntity(UserEntity loggedUser,
-                                                 UserEntity tweetPublisher,
+                                                 UserEntity notifiedUser,
                                                  NotificationType notificationType,
                                                  Long materialId) {
 
         if (Objects.isNull(loggedUser)
-                || Objects.isNull(tweetPublisher)
+                || Objects.isNull(notifiedUser)
                 || Objects.isNull(notificationType)) {
             return null;
         }
 
         return NotificationEntity.builder()
                 .publisher(loggedUser)
-                .subscriber(tweetPublisher)
+                .subscriber(notifiedUser)
                 .notificationType(notificationType)
                 .materialId(materialId)
                 .build();
@@ -66,6 +49,5 @@ public class NotificationMapper {
                 .materialId(notificationEntity.getMaterialId())
                 .build();
     }
-
 
 }

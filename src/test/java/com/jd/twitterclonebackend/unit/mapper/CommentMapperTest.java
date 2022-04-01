@@ -21,7 +21,7 @@ class CommentMapperTest extends UnitTestInitData {
     void should_mapFromCommentDto_ToCommentEntity() {
         // given
         UserEntity userEntity = initUserEntity();
-        TweetEntity tweetEntity = initPostEntity(userEntity);
+        TweetEntity tweetEntity = initTweetEntityWithoutFilesAndHashtags(userEntity);
         CommentRequestDto commentRequestDto = initCommentRequestDto();
 
         // when
@@ -30,7 +30,6 @@ class CommentMapperTest extends UnitTestInitData {
                 tweetEntity,
                 userEntity
         );
-        System.out.println(result);
 
         // then
         assertAll(
@@ -47,13 +46,12 @@ class CommentMapperTest extends UnitTestInitData {
     void should_mapFromCommentEntity_toCommentResponseDto() {
         // given
         UserEntity userEntity = initUserEntity();
-        TweetEntity tweetEntity = initPostEntity(userEntity);
+        TweetEntity tweetEntity = initTweetEntityWithoutFilesAndHashtags(userEntity);
         CommentEntity commentEntity = initCommentEntity(userEntity, tweetEntity);
 
         // when
         var result = commentMapper.mapFromEntityToDto(commentEntity);
 
-        System.out.println(result);
         // then
         assertAll(
                 () -> {

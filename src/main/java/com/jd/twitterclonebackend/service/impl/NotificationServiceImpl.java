@@ -26,29 +26,17 @@ public class NotificationServiceImpl implements NotificationService {
     private final NotificationRepository notificationRepository;
 
     @Override
-    public void notifyFollower(FollowerEntity followerEntity,
-                               NotificationType notificationType,
-                               Long materialId) {
-        NotificationEntity notificationEntity = notificationMapper.mapFromDtoToEntity(
-                followerEntity,
-                notificationType,
-                materialId
-        );
-        notificationRepository.save(notificationEntity);
-    }
-
-    @Override
-    public void notifyUser(UserEntity tweetPublisher,
+    public void notifyUser(UserEntity notifiedUser,
                            NotificationType notificationType,
                            Long materialId) {
         UserEntity loggedUser = userDetailsService.currentLoggedUserEntity();
 
-        if (Objects.equals(tweetPublisher.getId(), loggedUser.getId())) {
+        if (Objects.equals(notifiedUser.getId(), loggedUser.getId())) {
             return;
         }
         NotificationEntity notificationEntity = notificationMapper.mapFromDtoToEntity(
                 loggedUser,
-                tweetPublisher,
+                notifiedUser,
                 notificationType,
                 materialId
         );

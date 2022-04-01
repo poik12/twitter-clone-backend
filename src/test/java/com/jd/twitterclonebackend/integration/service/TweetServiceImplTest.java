@@ -1,134 +1,209 @@
 package com.jd.twitterclonebackend.integration.service;
 
+import com.jd.twitterclonebackend.dto.request.TweetRequestDto;
+import com.jd.twitterclonebackend.entity.TweetEntity;
+import com.jd.twitterclonebackend.exception.TweetException;
+import com.jd.twitterclonebackend.exception.enums.InvalidTweetEnum;
 import com.jd.twitterclonebackend.integration.IntegrationTestInitData;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.mock.web.MockMultipartFile;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class TweetServiceImplTest extends IntegrationTestInitData {
 
-//    @Test
-//    void should_addPost_withoutFile() {
-//        // given
-//        initCurrentLoggedUser();
-//        PostRequestDto postRequestDto = initPostRequestDto();
-//        String postRequestJson = initRequestDtoAsJson(postRequestDto);
-//
-//        // when
-//        postService.addPost((MultipartFile[]) null, postRequestJson);
-//
-//        // then
-//        assertThat(fileRepository.findAll()).hasSize(0);
-//        assertThat(postRepository.findAll()).hasSize(1);
-//        PostEntity postEntity = postRepository.findByDescription(POST_DESCRIPTION);
-//        assertThat(postEntity.getDescription()).isEqualTo(POST_DESCRIPTION);
-//    }
+    @BeforeEach
+    void setUp() {
+        initCurrentLoggedUser();
+    }
 
-//    @Test
-//    void should_addPost_withFile() {
-//        // given
-//        initCurrentLoggedUser();
-//        PostRequestDto postRequestDto = initPostRequestDto();
-//        String postRequestJson = initRequestDtoAsJson(postRequestDto);
-//        MultipartFile[] file = initMultiPartFile();
-//
-//        // when
-//        postService.addPost(file, postRequestJson);
-//
-//        // then
-//        assertThat(fileRepository.findAll()).hasSize(1);
-//        assertThat(postRepository.findAll()).hasSize(1);
-//
-//        PostEntity postEntity = postRepository.findByDescription(POST_DESCRIPTION);
-//        assertThat(postEntity.getDescription()).isEqualTo(POST_DESCRIPTION);
-//
-//        ImageFileEntity fileEntity = fileRepository.getByPost(postEntity);
-//        assertThat(fileEntity.getContent()).isNotNull();
-//    }
+    @Test
+    @DisplayName(value = "Should add new Tween Entity without Image File")
+    void should_addTweet_withoutFile() {
+        // given
+        TweetRequestDto tweetRequestDto = initTweetRequestDto();
+        String tweetRequestJson = initRequestDtoAsJson(tweetRequestDto);
 
-//    @Test
-//    void should_getAllPosts_sortedByTimeStamp() {
-//        // given
-//        Pageable pageable = PageRequest.of(
-//                0,
-//                10,
-//                Sort.Direction.DESC,
-//                "createdAt"
-//        );
-//
-//
-//        List<PostEntity> postEntityList = initPostsInDatabase();
-//        assertThat(postEntityList).hasSize(3);
-//
-//        // when
-//        var result = postService.getAllPosts(pageable);
+        // when
+        tweetService.addTweet(null, tweetRequestJson);
 
-        // todo: doesn't work
         // then
-//        assertThat(result.size()).isEqualTo(postEntityList.size());
-//        PostResponseDto postResponseDto = result.get(0);
-//        PostEntity postEntity = postEntityList.get(0);
-//        byte[] content = postEntity.getImages().get(0).getContent();
-//        assertThat(postResponseDto.getFileContent()).isEqualTo(content);
-//    }
+        assertAll(
+                () -> {
+                    assertThat(fileRepository.findAll()).hasSize(0);
+                    assertThat(tweetRepository.findAll()).hasSize(1);
+                    TweetEntity tweetEntity = tweetRepository.findByDescription(tweetRequestDto.getDescription());
+                    assertThat(tweetEntity.getDescription()).isEqualTo(tweetRequestDto.getDescription());
+                }
+        );
+    }
 
+    @Test
+    @DisplayName(value = "Should add new Tween Entity with Image Files")
+    void should_addTweet_withFile() {
+        // given
+        TweetRequestDto tweetRequestDto = initTweetRequestDto();
+        String tweetRequestJson = initRequestDtoAsJson(tweetRequestDto);
+        MockMultipartFile[] files = initMultiPartFiles();
+        assertThat(files).hasSize(2);
 
-//    @Test
-//    void should_getPostDto_byPostId() {
-//        // given
-//        List<PostEntity> postEntityList = initPostsInDatabase();
-//        assertThat(postEntityList).hasSize(3);
-//        postEntityList.forEach(postEntity -> {
-//            System.out.println(postEntity.getId());
-//            System.out.println(postEntity.getImages());
-//        });
-//        long postId = 2L;
-//
-//
-//        // TODO: IN POST ENTITY IMAGE LIST IS EMPTY
-//        // when
-//        var response = postService.getPostById(postId);
-//
-//        // then
-//        PostEntity postEntity = postEntityList.get(0);
-//
-//        assertThat(response.getId()).isEqualTo(postEntity.getId());
-//        assertThat(response.getName()).isEqualTo(postEntity.getUser().getName());
-//        assertThat(response.getUsername()).isEqualTo(postEntity.getUser().getUsername());
-//        assertThat(response.getDescription()).isEqualTo(postEntity.getDescription());
-//        assertThat(response.getCreatedAt()).isEqualTo(postEntity.getCreatedAt());
-//        assertThat(response.getCommentNo()).isEqualTo(postEntity.getCommentNo());
-//        assertThat(response.getUserProfilePicture()).isEqualTo(postEntity.getUser().getProfilePicture());
-//
-//        ImageFileEntity fileEntity = postEntity.getImages().get(0);
-//        assertThat(response.getFileContent()).isEqualTo(fileEntity.getContent());
-//
-//    }
+        // when
+        tweetService.addTweet(files, tweetRequestJson);
 
-//    @Test
-//    void should_throwPostException_whenPostWasNotFoundById() {
-//        // given
-//        List<PostEntity> postEntityList = initPostsInDatabase();
-//        assertThat(postEntityList).hasSize(3);
-//        Long postId = 3L;
-//
-//        // when
-//        var result = assertThrows(
-//                PostException.class,
-//                () -> postService.getPostById(postId)
+        // then
+        assertAll(
+                () -> {
+                    assertThat(fileRepository.findAll()).hasSize(2);
+                    assertThat(tweetRepository.findAll()).hasSize(1);
+                    TweetEntity tweetEntity = tweetRepository.findByDescription(tweetRequestDto.getDescription());
+                    assertThat(tweetEntity.getDescription()).isEqualTo(tweetRequestDto.getDescription());
+                }
+        );
+    }
+
+    // TODO: test doesn't work properly
+    @Test
+    @DisplayName(value = "Should get List<TweetResponseDto>")
+    void should_getAllTweets_sortedByTimeStamp() {
+        // given
+        Pageable pageable = PageRequest.of(
+                0,
+                10,
+                Sort.Direction.DESC,
+                "createdAt"
+        );
+
+        List<TweetEntity> tweetEntities = initTweetListInDatabase();
+        System.out.println(tweetEntities);
+        assertThat(tweetEntities.size()).isEqualTo(1);
+
+        // when
+        var result = tweetService.getAllTweets(pageable);
+        System.out.println(result);
+        // then
+//        assertAll(
+//                () -> {
+//                    assertThat(result.size()).isEqualTo(3);
+////                    assertThat(result.size()).isEqualTo(tweetEntityList.size());
+////                    assertEquals(result.get(0).getFileContent().get(0),
+////                            tweetEntityList.get(0).getImages().get(0).getContent());
+//                }
 //        );
-//
-//        // then
-//        assertThat(result.getStatus()).isEqualTo(HttpStatus.NOT_FOUND);
-//        assertThat(result.getMessage()).isEqualTo( InvalidPostEnum.POST_NOT_FOUND_WITH_ID.getMessage() + postId);
-//
-//    }
+    }
+
 
     @Test
-    void getPostsByUsername() {
+    @DisplayName(value = "Should get Tweet Response Dto by Tweet Id")
+    void should_getTweetDto_byTweetId() {
+        // given
+        TweetEntity tweetEntity = initTweetInDatabase();
+
+        // when
+        var response =
+                tweetService.getTweetById(tweetEntity.getId());
+
+        // then
+        assertAll(
+                () -> {
+                    assertThat(response.getId()).isEqualTo(tweetEntity.getId());
+                    assertThat(response.getName()).isEqualTo(tweetEntity.getUser().getName());
+                    assertThat(response.getUsername()).isEqualTo(tweetEntity.getUser().getUsername());
+                    assertThat(response.getDescription()).isEqualTo(tweetEntity.getDescription());
+                    assertThat(response.getCommentNo()).isEqualTo(tweetEntity.getCommentNo());
+                    assertThat(response.getUserProfilePicture())
+                            .isEqualTo(tweetEntity.getUser().getProfilePicture());
+                }
+        );
     }
 
     @Test
-    void deletePostById() {
+    @DisplayName(value = "Should throw Tweet Exception when Tweet Entity was not found by Id")
+    void should_throwTweetException_whenTweetWasNotFoundById() {
+        // given
+        List<TweetEntity> tweetEntityList = initTweetListInDatabase();
+        assertThat(tweetEntityList).hasSize(1);
+        long wrongTweetId = 100L;
+
+        // when
+        var result = assertThrows(
+                TweetException.class,
+                () -> tweetService.getTweetById((wrongTweetId))
+        );
+
+        // then
+        assertAll(
+                () -> {
+                    assertThat(result.getStatus()).isEqualTo(HttpStatus.NOT_FOUND);
+                    assertThat(result.getMessage())
+                            .isEqualTo(InvalidTweetEnum.TWEET_NOT_FOUND_WITH_ID.getMessage() + wrongTweetId);
+                }
+        );
     }
+
+    @Test
+    @DisplayName(value = "Should get List<TweetResponseDto> by Username")
+    void should_getTweets_byUsername() {
+        // given
+
+        // when
+
+        // then
+
+    }
+
+    @Test
+    @DisplayName(value = "Should delete Tweet Entity by Tweet Id")
+    void should_deleteTweetEntity_byId() {
+        // given
+
+        // when
+
+        // then
+
+    }
+
+    @Test
+    @DisplayName(value = "Should like Tweet Entity by Tweet Id")
+    void should_likeTweetEntity_byId() {
+        // given
+
+        // when
+
+        // then
+
+    }
+
+    @Test
+    @DisplayName(value = "Should get liked List<TweetResponseDto> by Username")
+    void should_getLikedTweets_byUsername() {
+        // given
+
+        // when
+
+        // then
+
+    }
+
+    @Test
+    @DisplayName(value = "Should get List<RepliedTweetResponseDto> by Username")
+    void should_getRepliedTweetsWithComments_byUsername() {
+        // given
+
+        // when
+
+        // then
+
+    }
+
 }

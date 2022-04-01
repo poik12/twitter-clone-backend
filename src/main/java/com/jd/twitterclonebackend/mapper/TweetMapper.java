@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -21,6 +20,7 @@ public class TweetMapper {
 
     private final JsonMapper jsonMapper;
     private final HashtagService hashtagService;
+    private final HashtagMapper hashtagMapper;
 
     public TweetEntity mapFromDtoToEntity(String tweetRequestJson, UserEntity userEntity) {
         // Map Post request from Json to Dto
@@ -56,18 +56,14 @@ public class TweetMapper {
                 .description(tweetEntity.getDescription())
                 .createdAt(tweetEntity.getCreatedAt())
                 .commentNo(getCommentCount(tweetEntity))
-                .likeNo(getPostCount(tweetEntity))
+                .likeNo(getUserLikesCount(tweetEntity))
                 .tweetTimeDuration(getPostTimeDuration(tweetEntity))
                 .username(tweetEntity.getUser().getUsername())
                 .name(tweetEntity.getUser().getName())
                 .userProfilePicture(tweetEntity.getUser().getProfilePicture())
                 .likedByLoggedUser(false)
                 .fileContent(Collections.emptyList())
-                .hashtags(tweetEntity.getHashtags()
-                        .stream()
-                        .map(HashtagEntity::getValue)
-                        .collect(Collectors.toList())
-                )
+                .hashtags(hashtagMapper.mapFromEntityToStringList(tweetEntity.getHashtags()))
                 .build();
     }
 
@@ -91,7 +87,7 @@ public class TweetMapper {
     }
 
     // Number of likes
-    private Long getPostCount(TweetEntity tweetEntity) {
+    private Long getUserLikesCount(TweetEntity tweetEntity) {
         return Long.parseLong(String.valueOf(tweetEntity.getUserLikes().size()));
     }
 

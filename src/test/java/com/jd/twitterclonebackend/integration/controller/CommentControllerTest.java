@@ -8,6 +8,7 @@ import com.jd.twitterclonebackend.dto.response.CommentResponseDto;
 import com.jd.twitterclonebackend.integration.IntegrationTestInitData;
 import com.jd.twitterclonebackend.service.CommentService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -48,6 +49,7 @@ class CommentControllerTest extends IntegrationTestInitData {
     }
 
     @Test
+    @DisplayName(value = "Should add new Comment by Comment Request Dto")
     void should_addComment() throws Exception {
         // given
         CommentRequestDto commentRequestDto = initCommentRequestDto();
@@ -63,15 +65,9 @@ class CommentControllerTest extends IntegrationTestInitData {
     }
 
     @Test
-    void should_getCommentResponseDtoList_byPostId() throws Exception {
+    @DisplayName(value = "Should get List<CommentResponseDto> by Tweet Id")
+    void should_getCommentResponseDtoList_byTweetId() throws Exception {
         // given
-        Pageable pageable = PageRequest.of(
-                0,
-                10,
-                Sort.Direction.DESC,
-                "createdAt"
-        );
-
         CommentResponseDto commentResponseDto = initCommentResponseDto();
 
         List<CommentResponseDto> commentResponseDtoList = List.of(
@@ -81,11 +77,13 @@ class CommentControllerTest extends IntegrationTestInitData {
         );
 
         // when then
-        when(commentService.getAllCommentsForPost(any(), pageable))
+        when(commentService.getAllCommentsForPost(any(), any()))
                 .thenReturn(commentResponseDtoList);
 
         mockMvc.perform(
-                        get("/comments/by-tweet/{postId}", commentResponseDto.getTweetId())
+                        get("/comments/by-tweet/{tweetId}", commentResponseDto.getTweetId())
+                                .param("pageNumber", "0")
+                                .param("pageSize", "10")
                                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 )
                 .andDo(print())
@@ -97,10 +95,9 @@ class CommentControllerTest extends IntegrationTestInitData {
     }
 
     @Test
+    @DisplayName(value = "Should get List<CommentResponseDto> by Username")
     void should_getCommentResponseDtoList_byUsername() throws Exception {
         // given
-        Pageable pageable = PageRequest.of(0, 10);
-
         CommentResponseDto commentResponseDto = initCommentResponseDto();
 
         List<CommentResponseDto> commentResponseDtoList = List.of(
@@ -110,11 +107,14 @@ class CommentControllerTest extends IntegrationTestInitData {
         );
 
         // when then
-        when(commentService.getThreeLastCommentsForPostByUsernameAndPostId(any(), any(), pageable))
+        when(commentService.getThreeLastCommentsForPostByUsernameAndPostId(any(), any(), any()))
                 .thenReturn(commentResponseDtoList);
 
         mockMvc.perform(
-                        get("/comments/by-user/{username}", commentResponseDto.getUsername())
+                        get("/comments/by-user/{username}/{tweetId}",
+                                commentResponseDto.getUsername(), commentResponseDto.getTweetId())
+                                .param("pageNumber", "0")
+                                .param("pageSize", "10")
                                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 )
                 .andDo(print())
@@ -126,6 +126,7 @@ class CommentControllerTest extends IntegrationTestInitData {
     }
 
     @Test
+    @DisplayName(value = "Should delete Comment Entity by Comment Id")
     void should_deleteComment_byId() throws Exception {
         // given
         CommentResponseDto commentResponseDto = initCommentResponseDto();
