@@ -7,9 +7,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 
-import java.time.Instant;
-import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -18,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class HashtagMapperTest extends UnitTestInitData {
 
     @InjectMocks
-    private HashtagMapper hashtagMapper;
+    private HashtagMapper underTest;
 
     @Test
     @DisplayName(value = "Should map from Hashtag String to Hashtag Entity")
@@ -27,7 +24,7 @@ class HashtagMapperTest extends UnitTestInitData {
         String hashtag = "#RandomHashtag";
 
         // when
-        var result = hashtagMapper.mapFromDtoToEntity(hashtag);
+        var result = underTest.mapFromDtoToEntity(hashtag);
 
         // then
         assertAll(
@@ -45,7 +42,7 @@ class HashtagMapperTest extends UnitTestInitData {
         List<HashtagEntity> hashtagEntityList = List.of(initHashtagEntity());
 
         // when
-        var result = hashtagMapper.mapFromEntityToStringList(hashtagEntityList);
+        var result = underTest.mapFromEntityToStringList(hashtagEntityList);
 
         // then
         assertAll(

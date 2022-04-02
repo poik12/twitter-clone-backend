@@ -3,7 +3,6 @@ package com.jd.twitterclonebackend.service.impl;
 import com.jd.twitterclonebackend.dto.response.CommentResponseDto;
 import com.jd.twitterclonebackend.dto.response.RepliedTweetResponseDto;
 import com.jd.twitterclonebackend.dto.response.TweetResponseDto;
-import com.jd.twitterclonebackend.entity.HashtagEntity;
 import com.jd.twitterclonebackend.entity.TweetEntity;
 import com.jd.twitterclonebackend.entity.UserEntity;
 import com.jd.twitterclonebackend.entity.enums.NotificationType;
@@ -281,7 +280,7 @@ public class TweetServiceImpl implements TweetService {
         return tweetResponseDtoList.stream()
                 .map(postResponseDto -> {
                             List<CommentResponseDto> commentResponseDtoList = commentRepository
-                                    .findAllByUserAndOrderByCreatedAtDesc(
+                                    .findAllByUserAndTweetIdAndOrderByCreatedAtDesc(
                                             userEntity,
                                             postResponseDto.getId(),
                                             commentRequest

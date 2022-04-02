@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 class AuthMapperTest extends UnitTestInitData {
 
     @InjectMocks
-    private AuthMapper authMapper;
+    private AuthMapper underTest;
 
     @Mock
     private FileService fileService;
@@ -41,7 +41,7 @@ class AuthMapperTest extends UnitTestInitData {
         when(fileService.convertFilePathToByteArray(any()))
                 .thenReturn(null);
 
-        var result = authMapper.mapFromDtoToEntity(registerRequestDto);
+        var result = underTest.mapFromDtoToEntity(registerRequestDto);
         System.out.println(result);
 
         // then

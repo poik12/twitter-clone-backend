@@ -30,10 +30,10 @@ import java.util.*;
 
 @SpringBootTest
 @Transactional // cleans db after each test
-@WithMockUser(
-        username = "mockUsername",
-        password = "mockPassword"
-)
+//@WithMockUser(
+//        username = "mockUsername",
+//        password = "mockPassword"
+//)
 public abstract class IntegrationTestInitData {
 
     @Autowired

@@ -1,12 +1,19 @@
 package com.jd.twitterclonebackend.unit;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.jd.twitterclonebackend.dto.request.*;
 import com.jd.twitterclonebackend.dto.response.ConversationResponseDto;
+import com.jd.twitterclonebackend.dto.response.EmailNotificationDto;
+import com.jd.twitterclonebackend.dto.response.UserResponseDto;
 import com.jd.twitterclonebackend.entity.*;
 import com.jd.twitterclonebackend.entity.enums.NotificationType;
 import com.jd.twitterclonebackend.entity.enums.UserRole;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.time.Instant;
 import java.util.Collections;
@@ -14,6 +21,8 @@ import java.util.Date;
 import java.util.List;
 
 @ExtendWith(value = MockitoExtension.class)
+@DataJpaTest
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public abstract class UnitTestInitData {
 
     protected static final String USER_PRIME_NAME = "Test User 1";
@@ -44,6 +53,10 @@ public abstract class UnitTestInitData {
 
     protected static final Date CREATED_AT = Date.from(Instant.now());
     protected static final Date UPDATED_AT = Date.from(Instant.now());
+
+    protected static final String FAKE_USERNAME = "Fake username";
+    protected static final String FAKE_EMAIL_ADDRESS = "Fake email address";
+    protected static final String FAKE_HASHTAG_VALUE = "Fake hashtag value";
 
     protected RegisterRequestDto initRegisterRequestDto() {
         return RegisterRequestDto.builder()
@@ -76,8 +89,8 @@ public abstract class UnitTestInitData {
                 .followers(Collections.emptyList())
                 .following(Collections.emptyList())
                 .description(USER_PRIME_TEST_DESCRIPTION)
-                .createdAt(Date.from(Instant.now()))
-                .updatedAt(Date.from(Instant.now()))
+                .createdAt(CREATED_AT)
+                .updatedAt(UPDATED_AT)
                 .build();
     }
 
@@ -127,8 +140,8 @@ public abstract class UnitTestInitData {
         return HashtagEntity.builder()
                 .id(1L)
                 .value("#RandomHashtag")
-                .createdAt(Date.from(Instant.now()))
                 .tweets(Collections.emptyList())
+                .createdAt(Date.from(Instant.now()))
                 .build();
     }
 
@@ -271,6 +284,40 @@ public abstract class UnitTestInitData {
                 .latestMessageTime(String.valueOf(Instant.now()))
                 .latestMessageContent(MESSAGE_CONTENT)
                 .latestMessageRead(true)
+                .build();
+    }
+
+    protected UserResponseDto initUserResponseDto(UserEntity userEntity) {
+        return UserResponseDto.builder()
+                .id(userEntity.getId())
+                .name(userEntity.getName())
+                .username(userEntity.getUsername())
+                .tweetNo(userEntity.getTweetNo())
+                .followingNo(userEntity.getFollowingNo())
+                .followerNo(userEntity.getFollowerNo())
+                .userProfilePicture(userEntity.getProfilePicture())
+                .userBackgroundPicture(userEntity.getBackgroundPicture())
+                .description(userEntity.getDescription())
+                .build();
+    }
+
+    protected <T> String initRequestDtoAsJson(T requestDto) {
+        String requestJSON = null;
+        ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        try {
+            requestJSON = objectWriter.writeValueAsString(requestDto);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return requestJSON;
+    }
+
+    protected EmailNotificationDto initEmailNotificationDto() {
+        return EmailNotificationDto.builder()
+                .emailSubject("Email Subject")
+                .emailRecipient(USER_PRIME_EMAIL_ADDRESS)
+                .recipientName(USER_PRIME_NAME)
+                .activationLink("LINK")
                 .build();
     }
 

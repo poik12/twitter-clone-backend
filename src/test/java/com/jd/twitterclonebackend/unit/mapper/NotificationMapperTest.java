@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class NotificationMapperTest extends UnitTestInitData {
 
     @InjectMocks
-    private NotificationMapper notificationMapper;
+    private NotificationMapper underTest;
 
     @Test
     @DisplayName(value = "Should map from Notification Dto to Notification Entity")
@@ -25,7 +25,7 @@ class NotificationMapperTest extends UnitTestInitData {
         UserEntity secondUser = initSecondUser();
 
         // when
-        var result = notificationMapper.mapFromDtoToEntity(
+        var result = underTest.mapFromDtoToEntity(
                 primeUser,
                 secondUser,
                 NotificationType.TWEET,
@@ -50,7 +50,7 @@ class NotificationMapperTest extends UnitTestInitData {
         NotificationEntity notificationEntity = initNotificationEntity();
 
         // when
-        var result = notificationMapper.mapFromEntityToDto(notificationEntity);
+        var result = underTest.mapFromEntityToDto(notificationEntity);
 
         // then
         assertAll(

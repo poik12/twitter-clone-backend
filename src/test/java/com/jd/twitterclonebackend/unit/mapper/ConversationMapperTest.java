@@ -11,8 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import java.time.Instant;
-import java.util.Collection;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ConversationMapperTest extends UnitTestInitData {
 
     @InjectMocks
-    private ConversationMapper conversationMapper;
+    private ConversationMapper underTest;
 
     @Mock
     private MessageMapper messageMapper;
@@ -34,7 +32,7 @@ class ConversationMapperTest extends UnitTestInitData {
         ConversationRequestDto conversationRequestDto = initConversationRequestDto();
 
         // when
-        var result = conversationMapper.mapFromDtoToEntity(
+        var result = underTest.mapFromDtoToEntity(
                 conversationRequestDto,
                 primeUser,
                 secondUser
@@ -59,7 +57,7 @@ class ConversationMapperTest extends UnitTestInitData {
         ConversationEntity conversationEntity = initConversationEntity();
 
         // when
-        var result = conversationMapper.mapFromEntityToDto(conversationEntity);
+        var result = underTest.mapFromEntityToDto(conversationEntity);
 
         // then
         assertAll(

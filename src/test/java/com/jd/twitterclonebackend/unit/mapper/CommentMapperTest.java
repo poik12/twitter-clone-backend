@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class CommentMapperTest extends UnitTestInitData {
 
     @InjectMocks
-    private CommentMapper commentMapper;
+    private CommentMapper underTest;
 
     @Test
     void should_mapFromCommentDto_ToCommentEntity() {
@@ -25,7 +25,7 @@ class CommentMapperTest extends UnitTestInitData {
         CommentRequestDto commentRequestDto = initCommentRequestDto();
 
         // when
-        var result = commentMapper.mapFromDtoToEntity(
+        var result = underTest.mapFromDtoToEntity(
                 commentRequestDto,
                 tweetEntity,
                 userEntity
@@ -50,7 +50,7 @@ class CommentMapperTest extends UnitTestInitData {
         CommentEntity commentEntity = initCommentEntity(userEntity, tweetEntity);
 
         // when
-        var result = commentMapper.mapFromEntityToDto(commentEntity);
+        var result = underTest.mapFromEntityToDto(commentEntity);
 
         // then
         assertAll(
