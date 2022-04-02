@@ -81,7 +81,7 @@ public class CommentServiceImpl implements CommentService {
                 ));
         // Get all comments for found post, map them to DTO and collect to list
         return commentRepository
-                .findAllByPostAndOrderByCreatedAtDesc(tweetEntity, pageable)
+                .findAllByTweetAndOrderByCreatedAtDesc(tweetEntity, pageable)
                 .stream()
                 .map(commentMapper::mapFromEntityToDto)
                 .collect(Collectors.toList());
@@ -101,7 +101,7 @@ public class CommentServiceImpl implements CommentService {
 
         // Get all comments created by user, map them to dto, collect to list and return
         return commentRepository
-                .findAllByUserAndOrderByCreatedAtDesc(userEntity, tweetId, pageable)
+                .findAllByUserAndTweetIdAndOrderByCreatedAtDesc(userEntity, tweetId, pageable)
                 .stream()
                 .map(commentMapper::mapFromEntityToDto)
                 .collect(Collectors.toList());

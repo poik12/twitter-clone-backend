@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = userRepository
                 .findByUsername(username)
                 .orElseThrow(() -> new UserException(
-                        InvalidUserEnum.USER_NOT_FOUND_WITH_USERNAME.getMessage(),
+                        InvalidUserEnum.USER_NOT_FOUND_WITH_USERNAME.getMessage() + username,
                         HttpStatus.NOT_FOUND
                 ));
         // Map user entity to user response

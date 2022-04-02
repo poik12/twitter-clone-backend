@@ -25,7 +25,7 @@ class UserDetailsServiceImplTest extends IntegrationTestInitData {
         UserEntity userEntity = initDatabaseByPrimeUserEnabled();
 
         // when
-        UserDetails result = userDetailsService.loadUserByUsername(USER_PRIME_USERNAME);
+        var result = userDetailsService.loadUserByUsername(USER_PRIME_USERNAME);
 
         // then
         assertThat(result.getUsername()).isEqualTo(USER_PRIME_USERNAME);
@@ -38,7 +38,7 @@ class UserDetailsServiceImplTest extends IntegrationTestInitData {
         initDatabaseByPrimeUserEnabled();
 
         // when
-        UserException result = assertThrows(
+        var result = assertThrows(
                 UserException.class,
                 () -> userDetailsService.loadUserByUsername(FAKE_USERNAME)
         );
@@ -63,7 +63,7 @@ class UserDetailsServiceImplTest extends IntegrationTestInitData {
                 .setAuthentication(authentication);
 
         // when
-        UserEntity result = userDetailsService.currentLoggedUserEntity();
+        var result = userDetailsService.currentLoggedUserEntity();
 
         // then
         assertThat(result).isEqualTo(userEntity);
@@ -83,7 +83,7 @@ class UserDetailsServiceImplTest extends IntegrationTestInitData {
                 .setAuthentication(authentication);
 
         // when
-        UserException result = assertThrows(
+        var result = assertThrows(
                 UserException.class,
                 () -> userDetailsService.currentLoggedUserEntity()
         );

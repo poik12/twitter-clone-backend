@@ -24,7 +24,6 @@ public interface ConversationRepository extends JpaRepository<ConversationEntity
                                                            UserEntity participant,
                                                            Pageable pageable);
 
-//    @Transactional
     @Modifying
     @Query(value = "UPDATE ConversationEntity c " +
             "SET c.latestMessageContent = :messageContent, c.latestMessageTime = :messageCreatedAt " +

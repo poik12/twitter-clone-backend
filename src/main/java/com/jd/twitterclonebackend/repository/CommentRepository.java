@@ -19,15 +19,13 @@ public interface CommentRepository extends JpaRepository<CommentEntity, Long> {
     @Query(value = "SELECT c FROM CommentEntity c " +
             "WHERE c.tweet = :tweetEntity " +
             "ORDER BY c.createdAt DESC")
-    List<CommentEntity> findAllByPostAndOrderByCreatedAtDesc(@Param("tweetEntity") TweetEntity tweetEntity,
-                                                             Pageable pageable);
+    List<CommentEntity> findAllByTweetAndOrderByCreatedAtDesc(@Param("tweetEntity") TweetEntity tweetEntity,
+                                                              Pageable pageable);
 
     @Query(value = "SELECT c FROM CommentEntity c " +
             "WHERE c.user = :userEntity AND c.tweet.id = :tweetId " +
             "ORDER BY c.createdAt DESC")
-    List<CommentEntity> findAllByUserAndOrderByCreatedAtDesc(@Param("userEntity") UserEntity userEntity,
-                                                             @Param("tweetId") Long tweetId,
-                                                             Pageable pageable);
-
-    void deleteAllByUser(UserEntity userEntity);
+    List<CommentEntity> findAllByUserAndTweetIdAndOrderByCreatedAtDesc(@Param("userEntity") UserEntity userEntity,
+                                                                       @Param("tweetId") Long tweetId,
+                                                                       Pageable pageable);
 }

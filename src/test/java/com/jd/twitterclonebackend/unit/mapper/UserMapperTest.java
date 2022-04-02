@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
 class UserMapperTest extends UnitTestInitData {
 
     @InjectMocks
-    private UserMapper userMapper;
+    private UserMapper underTest;
 
     @Mock
     private FileService fileService;
@@ -41,7 +41,7 @@ class UserMapperTest extends UnitTestInitData {
         UserEntity userEntity = initUserEntity();
 
         // when
-        var result = userMapper.mapFromEntityToDto(userEntity);
+        var result = underTest.mapFromEntityToDto(userEntity);
 
         // then
         assertAll(
@@ -79,7 +79,7 @@ class UserMapperTest extends UnitTestInitData {
         when(jsonMapper.mapFromJsonToDto(any(), any()))
                 .thenReturn(userDetailsRequestDto);
 
-        var result = userMapper.mapFromDtoToEntity(
+        var result = underTest.mapFromDtoToEntity(
                 userEntity,
                 userDetailsRequestJson,
                 profileImageFile,

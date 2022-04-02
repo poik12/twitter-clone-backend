@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class MessageMapperTest extends UnitTestInitData {
 
     @InjectMocks
-    private MessageMapper messageMapper;
+    private MessageMapper underTest;
 
     @Test
     @DisplayName(value = "Should map from Message Dto to Message Entity")
@@ -27,7 +27,7 @@ class MessageMapperTest extends UnitTestInitData {
         ConversationEntity conversationEntity = initConversationEntity();
 
         // when
-        var result = messageMapper.mapFromDtoToEntity(
+        var result = underTest.mapFromDtoToEntity(
                 primeUser,
                 secondUser,
                 message,
@@ -53,7 +53,7 @@ class MessageMapperTest extends UnitTestInitData {
         MessageEntity messageEntity = initMessageEntity();
 
         // when
-        var result = messageMapper.mapFromEntityToDto(messageEntity);
+        var result = underTest.mapFromEntityToDto(messageEntity);
 
         // then
         assertAll(

@@ -6,14 +6,12 @@ import com.jd.twitterclonebackend.unit.UnitTestInitData;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 
-import java.util.Collections;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class FollowerMapperTest extends UnitTestInitData {
 
     @InjectMocks
-    private FollowerMapper followerMapper;
+    private FollowerMapper underTest;
 
     @Test
     void should_mapFromUserEntity_toFollowerResponseDto() {
@@ -21,7 +19,7 @@ class FollowerMapperTest extends UnitTestInitData {
         UserEntity userEntity = initUserEntity();
 
         // when
-        var result = followerMapper.mapFromEntityToDto(userEntity);
+        var result = underTest.mapFromEntityToDto(userEntity);
 
         // then
         assertAll(

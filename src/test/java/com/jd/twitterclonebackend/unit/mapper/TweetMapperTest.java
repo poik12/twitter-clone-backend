@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
 class TweetMapperTest extends UnitTestInitData {
 
     @InjectMocks
-    private TweetMapper tweetMapper;
+    private TweetMapper underTest;
 
     @Mock
     private JsonMapper jsonMapper;
@@ -46,7 +46,7 @@ class TweetMapperTest extends UnitTestInitData {
         when(hashtagService.checkHashTags(any()))
                 .thenReturn(Collections.emptyList());
 
-        var result = tweetMapper.mapFromDtoToEntity(
+        var result = underTest.mapFromDtoToEntity(
                 tweetRequestJson,
                 userEntity
         );
@@ -73,7 +73,7 @@ class TweetMapperTest extends UnitTestInitData {
         // when
         when(hashtagMapper.mapFromEntityToStringList(any()))
                 .thenReturn(Collections.emptyList());
-        var result = tweetMapper.mapFromEntityToDto(tweetEntity);
+        var result = underTest.mapFromEntityToDto(tweetEntity);
 
         // then
         assertAll(
