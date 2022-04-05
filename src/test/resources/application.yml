@@ -1,4 +1,7 @@
 spring:
+  # Active profile
+  profiles:
+    active: test
   # Database properties
   datasource:
     url: jdbc:h2:mem:twitter_clone_db;DB_CLOSE_DELAY=-1
