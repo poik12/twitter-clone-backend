@@ -8,6 +8,7 @@ import com.jd.twitterclonebackend.config.security.filter.jwt.RefreshTokenProvide
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -102,9 +103,8 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    // TODO: needed for testing purpose - test doesn't work without it
-    // TODO: comment when spring boot doesn't want to start
     @Bean
+    @Profile(value = "test")
     public JavaMailSender javaMailSender() {
         return new JavaMailSenderImpl();
     }

@@ -19,6 +19,7 @@ import java.time.Instant;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @ExtendWith(value = MockitoExtension.class)
 @DataJpaTest
@@ -54,9 +55,13 @@ public abstract class UnitTestInitData {
     protected static final Date CREATED_AT = Date.from(Instant.now());
     protected static final Date UPDATED_AT = Date.from(Instant.now());
 
+    protected static final String TOKEN = UUID.randomUUID().toString();
+    protected static final Instant TOKEN_CONFIRMATION_TIME = Instant.now();
+
     protected static final String FAKE_USERNAME = "Fake username";
     protected static final String FAKE_EMAIL_ADDRESS = "Fake email address";
     protected static final String FAKE_HASHTAG_VALUE = "Fake hashtag value";
+    protected static final String FAKE_TOKEN = UUID.randomUUID() + "Fake";
 
     protected RegisterRequestDto initRegisterRequestDto() {
         return RegisterRequestDto.builder()
@@ -318,6 +323,28 @@ public abstract class UnitTestInitData {
                 .emailRecipient(USER_PRIME_EMAIL_ADDRESS)
                 .recipientName(USER_PRIME_NAME)
                 .activationLink("LINK")
+                .build();
+    }
+
+    protected RefreshTokenEntity initRefreshTokenEntity(UserEntity userEntity) {
+
+        return RefreshTokenEntity.builder()
+                .id(2L)
+                .token(TOKEN)
+                .user(userEntity)
+                .createdAt(CREATED_AT)
+                .expiresAt(CREATED_AT.toInstant().plusSeconds(1000))
+                .build();
+    }
+
+    protected VerificationTokenEntity initVerificationTokenEntity(UserEntity userEntity) {
+        return VerificationTokenEntity.builder()
+                .id(2L)
+                .token(TOKEN)
+                .user(userEntity)
+                .createdAt(CREATED_AT)
+                .expiresAt(CREATED_AT.toInstant().plusSeconds(1000))
+                .confirmedAt(null)
                 .build();
     }
 
